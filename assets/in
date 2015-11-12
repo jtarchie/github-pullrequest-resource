@@ -1,0 +1,34 @@
+#!/usr/bin/env ruby
+
+require 'json'
+require 'octokit'
+
+destination = ARGV.shift
+
+def input
+  @input ||= JSON.parse(ARGF.read).tap do |input|
+    input['version'] ||= {}
+    input['params'] ||= {}
+  end
+end
+
+def uri
+  input['source']['uri'] || "https://github.com/#{input['source']['repo']}"
+end
+
+def ref
+  input['version']['ref']
+end
+
+Octokit.connection_options[:ssl] = { verify: false } if ENV['http_proxy']
+pr = Octokit.pull_request(input['source']['repo'], input['version']['pr'])
+
+system("git clone --depth 1 #{uri} #{destination} 1>&2")
+Dir.chdir(destination) do
+  system("git fetch -q origin #{ref}")
+  system("git checkout -q #{ref}")
+  system("git config --add pullrequest.url #{pr['url']}")
+end
+
+puts JSON.generate(version:  { ref: ref, pr: input['version']['pr'] },
+                   metadata: { url: pr['url'] })

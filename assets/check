@@ -1,0 +1,44 @@
+#!/usr/bin/env ruby
+
+require 'json'
+require 'octokit'
+
+def input
+  @input ||= JSON.parse(ARGF.read).tap do |input|
+    input['version'] ||= {}
+  end
+end
+
+def json!(payload)
+  puts JSON.generate(payload)
+  exit
+end
+
+def status(pr)
+  statuses = Octokit.statuses(input['source']['repo'], pr['head']['sha'])
+  statuses.find { |status| status['context'] == 'concourseci' } || { 'state' => 'pending' }
+end
+
+def same_version?(pr)
+  [pr['head']['sha'], pr['id']] == [input['version']['ref'], input['version']['pr']]
+end
+
+def pending?(pr)
+  status(pr)['state'] == 'pending'
+end
+
+Octokit.connection_options[:ssl] = { verify: false } if ENV['http_proxy']
+Octokit.auto_paginate = true
+
+prs = Octokit.pulls(input['source']['repo'], state: 'open', sort: 'updated', direction: 'desc')
+json!([]) if prs.empty?
+
+current_pr = prs.find { |pr| same_version?(pr) }
+json!([]) if current_pr && pending?(current_pr)
+
+most_recent = prs.first
+if pending?(most_recent)
+  json!([{ ref: most_recent['head']['sha'], pr: most_recent['id'] }])
+else
+  json!([])
+end
