@@ -1,0 +1,36 @@
+#!/usr/bin/env ruby
+
+require 'json'
+require 'octokit'
+require_relative 'common'
+
+destination = ARGV.shift
+
+def input
+  @input ||= JSON.parse(ARGF.read).tap do |input|
+    input['params'] ||= {}
+  end
+end
+
+def json!(payload)
+  puts JSON.generate(payload)
+  exit
+end
+
+Octokit.connection_options[:ssl] = { verify: false } if ENV['http_proxy']
+repo = Repository.new(name: input['source']['repo'])
+
+next_pull_request = repo.next_pull_request 
+if next_pull_request
+  next_pull_request.status!(input['source']['status'])
+
+  json!({
+    version: next_pull_request.as_json,
+    metadata: {
+      url: next_pull_request.url,
+      status: input['params']['status']
+    }
+  })
+else
+  json!({})
+end

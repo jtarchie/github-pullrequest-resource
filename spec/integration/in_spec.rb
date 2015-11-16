@@ -1,7 +1,6 @@
 require 'spec_helper'
 require 'json'
 require 'tmpdir'
-require 'billy'
 
 describe 'get' do
   let(:proxy) { Billy::Proxy.new }
@@ -14,7 +13,6 @@ describe 'get' do
 
   def get(payload = {})
     path = ['./assets/in', '/opt/resource/in'].find { |p| File.exist? p }
-    payload[:source][:repo] = 'jtarchie/test'
 
     output = `echo '#{JSON.generate(payload)}' | env http_proxy=#{proxy.url} #{path} #{dest_dir}`
     JSON.parse(output)
@@ -24,32 +22,44 @@ describe 'get' do
     Dir.chdir(dir) { `git #{cmd}`.chomp }
   end
 
+  def commit(msg)
+    git("-c user.name='test' -c user.email='test@example.com' commit -q --allow-empty -m '#{msg}'")
+    git('log --format=format:%H HEAD')
+  end
+
   before do
     proxy.stub('https://api.github.com:443/repos/jtarchie/test/pulls/1')
-      .and_return(json: { url: 'http://example.com' })
+      .and_return(json: { url: 'http://example.com', id: '1' })
 
     git('init -q')
-    git("-c user.name='test' -c user.email='test@example.com' commit -q --allow-empty -m 'init'")
+    @ref = commit('init')
+    commit('second')
+
+    git("update-ref refs/pull/1/head #{@ref}")
   end
 
   it 'checks out the pull request to dest_dir' do
-    ref = git('log --format=format:%H HEAD')
-    get(version: { ref: ref, pr: '1' }, source: { uri: git_uri })
-    expect(ref).to eq git('log --format=format:%H HEAD', dest_dir)
+    get(version: { ref: @ref, pr: '1' }, source: { uri: git_uri, repo: 'jtarchie/test' })
+    expect(@ref).to eq git('log --format=format:%H HEAD', dest_dir)
   end
 
   it 'returns the correct JSON metadata' do
-    ref = git('log --format=format:%H HEAD')
-    output = get(version: { ref: ref, pr: '1' }, source: { uri: git_uri })
-    expect(output).to eq('version'  => { 'ref' => ref, 'pr' => '1' },
+    output = get(version: { ref: @ref, pr: '1' }, source: { uri: git_uri, repo: 'jtarchie/test' })
+    expect(output).to eq('version'  => { 'ref' => @ref, 'pr' => '1' },
                          'metadata' => { 'url' => 'http://example.com' })
   end
 
   it 'adds metadata to `git config`' do
-    ref = git('log --format=format:%H HEAD')
-    get(version: { ref: ref, pr: '1' }, source: { uri: git_uri })
+    get(version: { ref: @ref, pr: '1' }, source: { uri: git_uri, repo: 'jtarchie/test' })
 
     value = git('config --get pullrequest.url', dest_dir)
     expect(value).to eq 'http://example.com'
+  end
+
+  it 'checks out as a branch' do
+    get(version: { ref: @ref, pr: '1' }, source: { uri: git_uri, repo: 'jtarchie/test' })
+
+    value = git('rev-parse --abbrev-ref HEAD', dest_dir)
+    expect(value).to eq 'pr-1'
   end
 end

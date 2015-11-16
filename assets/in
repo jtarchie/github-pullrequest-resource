@@ -25,10 +25,10 @@ pr = Octokit.pull_request(input['source']['repo'], input['version']['pr'])
 
 system("git clone --depth 1 #{uri} #{destination} 1>&2")
 Dir.chdir(destination) do
-  system("git fetch -q origin #{ref}")
-  system("git checkout -q #{ref}")
+  system("git fetch -q origin pull/#{pr['id']}/head:pr-#{pr['id']}")
+  system("git checkout pr-#{pr['id']}")
   system("git config --add pullrequest.url #{pr['url']}")
 end
 
-puts JSON.generate(version:  { ref: ref, pr: input['version']['pr'] },
+puts JSON.generate(version:  { ref: ref, pr: pr['id'] },
                    metadata: { url: pr['url'] })

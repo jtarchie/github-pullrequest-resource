@@ -2,7 +2,7 @@ source 'https://rubygems.org'
 
 gem 'octokit'
 
-gem 'development' do
+group :development do
   gem 'rubocop', require: false
 end
 
