@@ -15,11 +15,11 @@ class PullRequest
   end
 
   def equals?(id:, sha:)
-    [@pr['head']['sha'], @pr['id']] == [sha, id]
+    [@pr['head']['sha'], @pr['id'].to_s] == [sha, id.to_s]
   end
 
   def as_json
-    { ref: @pr['head']['sha'], pr: @pr['id'] }
+    { ref: @pr['head']['sha'], pr: @pr['id'].to_s }
   end
 
   def status!(state)
@@ -80,9 +80,12 @@ class Repository
 end
 
 def load_key(input)
-  private_key_path = input['source']['private_key'] || ""
+  private_key      = input['source']['private_key'] || ""
+  private_key_path = '/tmp/private_key'
 
-  if File.exist?(private_key_path)
+  File.write(private_key_path, private_key)
+
+  unless File.zero?(private_key_path)
     FileUtils.chmod(0600, private_key_path)
     system <<-SHELL
       $(ssh-agent) >/dev/null 2>&1')

@@ -29,7 +29,7 @@ describe 'get' do
 
   before do
     proxy.stub('https://api.github.com:443/repos/jtarchie/test/pulls/1')
-      .and_return(json: { url: 'http://example.com', id: '1' })
+      .and_return(json: { url: 'http://example.com', id: 1 })
 
     git('init -q')
     @ref = commit('init')

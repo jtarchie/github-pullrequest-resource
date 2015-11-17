@@ -39,7 +39,7 @@ describe 'check' do
   context 'when there is an open pull request' do
     before do
       proxy.stub('https://api.github.com:443/repos/jtarchie/test/pulls')
-        .and_return(json: [{ id: '1', head: { sha: 'abcdef' } }])
+        .and_return(json: [{ id: 1, head: { sha: 'abcdef' } }])
     end
 
     context 'that has no status' do
@@ -97,8 +97,8 @@ describe 'check' do
     before do
       proxy.stub('https://api.github.com:443/repos/jtarchie/test/pulls')
         .and_return(json: [
-          { id: '2', head: { sha: 'zyxwvu' } },
-          { id: '1', head: { sha: 'abcdef' } }
+          { id: 2, head: { sha: 'zyxwvu' } },
+          { id: 1, head: { sha: 'abcdef' } }
         ])
     end
 

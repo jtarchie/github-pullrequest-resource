@@ -32,5 +32,5 @@ Dir.chdir(destination) do
   system("git config --add pullrequest.url #{pr['url']}")
 end
 
-puts JSON.generate(version:  { ref: ref, pr: pr['id'] },
+puts JSON.generate(version:  { ref: ref, pr: pr['id'].to_s },
                    metadata: { url: pr['url'] })

@@ -19,7 +19,7 @@ describe 'out' do
     proxy.stub('https://api.github.com:443/repos/jtarchie/test/pulls')
       .and_return(json: [{
       url: 'http://example.com',
-      id: '1',
+      id: 1,
       head: { sha: 'abcdef' }
     }])
     proxy.stub('https://api.github.com:443/repos/jtarchie/test/statuses/abcdef')
