@@ -15,8 +15,7 @@ def json!(payload)
   exit
 end
 
-Octokit.connection_options[:ssl] = { verify: false } if ENV['http_proxy']
-Octokit.auto_paginate = true
+load_key input
 
 repo = Repository.new(name: input['source']['repo'])
 

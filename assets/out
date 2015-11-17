@@ -17,7 +17,8 @@ def json!(payload)
   exit
 end
 
-Octokit.connection_options[:ssl] = { verify: false } if ENV['http_proxy']
+load_key input
+
 repo = Repository.new(name: input['source']['repo'])
 
 next_pull_request = repo.next_pull_request 

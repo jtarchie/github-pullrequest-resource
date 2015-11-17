@@ -2,6 +2,7 @@
 
 require 'json'
 require 'octokit'
+require_relative 'common'
 
 destination = ARGV.shift
 
@@ -20,7 +21,8 @@ def ref
   input['version']['ref']
 end
 
-Octokit.connection_options[:ssl] = { verify: false } if ENV['http_proxy']
+load_key input
+
 pr = Octokit.pull_request(input['source']['repo'], input['version']['pr'])
 
 system("git clone --depth 1 #{uri} #{destination} 1>&2")
