@@ -29,7 +29,7 @@ describe 'get' do
 
   before do
     proxy.stub('https://api.github.com:443/repos/jtarchie/test/pulls/1')
-      .and_return(json: { url: 'http://example.com', id: 1 })
+      .and_return(json: { url: 'http://example.com', number: 1 })
 
     git('init -q')
     @ref = commit('init')
@@ -46,7 +46,10 @@ describe 'get' do
   it 'returns the correct JSON metadata' do
     output = get(version: { ref: @ref, pr: '1' }, source: { uri: git_uri, repo: 'jtarchie/test' })
     expect(output).to eq('version'  => { 'ref' => @ref, 'pr' => '1' },
-                         'metadata' => { 'url' => 'http://example.com' })
+                         'metadata' => [{
+                           'name' => 'url',
+                           'value' => 'http://example.com'
+    }])
   end
 
   it 'adds metadata to `git config`' do

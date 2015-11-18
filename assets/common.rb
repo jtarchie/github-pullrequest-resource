@@ -15,11 +15,11 @@ class PullRequest
   end
 
   def equals?(id:, sha:)
-    [@pr['head']['sha'], @pr['id'].to_s] == [sha, id.to_s]
+    [self.sha, self.id.to_s] == [sha, id.to_s]
   end
 
   def as_json
-    { ref: @pr['head']['sha'], pr: @pr['id'].to_s }
+    { ref: sha, pr: id.to_s }
   end
 
   def status!(state)
@@ -31,7 +31,7 @@ class PullRequest
   end
 
   def id
-    @pr['id']
+    @pr['number']
   end
 
   def sha

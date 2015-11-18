@@ -1,5 +1,6 @@
 #!/usr/bin/env ruby
 
+require 'rubygems'
 require 'json'
 require 'octokit'
 require_relative 'common'
@@ -24,13 +25,14 @@ end
 load_key input
 
 pr = Octokit.pull_request(input['source']['repo'], input['version']['pr'])
+id = pr['number']
 
 system("git clone --depth 1 #{uri} #{destination} 1>&2")
 Dir.chdir(destination) do
-  system("git fetch -q origin pull/#{pr['id']}/head:pr-#{pr['id']}")
-  system("git checkout pr-#{pr['id']}")
+  system("git fetch -q origin pull/#{id}/head:pr-#{id}")
+  system("git checkout pr-#{id}")
   system("git config --add pullrequest.url #{pr['url']}")
 end
 
-puts JSON.generate(version:  { ref: ref, pr: pr['id'].to_s },
-                   metadata: { url: pr['url'] })
+puts JSON.generate(version:  { ref: ref, pr: id.to_s },
+                   metadata: [{ name: 'url', value: pr['url'] }])
