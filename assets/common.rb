@@ -88,7 +88,7 @@ def load_key(input)
   unless File.zero?(private_key_path)
     FileUtils.chmod(0600, private_key_path)
     system <<-SHELL
-      $(ssh-agent) >/dev/null 2>&1')
+      $(ssh-agent) >/dev/null 2>&1
       trap "kill $SSH_AGENT_PID" 0
       SSH_ASKPASS=/opt/resource/askpass.sh DISPLAY= ssh-add $private_key_path >/dev/null
     SHELL
