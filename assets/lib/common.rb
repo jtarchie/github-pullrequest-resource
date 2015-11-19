@@ -1,9 +1,6 @@
 require 'octokit'
 require 'fileutils'
 
-Octokit.auto_paginate = true
-Octokit.connection_options[:ssl] = { verify: false } if ENV['http_proxy']
-
 class PullRequest
   def initialize(repo:, pr:)
     @repo = repo
@@ -26,7 +23,9 @@ class PullRequest
     Octokit.create_status(
       @repo.name,
       sha,
-      state
+      state,
+      context: 'concourseci',
+      description: "The path to the build /pipelines/#{ENV['BUILD_PIPELINE_NAME']}/jobs/#{ENV['BUILD_JOB_NAME']}/builds/#{ENV['BUILD_NAME']}"
     )
   end
 
@@ -65,6 +64,11 @@ class Repository
     end
   end
 
+  def pull_request(id:)
+    pr = Octokit.pull_request(name, id)
+    PullRequest.new(repo: self, pr: pr)
+  end
+
   def next_pull_request(id: nil, sha: nil)
     return if pull_requests.empty?
 
@@ -79,26 +83,18 @@ class Repository
   end
 end
 
-def load_key(input)
-  private_key      = input['source']['private_key'] || ""
-  private_key_path = '/tmp/private_key'
-
-  File.write(private_key_path, private_key)
-
-  unless File.zero?(private_key_path)
-    FileUtils.chmod(0600, private_key_path)
-    system <<-SHELL
-      $(ssh-agent) >/dev/null 2>&1
-      trap "kill $SSH_AGENT_PID" 0
-      SSH_ASKPASS=/opt/resource/askpass.sh DISPLAY= ssh-add $private_key_path >/dev/null
-    SHELL
-
-    FileUtils.mkdir_p('~/.ssh')
-    File.write('~/.ssh/config', <<-SSHCONFIG)
-StrictHostKeyChecking no
-LogLevel quiet
-EOF
-    SSHCONFIG
-    FileUtils.chmod(0600, '~/.ssh/config')
-  end
+def input
+  @input ||= JSON.parse(ARGF.read)
 end
+
+def json!(payload)
+  puts JSON.generate(payload)
+  exit
+end
+
+Octokit.auto_paginate = true
+Octokit.connection_options[:ssl] = { verify: false } if ENV['http_proxy']
+Octokit.configure do |c|
+  c.access_token = input['source']['access_token']
+end
+

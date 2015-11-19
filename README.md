@@ -1,0 +1,91 @@
+# Github Pull Request Resource
+
+Tracks pull requests made to a particular github repo. In the spirit of [Travis
+CI](https://travis-ci.org/), a status of pending, success, or failure will be
+set on the pull request, which much be explicitly defined in your pipeline.
+
+## Source Configuration
+
+* `repo`: *Required.* The repo name on github.
+    Example: `jtarchie/pullrequest-resource`
+
+* `private_key`: *Optional.* Private key to use when pulling/pushing.
+    Example:
+    ```
+    private_key: |
+      -----BEGIN RSA PRIVATE KEY-----
+      MIIEowIBAAKCAQEAtCS10/f7W7lkQaSgD/mVeaSOvSF9ql4hf/zfMwfVGgHWjj+W
+      <Lots more text>
+      DWiJL+OFeg9kawcUL6hQ8JeXPhlImG6RTUffma9+iGQyyBMCGd1l
+      -----END RSA PRIVATE KEY-----
+    ```
+
+* `access_token`: *Required.* An access token with `repo:status` access.
+
+## Behavior
+
+### `check`: Check for new pull requests
+
+New pull requests that have no `concourseci` status messages are pulled in.
+Since the nature of Concourse is to always have the latest version, some jiggery
+pokery was done to allow iteration of each pull request.
+
+### `in`: Clone the repository, at the given pull request ref
+
+Clones the repository to the destination, and locks it down to a given ref.
+
+Submodules are initialized and updated recursively.
+
+
+### `out`: Update the status of a pull request
+
+Set the status message for `concourseci` context on specified pull request.
+
+#### Parameters
+
+* `path`: *Required.* The path of the repository to reference the pull request.
+
+* `status`: *Required.* The status of success, failure, error, or pending.
+
+## Example pipeline
+
+This is what I am currently using to test this resource on Concourse.
+
+```yaml
+resources:
+- name: repo
+  type: pull-request
+  source:
+    access_token: acecss_token
+    private_key: |
+      -----BEGIN RSA PRIVATE KEY-----
+      My private key.
+      -----END RSA PRIVATE KEY-----
+    repo: jtarchie/pullrequest-resource
+jobs:
+- name: test pull request
+  plan:
+  - get: repo
+    trigger: true
+  - put: repo
+    params:
+      path: repo
+      status: pending
+  - task: do something with git
+    config:
+      platform: linux
+      image: docker:///concourse/git-resource
+      run:
+        path: sh
+        args:
+        - -c
+        - cd repo && git --no-pager show
+      inputs:
+      - name: repo
+        path: ""
+  - put: repo
+    params:
+      path: repo
+      status: success
+
+```

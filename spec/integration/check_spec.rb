@@ -7,13 +7,6 @@ describe 'check' do
   before { proxy.start }
   after  { proxy.reset }
 
-  def check(payload)
-    path = ['./assets/check', '/opt/resource/check'].find { |p| File.exist? p }
-
-    output = `echo '#{JSON.generate(payload)}' | env http_proxy=#{proxy.url} #{path}`
-    JSON.parse(output)
-  end
-
   context 'when there are no pull requests' do
     before do
       proxy.stub('https://api.github.com:443/repos/jtarchie/test/pulls')
@@ -49,7 +42,7 @@ describe 'check' do
       end
 
       it 'returns SHA of the pull request' do
-        expect(check(source: { repo: 'jtarchie/test' })).to eq [{ 'ref' => 'abcdef', 'pr' => '1' }]
+        expect(check(source: { repo: 'jtarchie/test' }, version: {})).to eq [{ 'ref' => 'abcdef', 'pr' => '1' }]
       end
 
       context 'and the version is the same as the pull request' do
@@ -68,7 +61,7 @@ describe 'check' do
       end
 
       it 'returns SHA of the pull request' do
-        expect(check(source: { repo: 'jtarchie/test' })).to eq []
+        expect(check(source: { repo: 'jtarchie/test' }, version: {})).to eq []
       end
 
       context 'and the version is the same as the pull request' do
@@ -88,7 +81,7 @@ describe 'check' do
             { state: 'success', context: 'concourseci' }
           ])
 
-        expect(check(source: { repo: 'jtarchie/test' })).to eq []
+        expect(check(source: { repo: 'jtarchie/test' }, version: {})).to eq []
       end
     end
   end

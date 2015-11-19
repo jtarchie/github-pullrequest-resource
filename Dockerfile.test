@@ -1,0 +1,13 @@
+FROM jtarchie/pr 
+
+RUN apk add --update \
+    ruby-bundler \
+    ruby-io-console \
+    ruby-dev \
+    openssl-dev \
+    alpine-sdk
+
+ADD / /opt/resource-tests/
+RUN cd /opt/resource-tests/ && \
+    bundle && \
+    rspec

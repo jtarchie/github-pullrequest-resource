@@ -1,28 +1,14 @@
-#!/usr/bin/env ruby
+#!/bin/sh
 
-require 'rubygems'
-require 'json'
-require 'octokit'
-require_relative 'common'
+set -e
 
-def input
-  @input ||= JSON.parse(ARGF.read).tap do |input|
-    input['version'] ||= {}
-  end
-end
+exec 3>&1 # make stdout available as fd 3 for the result
+exec 1>&2 # redirect all output to stderr for logging
 
-def json!(payload)
-  puts JSON.generate(payload)
-  exit
-end
+. $(dirname $0)/common.sh
 
-load_key input
+payload=$(mktemp $TMPDIR/pullrequest-resource.XXXXXX)
+cat > $payload <&0
+load_pubkey $payload
 
-repo = Repository.new(name: input['source']['repo'])
-
-next_pull_request = repo.next_pull_request(id: input['version']['pr'], sha: input['version']['ref'])
-if next_pull_request
-  json!([next_pull_request.as_json])
-else
-  json!([])
-end
+$(dirname $0)/lib/check.rb $1 >&3 < $payload

@@ -1,0 +1,31 @@
+#!/usr/bin/env ruby
+
+destination = ARGV.shift
+
+require 'rubygems'
+require 'json'
+require 'octokit'
+require_relative 'common'
+
+raise %Q{`status` "#{input['params']['status']}" is not supported -- only success, failure, error, or pending} unless %w{success failure error pending}.include?(input['params']['status'])
+raise '`path` required in `params`' unless input['params'].has_key?('path')
+
+path = File.join(destination, input['params']['path'])
+raise %Q{`path` "#{input['params']['path']}" does not exist} unless File.exist?(path)
+
+id = Dir.chdir(path) do
+  `git config --get pullrequest.id`.chomp
+end
+
+repo = Repository.new(name: input['source']['repo'])
+pr   = repo.pull_request(id: id)
+
+pr.status!(input['params']['status'])
+
+json!({
+  version: pr.as_json,
+  metadata: [
+    {name: 'url', value: pr.url},
+    {name: 'status', value: input['params']['status']}
+  ]
+})
