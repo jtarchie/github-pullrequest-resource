@@ -42,7 +42,7 @@ describe 'get' do
                          'metadata' => [{
                            'name' => 'url',
                            'value' => 'http://example.com'
-    }])
+                         }])
   end
 
   it 'adds metadata to `git config`' do

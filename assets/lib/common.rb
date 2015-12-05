@@ -48,7 +48,6 @@ class PullRequest
       status['context'] == 'concourseci'
     end
   end
-
 end
 
 class Repository
@@ -97,4 +96,3 @@ Octokit.connection_options[:ssl] = { verify: false } if ENV['http_proxy']
 Octokit.configure do |c|
   c.access_token = input['source']['access_token']
 end
-

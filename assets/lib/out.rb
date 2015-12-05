@@ -7,11 +7,11 @@ require 'json'
 require 'octokit'
 require_relative 'common'
 
-raise %Q{`status` "#{input['params']['status']}" is not supported -- only success, failure, error, or pending} unless %w{success failure error pending}.include?(input['params']['status'])
-raise '`path` required in `params`' unless input['params'].has_key?('path')
+fail %(`status` "#{input['params']['status']}" is not supported -- only success, failure, error, or pending) unless %w(success failure error pending).include?(input['params']['status'])
+fail '`path` required in `params`' unless input['params'].key?('path')
 
 path = File.join(destination, input['params']['path'])
-raise %Q{`path` "#{input['params']['path']}" does not exist} unless File.exist?(path)
+fail %(`path` "#{input['params']['path']}" does not exist) unless File.exist?(path)
 
 id = Dir.chdir(path) do
   `git config --get pullrequest.id`.chomp
@@ -22,10 +22,8 @@ pr   = repo.pull_request(id: id)
 
 pr.status!(input['params']['status'])
 
-json!({
-  version: pr.as_json,
-  metadata: [
-    {name: 'url', value: pr.url},
-    {name: 'status', value: input['params']['status']}
-  ]
-})
+json!(version: pr.as_json,
+      metadata: [
+        { name: 'url', value: pr.url },
+        { name: 'status', value: input['params']['status'] }
+      ])

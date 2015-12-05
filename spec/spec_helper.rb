@@ -34,11 +34,15 @@ def put(payload = {})
   path = ['./assets/out', '/opt/resource/out'].find { |p| File.exist? p }
   payload[:source] = { repo: 'jtarchie/test' }
 
-  output, error, _ = with_resource do |dir|
+  output, error, = with_resource do |dir|
     Open3.capture3("echo '#{JSON.generate(payload)}' | env http_proxy=#{proxy.url} #{path} #{dir}")
   end
 
-  return (JSON.parse(output) rescue nil), error
+  [(begin
+      JSON.parse(output)
+    rescue
+      nil
+    end), error]
 end
 
 def with_resource
@@ -46,5 +50,3 @@ def with_resource
   FileUtils.cp_r(dest_dir, File.join(tmp_dir, 'resource'))
   yield(tmp_dir)
 end
-
-

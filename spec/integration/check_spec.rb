@@ -14,7 +14,7 @@ describe 'check' do
     end
 
     it 'returns no versions' do
-      expect(check(source: { repo: 'jtarchie/test'})).to eq []
+      expect(check(source: { repo: 'jtarchie/test' })).to eq []
     end
 
     context 'when there is a last known version' do
