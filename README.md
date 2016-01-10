@@ -19,6 +19,12 @@ In your bosh deployment manifest, add to the `groundcrew.additional_resource_typ
 * `repo`: *Required.* The repo name on github.
     Example: `jtarchie/pullrequest-resource`
 
+* `access_token`: *Required.* An access token with `repo:status` access.
+
+* `base_url`: *Optional* The base URL for the Concourse deployment, used for
+  linking to builds. If not present, no link is provided on the Github pull
+  request.
+
 * `private_key`: *Optional.* Private key to use when pulling/pushing.
     Example:
     ```
@@ -29,8 +35,6 @@ In your bosh deployment manifest, add to the `groundcrew.additional_resource_typ
       DWiJL+OFeg9kawcUL6hQ8JeXPhlImG6RTUffma9+iGQyyBMCGd1l
       -----END RSA PRIVATE KEY-----
     ```
-
-* `access_token`: *Required.* An access token with `repo:status` access.
 
 ## Behavior
 
