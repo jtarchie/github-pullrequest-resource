@@ -1,0 +1,20 @@
+resources:
+  - name: repo
+    type: git
+    source:
+      uri: https://github.com/jtarchie/pullrequest-resource
+      branch: master
+
+jobs:
+  - name: tests
+    plan:
+      - get: repo
+      - task: rspec
+        config:
+          image: docker:///jtarchie/pr#test
+          inputs:
+            - name: repo
+          platform: linux
+          run:
+            path: sh
+            args: ['-c', 'cd repo && bundle install && bundle exec rspec']
