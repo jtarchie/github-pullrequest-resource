@@ -9,6 +9,7 @@ jobs:
   - name: tests
     plan:
       - get: repo
+        trigger: true
       - task: rspec
         config:
           image: docker:///jtarchie/pr#test
