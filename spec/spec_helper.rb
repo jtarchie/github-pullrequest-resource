@@ -18,6 +18,7 @@ end
 
 def check(payload)
   path = ['./assets/check', '/opt/resource/check'].find { |p| File.exist? p }
+  payload[:source][:no_ssl_verify] = true
 
   output = `echo '#{JSON.generate(payload)}' | env http_proxy=#{proxy.url} #{path}`
   JSON.parse(output)
@@ -25,6 +26,7 @@ end
 
 def get(payload = {})
   path = ['./assets/in', '/opt/resource/in'].find { |p| File.exist? p }
+  payload[:source][:no_ssl_verify] = true
 
   output = `echo '#{JSON.generate(payload)}' | env http_proxy=#{proxy.url} #{path} #{dest_dir}`
   JSON.parse(output)
@@ -32,7 +34,7 @@ end
 
 def put(payload = {})
   path = ['./assets/out', '/opt/resource/out'].find { |p| File.exist? p }
-  payload[:source] = { repo: 'jtarchie/test' }
+  payload[:source] = { repo: 'jtarchie/test', no_ssl_verify: true }
 
   output, error, = with_resource do |dir|
     Open3.capture3("echo '#{JSON.generate(payload)}' | env http_proxy=#{proxy.url} #{path} #{dir}")
