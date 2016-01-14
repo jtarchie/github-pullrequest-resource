@@ -35,6 +35,8 @@ In your bosh deployment manifest, add to the `groundcrew.additional_resource_typ
       DWiJL+OFeg9kawcUL6hQ8JeXPhlImG6RTUffma9+iGQyyBMCGd1l
       -----END RSA PRIVATE KEY-----
     ```
+* `api_endpoint`: *Optional.* If the repository is located on a GitHub Enterprise
+  instance you need to specify the base api endpoint (e.g. "https://\<hostname\>/api/v3/").
 
 ## Behavior
 

@@ -96,5 +96,6 @@ end
 Octokit.auto_paginate = true
 Octokit.connection_options[:ssl] = { verify: false } if ENV['http_proxy']
 Octokit.configure do |c|
+  c.api_endpoint = input['source']['api_endpoint'] if input['source']['api_endpoint']
   c.access_token = input['source']['access_token']
 end
