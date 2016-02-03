@@ -7,6 +7,18 @@ describe 'check' do
   before { proxy.start }
   after  { proxy.reset }
 
+  context 'when working with an external API' do
+    it 'makes requests with respect to that endpoint' do
+      proxy.stub('https://test.example.com:443/repos/jtarchie/test/pulls')
+        .and_return(json: [])
+
+      expect(check(source: {
+        repo: 'jtarchie/test',
+        api_endpoint: 'https://test.example.com'
+      })).to eq []
+    end
+  end
+
   context 'when there are no pull requests' do
     before do
       proxy.stub('https://api.github.com:443/repos/jtarchie/test/pulls')
