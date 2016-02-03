@@ -94,7 +94,7 @@ def json!(payload)
 end
 
 Octokit.auto_paginate = true
-Octokit.connection_options[:ssl] = { verify: false } if ENV['http_proxy']
+Octokit.connection_options[:ssl] = { verify: false } if input['source']['no_ssl_verify']
 Octokit.configure do |c|
   c.api_endpoint = input['source']['api_endpoint'] if input['source']['api_endpoint']
   c.access_token = input['source']['access_token']
