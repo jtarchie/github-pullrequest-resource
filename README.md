@@ -4,6 +4,7 @@ Tracks pull requests made to a particular github repo. In the spirit of [Travis
 CI](https://travis-ci.org/), a status of pending, success, or failure will be
 set on the pull request, which much be explicitly defined in your pipeline.
 
+Please checkout our [CI Pipeline](http://ci.passed.fail/pipelines/jtarchie-pullrequest-resource).
 
 ## Deploying to Concourse
 
