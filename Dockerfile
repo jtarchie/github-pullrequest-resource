@@ -1,7 +1,8 @@
-FROM alpine 
+FROM alpine
 
 RUN apk add --update \
   ruby \
+  perl \
   jq \
   git \
   openssh-client \
