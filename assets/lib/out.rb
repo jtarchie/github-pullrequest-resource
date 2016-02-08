@@ -17,6 +17,8 @@ id = Dir.chdir(path) do
   `git config --get pullrequest.id`.chomp
 end
 
+fail 'could not get pullrequest `id` from repository' unless id
+
 repo = Repository.new(name: input['source']['repo'])
 pr   = repo.pull_request(id: id)
 

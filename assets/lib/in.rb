@@ -19,6 +19,9 @@ pr = Octokit.pull_request(input['source']['repo'], input['version']['pr'])
 id = pr['number']
 
 system("git clone --depth 1 #{uri} #{destination} 1>&2")
+
+fail 'git clone failed' unless $?.exitstatus == 0
+
 Dir.chdir(destination) do
   system("git submodule update --init --recursive 1>&2")
   system("git fetch -q origin pull/#{id}/head:pr-#{id} 1>&2")
