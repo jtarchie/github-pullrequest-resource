@@ -19,13 +19,13 @@ class PullRequest
     { ref: sha, pr: id.to_s }
   end
 
-  def status!(state:, atc_url: nil)
+  def status!(state:, atc_url: nil, context: 'concourseci')
     target_url = ("#{atc_url}/builds/#{ENV['BUILD_ID']}" if atc_url)
     Octokit.create_status(
       @repo.name,
       sha,
       state,
-      context: 'concourseci',
+      context: context,
       description: "Concourse CI build #{state}",
       target_url: target_url
     )
