@@ -20,7 +20,9 @@ end
 repo = Repository.new(name: input['source']['repo'])
 pr   = repo.pull_request(id: id)
 
-pr.status!(state: input['params']['status'], atc_url: input['source']['base_url'])
+pr.status!(state: input['params']['status'],
+           atc_url: input['source']['base_url'],
+           context: input['source']['context'])
 
 json!(version: pr.as_json,
       metadata: [
