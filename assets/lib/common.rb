@@ -20,6 +20,7 @@ class PullRequest
   end
 
   def status!(state:, atc_url: nil, context: 'concourseci')
+    context ||= 'concourseci'  # Explicit nil (if undefined in hash, for example) should preserve default
     target_url = ("#{atc_url}/builds/#{ENV['BUILD_ID']}" if atc_url)
     Octokit.create_status(
       @repo.name,
