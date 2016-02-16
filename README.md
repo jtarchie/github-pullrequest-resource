@@ -106,3 +106,22 @@ jobs:
       status: success
 
 ```
+
+## Tests
+
+Tests can be run two ways, for local feedback and to see how it will run on the resource container.
+
+1. Local, requires `ruby`
+
+```sh
+gem install bundler
+bundle install
+bundle exec rspec
+```
+2. Container, requires requires `ruby` and `docker`
+
+```sh
+gem install bundler
+bundle install
+rake test
+```
