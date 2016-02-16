@@ -64,6 +64,8 @@ Set the status message for `concourseci` context on specified pull request.
 
 * `status`: *Required.* The status of success, failure, error, or pending.
 
+* `context`: *Optional.* The context on the specified pull request (defaults to `concourseci`)
+
 ## Example pipeline
 
 This is what I am currently using to test this resource on Concourse.
