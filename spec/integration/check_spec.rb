@@ -13,9 +13,9 @@ describe 'check' do
         .and_return(json: [])
 
       expect(check(source: {
-        repo: 'jtarchie/test',
-        api_endpoint: 'https://test.example.com'
-      })).to eq []
+                     repo: 'jtarchie/test',
+                     api_endpoint: 'https://test.example.com'
+                   })).to eq []
     end
   end
 

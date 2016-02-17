@@ -18,28 +18,29 @@ describe 'out' do
   end
 
   before do
+    git('init -q')
+    git('config --add pullrequest.id 1')
+    @sha = commit('test commit')
+
+    proxy.stub("https://api.github.com:443/repos/jtarchie/test/statuses/#{@sha}")
+      .and_return(json: [])
     proxy.stub('https://api.github.com:443/repos/jtarchie/test/pulls/1')
       .and_return(json: {
                     url: 'http://example.com',
                     number: 1,
                     head: { sha: 'abcdef' }
                   })
-    proxy.stub('https://api.github.com:443/repos/jtarchie/test/statuses/abcdef')
-      .and_return(json: [])
-
-    git('init -q')
-    git('config --add pullrequest.id 1')
   end
 
   context 'when acquiring a pull request' do
     it 'sets into pending mode' do
-      proxy.stub('https://api.github.com:443/repos/jtarchie/test/statuses/abcdef', method: :post)
+      proxy.stub("https://api.github.com:443/repos/jtarchie/test/statuses/#{@sha}", method: :post)
 
-      output, = put(params: { status: 'pending', path: 'resource' }, source: { repo: 'jtarchie/test' })
-      expect(output).to eq('version'  => { 'ref' => 'abcdef', 'pr' => '1' },
+      output, error = put(params: { status: 'pending', path: 'resource' }, source: { repo: 'jtarchie/test' })
+      expect(output).to eq('version'  => { 'ref' => @sha, 'pr' => '1' },
                            'metadata' => [
-                             { 'name' => 'url', 'value' => 'http://example.com' },
-                             { 'name' => 'status', 'value' => 'pending' }
+                             { 'name' => 'status', 'value' => 'pending' },
+                             { 'name' => 'url', 'value' => 'http://example.com' }
                            ])
     end
 
@@ -66,26 +67,26 @@ describe 'out' do
   context 'when the pull request is being release' do
     context 'and the build passed' do
       it 'sets into success mode' do
-        proxy.stub('https://api.github.com:443/repos/jtarchie/test/statuses/abcdef', method: :post)
+        proxy.stub("https://api.github.com:443/repos/jtarchie/test/statuses/#{@sha}", method: :post)
 
         output, = put(params: { status: 'success', path: 'resource' }, source: { repo: 'jtarchie/test' })
-        expect(output).to eq('version'  => { 'ref' => 'abcdef', 'pr' => '1' },
+        expect(output).to eq('version'  => { 'ref' => @sha, 'pr' => '1' },
                              'metadata' => [
-                               { 'name' => 'url', 'value' => 'http://example.com' },
-                               { 'name' => 'status', 'value' => 'success' }
+                               { 'name' => 'status', 'value' => 'success' },
+                               { 'name' => 'url', 'value' => 'http://example.com' }
                              ])
       end
     end
 
     context 'and the build failed' do
       it 'sets into failure mode' do
-        proxy.stub('https://api.github.com:443/repos/jtarchie/test/statuses/abcdef', method: :post)
+        proxy.stub("https://api.github.com:443/repos/jtarchie/test/statuses/#{@sha}", method: :post)
 
         output, = put(params: { status: 'failure', path: 'resource' }, source: { repo: 'jtarchie/test' })
-        expect(output).to eq('version'  => { 'ref' => 'abcdef', 'pr' => '1' },
+        expect(output).to eq('version'  => { 'ref' => @sha, 'pr' => '1' },
                              'metadata' => [
-                               { 'name' => 'url', 'value' => 'http://example.com' },
-                               { 'name' => 'status', 'value' => 'failure' }
+                               { 'name' => 'status', 'value' => 'failure' },
+                               { 'name' => 'url', 'value' => 'http://example.com' }
                              ])
       end
     end

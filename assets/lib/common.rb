@@ -1,6 +1,33 @@
 require 'octokit'
 require 'fileutils'
 
+class Status
+  def initialize(state:, atc_url:, sha:, repo:, context: 'concourseci')
+    @atc_url = atc_url
+    @context = context
+    @repo    = repo
+    @sha     = sha
+    @state   = state
+  end
+
+  def create!
+    Octokit.create_status(
+      @repo.name,
+      @sha,
+      @state,
+      context: 'concourseci',
+      description: "Concourse CI build #{@state}",
+      target_url: target_url
+    )
+  end
+
+  private
+
+  def target_url
+    "#{@atc_url}/builds/#{ENV['BUILD_ID']}" if @atc_url
+  end
+end
+
 class PullRequest
   def initialize(repo:, pr:)
     @repo = repo
@@ -17,18 +44,6 @@ class PullRequest
 
   def as_json
     { ref: sha, pr: id.to_s }
-  end
-
-  def status!(state:, atc_url: nil)
-    target_url = ("#{atc_url}/builds/#{ENV['BUILD_ID']}" if atc_url)
-    Octokit.create_status(
-      @repo.name,
-      sha,
-      state,
-      context: 'concourseci',
-      description: "Concourse CI build #{state}",
-      target_url: target_url
-    )
   end
 
   def id
