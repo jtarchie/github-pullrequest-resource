@@ -19,7 +19,9 @@ sha = Dir.chdir(path) { `git rev-parse HEAD`.chomp }
 repo = Repository.new(name: input['source']['repo'])
 
 metadata = [{ name: 'status', value: input['params']['status'] }]
-if id
+if id.empty?
+  version = { ref: sha }
+else
   pr = repo.pull_request(id: id)
   metadata << { name: 'url', value: pr.url }
   version = { pr: id, ref: sha }
