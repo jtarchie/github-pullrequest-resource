@@ -1,4 +1,5 @@
 #!/usr/bin/env ruby
+# encoding: utf-8
 
 destination = ARGV.shift
 
@@ -7,11 +8,11 @@ require 'json'
 require 'octokit'
 require_relative 'common'
 
-fail %(`status` "#{input['params']['status']}" is not supported -- only success, failure, error, or pending) unless %w(success failure error pending).include?(input['params']['status'])
-fail '`path` required in `params`' unless input['params'].key?('path')
+raise %(`status` "#{input['params']['status']}" is not supported -- only success, failure, error, or pending) unless %w(success failure error pending).include?(input['params']['status'])
+raise '`path` required in `params`' unless input['params'].key?('path')
 
 path = File.join(destination, input['params']['path'])
-fail %(`path` "#{input['params']['path']}" does not exist) unless File.exist?(path)
+raise %(`path` "#{input['params']['path']}" does not exist) unless File.exist?(path)
 
 id  = Dir.chdir(path) { `git config --get pullrequest.id`.chomp }
 sha = Dir.chdir(path) { `git rev-parse HEAD`.chomp }

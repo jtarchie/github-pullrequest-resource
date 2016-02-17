@@ -1,3 +1,4 @@
+# encoding: utf-8
 require 'spec_helper'
 require 'json'
 
@@ -10,7 +11,7 @@ describe 'check' do
   context 'when working with an external API' do
     it 'makes requests with respect to that endpoint' do
       proxy.stub('https://test.example.com:443/repos/jtarchie/test/pulls')
-        .and_return(json: [])
+           .and_return(json: [])
 
       expect(check(source: {
                      repo: 'jtarchie/test',
@@ -22,7 +23,7 @@ describe 'check' do
   context 'when there are no pull requests' do
     before do
       proxy.stub('https://api.github.com:443/repos/jtarchie/test/pulls')
-        .and_return(json: [])
+           .and_return(json: [])
     end
 
     it 'returns no versions' do
@@ -34,7 +35,7 @@ describe 'check' do
         payload = { version: { ref: '1' }, source: { repo: 'jtarchie/test' } }
 
         proxy.stub('https://api.github.com:443/repos/jtarchie/test/pulls/1')
-          .and_return(json: {})
+             .and_return(json: {})
 
         expect(check(payload)).to eq []
       end
@@ -44,13 +45,13 @@ describe 'check' do
   context 'when there is an open pull request' do
     before do
       proxy.stub('https://api.github.com:443/repos/jtarchie/test/pulls')
-        .and_return(json: [{ number: 1, head: { sha: 'abcdef' } }])
+           .and_return(json: [{ number: 1, head: { sha: 'abcdef' } }])
     end
 
     context 'that has no status' do
       before do
         proxy.stub('https://api.github.com:443/repos/jtarchie/test/statuses/abcdef')
-          .and_return(json: [])
+             .and_return(json: [])
       end
 
       it 'returns SHA of the pull request' do
@@ -69,7 +70,7 @@ describe 'check' do
     context 'that has a pending status' do
       before do
         proxy.stub('https://api.github.com:443/repos/jtarchie/test/statuses/abcdef')
-          .and_return(json: [{ state: 'pending', context: 'concourseci' }])
+             .and_return(json: [{ state: 'pending', context: 'concourseci' }])
       end
 
       it 'returns SHA of the pull request' do
@@ -88,10 +89,10 @@ describe 'check' do
     context 'that has another status' do
       it 'does not return it' do
         proxy.stub('https://api.github.com:443/repos/jtarchie/test/statuses/abcdef')
-          .and_return(json: [
-            { state: 'pending', context: 'concourseci' },
-            { state: 'success', context: 'concourseci' }
-          ])
+             .and_return(json: [
+                           { state: 'pending', context: 'concourseci' },
+                           { state: 'success', context: 'concourseci' }
+                         ])
 
         expect(check(source: { repo: 'jtarchie/test' }, version: {})).to eq []
       end
@@ -101,10 +102,10 @@ describe 'check' do
   context 'when there is more than one open pull request' do
     before do
       proxy.stub('https://api.github.com:443/repos/jtarchie/test/pulls')
-        .and_return(json: [
-          { number: 2, head: { sha: 'zyxwvu' } },
-          { number: 1, head: { sha: 'abcdef' } }
-        ])
+           .and_return(json: [
+                         { number: 2, head: { sha: 'zyxwvu' } },
+                         { number: 1, head: { sha: 'abcdef' } }
+                       ])
     end
 
     context 'and the version is the same as the older pull request' do
@@ -112,10 +113,10 @@ describe 'check' do
         payload = { version: { ref: 'abcdef', pr: '1' }, source: { repo: 'jtarchie/test' } }
 
         proxy.stub('https://api.github.com:443/repos/jtarchie/test/statuses/abcdef')
-          .and_return(json: [{ state: 'pending', context: 'concourseci' }])
+             .and_return(json: [{ state: 'pending', context: 'concourseci' }])
 
         proxy.stub('https://api.github.com:443/repos/jtarchie/test/statuses/zyxwvu')
-          .and_return(json: [])
+             .and_return(json: [])
 
         expect(check(payload)).to eq [{ 'ref' => 'zyxwvu', 'pr' => '2' }]
       end
@@ -124,10 +125,10 @@ describe 'check' do
         payload = { version: { ref: 'abcdef', pr: '1' }, source: { repo: 'jtarchie/test' } }
 
         proxy.stub('https://api.github.com:443/repos/jtarchie/test/statuses/abcdef')
-          .and_return(json: [{ state: 'success', context: 'concourseci' }])
+             .and_return(json: [{ state: 'success', context: 'concourseci' }])
 
         proxy.stub('https://api.github.com:443/repos/jtarchie/test/statuses/zyxwvu')
-          .and_return(json: [{ state: 'pending', context: 'concourseci' }])
+             .and_return(json: [{ state: 'pending', context: 'concourseci' }])
 
         expect(check(payload)).to eq []
       end

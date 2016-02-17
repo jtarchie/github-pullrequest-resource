@@ -1,3 +1,4 @@
+# encoding: utf-8
 require 'spec_helper'
 require 'fileutils'
 
@@ -22,7 +23,7 @@ describe 'out' do
     @sha = commit('test commit')
 
     proxy.stub("https://api.github.com:443/repos/jtarchie/test/statuses/#{@sha}")
-      .and_return(json: [])
+         .and_return(json: [])
   end
 
   context 'when the git repo has no pull request meta information' do
@@ -41,11 +42,11 @@ describe 'out' do
     before do
       git('config --add pullrequest.id 1')
       proxy.stub('https://api.github.com:443/repos/jtarchie/test/pulls/1')
-        .and_return(json: {
-                      url: 'http://example.com',
-                      number: 1,
-                      head: { sha: 'abcdef' }
-                    })
+           .and_return(json: {
+                         url: 'http://example.com',
+                         number: 1,
+                         head: { sha: 'abcdef' }
+                       })
     end
 
     context 'when acquiring a pull request' do

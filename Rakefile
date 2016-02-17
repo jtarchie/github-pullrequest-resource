@@ -1,3 +1,4 @@
+# encoding: utf-8
 task :build do
   system('docker build -t jtarchie/pr .')
 end
