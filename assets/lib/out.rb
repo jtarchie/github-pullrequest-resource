@@ -17,6 +17,8 @@ raise %(`path` "#{input['params']['path']}" does not exist) unless File.exist?(p
 id  = Dir.chdir(path) { `git config --get pullrequest.id`.chomp }
 sha = Dir.chdir(path) { `git rev-parse HEAD`.chomp }
 
+fail 'could not get pullrequest `id` from repository' unless id
+
 repo = Repository.new(name: input['source']['repo'])
 
 metadata = [{ name: 'status', value: input['params']['status'] }]
