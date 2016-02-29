@@ -6,6 +6,7 @@ destination = ARGV.shift
 require 'rubygems'
 require 'json'
 require 'octokit'
+require 'English'
 require_relative 'common'
 
 def uri
