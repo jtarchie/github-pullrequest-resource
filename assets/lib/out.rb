@@ -28,9 +28,11 @@ else
   version = { pr: id, ref: sha }
 end
 
+atc_url = input['source']['base_url'] || ENV['ATC_EXTERNAL_URL']
+
 Status.new(
   state: input['params']['status'],
-  atc_url: input['source']['base_url'],
+  atc_url: atc_url,
   sha: sha,
   repo: repo
 ).create!
