@@ -38,7 +38,7 @@ describe 'get' do
   end
 
   it 'returns the correct JSON metadata' do
-    output = get(version: { ref: @ref, pr: '1' }, source: { uri: git_uri, repo: 'jtarchie/test' })
+    output, = get(version: { ref: @ref, pr: '1' }, source: { uri: git_uri, repo: 'jtarchie/test' })
     expect(output).to eq('version'  => { 'ref' => @ref, 'pr' => '1' },
                          'metadata' => [{
                            'name' => 'url',
@@ -58,5 +58,12 @@ describe 'get' do
 
     value = git('rev-parse --abbrev-ref HEAD', dest_dir)
     expect(value).to eq 'pr-1'
+  end
+
+  context 'when the git clone fails' do
+    it 'provides a helpful erorr message' do
+      _, error = get(version: { ref: @ref, pr: '1' }, source: { uri: 'invalid_git_uri', repo: 'jtarchie/test' })
+      expect(error).to include 'git clone failed'
+    end
   end
 end

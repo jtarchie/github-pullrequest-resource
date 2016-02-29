@@ -29,8 +29,14 @@ def get(payload = {})
   path = ['./assets/in', '/opt/resource/in'].find { |p| File.exist? p }
   payload[:source][:no_ssl_verify] = true
 
-  output = `echo '#{JSON.generate(payload)}' | env http_proxy=#{proxy.url} #{path} #{dest_dir}`
-  JSON.parse(output)
+  output, error, = with_resource do |_dir|
+    Open3.capture3("echo '#{JSON.generate(payload)}' | env http_proxy=#{proxy.url} #{path} #{dest_dir}")
+  end
+  [(begin
+      JSON.parse(output)
+    rescue
+      nil
+    end), error]
 end
 
 def put(payload = {})

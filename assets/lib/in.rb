@@ -21,7 +21,7 @@ id = pr['number']
 
 system("git clone --depth 1 #{uri} #{destination} 1>&2")
 
-fail 'git clone failed' unless $?.exitstatus == 0
+raise 'git clone failed' unless $CHILD_STATUS.exitstatus == 0
 
 Dir.chdir(destination) do
   system('git submodule update --init --recursive 1>&2')
