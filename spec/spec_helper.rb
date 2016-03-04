@@ -3,9 +3,22 @@ require 'billy'
 require 'open3'
 
 Billy.configure do |c|
+  c.cache = true
+  c.merge_cached_responses_whitelist = [/github/]
   c.non_successful_error_level = :error
   c.non_whitelisted_requests_disabled = true
 end
+
+module StubCacheHandler
+  def handle_request(method, url, headers, body)
+    if response = super
+      Billy::Cache.instance.store(method.downcase, url, headers, body, response[:headers], response[:status], response[:content])
+      return response
+    end
+  end
+end
+
+Billy::StubHandler.prepend(StubCacheHandler)
 
 RSpec.configure do |config|
   config.expect_with :rspec do |expectations|
@@ -41,7 +54,7 @@ end
 
 def put(payload = {})
   path = ['./assets/out', '/opt/resource/out'].find { |p| File.exist? p }
-  payload[:source] = { repo: 'jtarchie/test', no_ssl_verify: true }
+  payload[:source][:no_ssl_verify] = true
 
   output, error, = with_resource do |dir|
     Open3.capture3("echo '#{JSON.generate(payload)}' | env http_proxy=#{proxy.url} #{path} #{dir}")
