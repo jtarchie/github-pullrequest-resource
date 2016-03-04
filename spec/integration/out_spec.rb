@@ -33,6 +33,7 @@ describe 'out' do
 
     proxy.stub("https://api.github.com:443/repos/jtarchie/test/statuses/#{@sha}")
          .and_return(json: [])
+    ENV['BUILD_ID'] = '1234'
   end
 
   context 'when the git repo has no pull request meta information' do
@@ -108,8 +109,21 @@ describe 'out' do
             proxy.stub("https://api.github.com:443/repos/jtarchie/test/statuses/#{@sha}", method: :post)
 
             put(params: { status: 'success', path: 'resource' }, source: { repo: 'jtarchie/test', base_url: 'http://example.com'})
+
             body = request_body('post', "https://api.github.com:443/repos/jtarchie/test/statuses/#{@sha}")
-            expect(JSON.parse(body)).to include('target_url' => 'http://example.com/builds/')
+            expect(JSON.parse(body)).to include('target_url' => 'http://example.com/builds/1234')
+          end
+        end
+
+        context 'with no base_url defined, but with ATC_EXTERNAL_URL defined' do
+          it 'sets the target_url for status' do
+            ENV['ATC_EXTERNAL_URL'] = 'http://atc-endpoint.com'
+            proxy.stub("https://api.github.com:443/repos/jtarchie/test/statuses/#{@sha}", method: :post)
+
+            put(params: { status: 'success', path: 'resource' }, source: { repo: 'jtarchie/test'})
+
+            body = request_body('post', "https://api.github.com:443/repos/jtarchie/test/statuses/#{@sha}")
+            expect(JSON.parse(body)).to include('target_url' => 'http://atc-endpoint.com/builds/1234')
           end
         end
       end
