@@ -126,6 +126,26 @@ describe 'out' do
             expect(JSON.parse(body)).to include('target_url' => 'http://atc-endpoint.com/builds/1234')
           end
         end
+
+        it 'sets the a default context on the status' do
+          proxy.stub("https://api.github.com:443/repos/jtarchie/test/statuses/#{@sha}", method: :post)
+
+          put(params: { status: 'success', path: 'resource' }, source: { repo: 'jtarchie/test'})
+
+          body = request_body('post', "https://api.github.com:443/repos/jtarchie/test/statuses/#{@sha}")
+          expect(JSON.parse(body)).to include('context' => 'concourse-ci')
+        end
+
+        context 'with a custom context for the status' do
+          it 'sets the context' do
+            proxy.stub("https://api.github.com:443/repos/jtarchie/test/statuses/#{@sha}", method: :post)
+
+            put(params: { status: 'success', path: 'resource', context: 'my-custom-context' }, source: { repo: 'jtarchie/test'})
+
+            body = request_body('post', "https://api.github.com:443/repos/jtarchie/test/statuses/#{@sha}")
+            expect(JSON.parse(body)).to include('context' => 'my-custom-context')
+          end
+        end
       end
 
       context 'and the build failed' do

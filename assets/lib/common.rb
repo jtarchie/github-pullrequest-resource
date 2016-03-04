@@ -3,7 +3,7 @@ require 'octokit'
 require 'fileutils'
 
 class Status
-  def initialize(state:, atc_url:, sha:, repo:, context: 'concourseci')
+  def initialize(state:, atc_url:, sha:, repo:, context: 'concourse-ci')
     @atc_url = atc_url
     @context = context
     @repo    = repo
@@ -16,7 +16,7 @@ class Status
       @repo.name,
       @sha,
       @state,
-      context: 'concourseci',
+      context: @context,
       description: "Concourse CI build #{@state}",
       target_url: target_url
     )
