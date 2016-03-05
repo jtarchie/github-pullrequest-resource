@@ -39,8 +39,6 @@ In your bosh deployment manifest, add to the `groundcrew.additional_resource_typ
 * `api_endpoint`: *Optional.* If the repository is located on a GitHub Enterprise
   instance you need to specify the base api endpoint (e.g. "https://\<hostname\>/api/v3/").
 
-* `context`: *Optional.* The context on the specified pull request (defaults to `concourse-ci`)
-
 ## Behavior
 
 ### `check`: Check for new pull requests
@@ -65,6 +63,8 @@ Set the status message for `concourseci` context on specified pull request.
 * `path`: *Required.* The path of the repository to reference the pull request.
 
 * `status`: *Required.* The status of success, failure, error, or pending.
+
+* `context`: *Optional.* The context on the specified pull request (defaults to `concourse-ci`)
 
 ## Example pipeline
 
