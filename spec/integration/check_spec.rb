@@ -70,7 +70,7 @@ describe 'check' do
     context 'that has a pending status' do
       before do
         proxy.stub('https://api.github.com:443/repos/jtarchie/test/statuses/abcdef')
-             .and_return(json: [{ state: 'pending', context: 'concourseci' }])
+             .and_return(json: [{ state: 'pending', context: 'concourse-ci' }])
       end
 
       it 'returns SHA of the pull request' do
@@ -90,8 +90,8 @@ describe 'check' do
       it 'does not return it' do
         proxy.stub('https://api.github.com:443/repos/jtarchie/test/statuses/abcdef')
              .and_return(json: [
-                           { state: 'pending', context: 'concourseci' },
-                           { state: 'success', context: 'concourseci' }
+                           { state: 'pending', context: 'concourse-ci' },
+                           { state: 'success', context: 'concourse-ci' }
                          ])
 
         expect(check(source: { repo: 'jtarchie/test' }, version: {})).to eq []
@@ -113,7 +113,7 @@ describe 'check' do
         payload = { version: { ref: 'abcdef', pr: '1' }, source: { repo: 'jtarchie/test' } }
 
         proxy.stub('https://api.github.com:443/repos/jtarchie/test/statuses/abcdef')
-             .and_return(json: [{ state: 'pending', context: 'concourseci' }])
+             .and_return(json: [{ state: 'pending', context: 'concourse-ci' }])
 
         proxy.stub('https://api.github.com:443/repos/jtarchie/test/statuses/zyxwvu')
              .and_return(json: [])
@@ -125,10 +125,10 @@ describe 'check' do
         payload = { version: { ref: 'abcdef', pr: '1' }, source: { repo: 'jtarchie/test' } }
 
         proxy.stub('https://api.github.com:443/repos/jtarchie/test/statuses/abcdef')
-             .and_return(json: [{ state: 'success', context: 'concourseci' }])
+             .and_return(json: [{ state: 'success', context: 'concourse-ci' }])
 
         proxy.stub('https://api.github.com:443/repos/jtarchie/test/statuses/zyxwvu')
-             .and_return(json: [{ state: 'pending', context: 'concourseci' }])
+             .and_return(json: [{ state: 'pending', context: 'concourse-ci' }])
 
         expect(check(payload)).to eq []
       end

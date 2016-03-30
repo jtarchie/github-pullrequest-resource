@@ -63,7 +63,7 @@ class PullRequest
 
   def statuses
     @statuses ||= Octokit.statuses(@repo.name, sha).select do |status|
-      status['context'] == 'concourseci'
+      status['context'] == 'concourse-ci'
     end
   end
 end

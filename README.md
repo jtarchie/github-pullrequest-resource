@@ -43,7 +43,7 @@ In your bosh deployment manifest, add to the `groundcrew.additional_resource_typ
 
 ### `check`: Check for new pull requests
 
-New pull requests that have no `concourseci` status messages are pulled in.
+New pull requests that have no `concourse-ci` status messages are pulled in.
 Since the nature of Concourse is to always have the latest version, some jiggery
 pokery was done to allow iteration of each pull request.
 
@@ -56,7 +56,7 @@ Submodules are initialized and updated recursively.
 
 ### `out`: Update the status of a pull request
 
-Set the status message for `concourseci` context on specified pull request.
+Set the status message for `concourse-ci` context on specified pull request.
 
 #### Parameters
 
