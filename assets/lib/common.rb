@@ -56,7 +56,7 @@ class PullRequest
   end
 
   def url
-    @pr['url']
+    @pr['html_url']
   end
 
   private

@@ -28,9 +28,9 @@ Dir.chdir(destination) do
   system('git submodule update --init --recursive 1>&2')
   system("git fetch -q origin pull/#{id}/head:pr-#{id} 1>&2")
   system("git checkout pr-#{id} 1>&2")
-  system("git config --add pullrequest.url #{pr['url']} 1>&2")
+  system("git config --add pullrequest.url #{pr['html_url']} 1>&2")
   system("git config --add pullrequest.id #{pr['number']} 1>&2")
 end
 
 puts JSON.generate(version:  { ref: ref, pr: id.to_s },
-                   metadata: [{ name: 'url', value: pr['url'] }])
+                   metadata: [{ name: 'url', value: pr['html_url'] }])

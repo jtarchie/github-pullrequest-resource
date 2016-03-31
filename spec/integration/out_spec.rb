@@ -53,7 +53,7 @@ describe 'out' do
       git('config --add pullrequest.id 1')
       proxy.stub('https://api.github.com:443/repos/jtarchie/test/pulls/1')
            .and_return(json: {
-                         url: 'http://example.com',
+                         html_url: 'http://example.com',
                          number: 1,
                          head: { sha: 'abcdef' }
                        })
