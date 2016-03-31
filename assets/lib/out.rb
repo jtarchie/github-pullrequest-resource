@@ -29,7 +29,7 @@ else
 end
 
 atc_url = input['source']['base_url'] || ENV['ATC_EXTERNAL_URL']
-context = input['params']['context'] || 'concourse-ci'
+context = input['params']['context'] || 'status'
 
 Status.new(
   state: input['params']['status'],

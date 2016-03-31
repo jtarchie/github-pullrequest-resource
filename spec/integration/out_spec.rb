@@ -133,7 +133,7 @@ describe 'out' do
           put(params: { status: 'success', path: 'resource' }, source: { repo: 'jtarchie/test'})
 
           body = request_body('post', "https://api.github.com:443/repos/jtarchie/test/statuses/#{@sha}")
-          expect(JSON.parse(body)).to include('context' => 'concourse-ci')
+          expect(JSON.parse(body)).to include('context' => 'concourse-ci/status')
         end
 
         context 'with a custom context for the status' do
@@ -143,7 +143,7 @@ describe 'out' do
             put(params: { status: 'success', path: 'resource', context: 'my-custom-context' }, source: { repo: 'jtarchie/test'})
 
             body = request_body('post', "https://api.github.com:443/repos/jtarchie/test/statuses/#{@sha}")
-            expect(JSON.parse(body)).to include('context' => 'my-custom-context')
+            expect(JSON.parse(body)).to include('context' => 'concourse-ci/my-custom-context')
           end
         end
       end
