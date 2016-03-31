@@ -47,9 +47,13 @@ In your bosh deployment manifest, add to the `groundcrew.additional_resource_typ
 
 ### `check`: Check for new pull requests
 
-New pull requests that have no `concourse-ci` status messages are pulled in.
-Since the nature of Concourse is to always have the latest version, some jiggery
-pokery was done to allow iteration of each pull request.
+Concourse resources always iterate over the latest version. This maps well to
+semver and git, but not with pull requests. To find the latests pull
+requests, `check` queries for all PRs, selects only PRs without `concourse-ci`
+status messages, and then only returns the oldest one from list.
+
+To ensure that `check` can iterate over all PRs, you must explicitly define an
+`out` for the PR.
 
 ### `in`: Clone the repository, at the given pull request ref
 
