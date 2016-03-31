@@ -108,7 +108,7 @@ describe 'out' do
           it 'sets the target_url for status' do
             proxy.stub("https://api.github.com:443/repos/jtarchie/test/statuses/#{@sha}", method: :post)
 
-            put(params: { status: 'success', path: 'resource' }, source: { repo: 'jtarchie/test', base_url: 'http://example.com'})
+            put(params: { status: 'success', path: 'resource' }, source: { repo: 'jtarchie/test', base_url: 'http://example.com' })
 
             body = request_body('post', "https://api.github.com:443/repos/jtarchie/test/statuses/#{@sha}")
             expect(JSON.parse(body)).to include('target_url' => 'http://example.com/builds/1234')
@@ -120,7 +120,7 @@ describe 'out' do
             ENV['ATC_EXTERNAL_URL'] = 'http://atc-endpoint.com'
             proxy.stub("https://api.github.com:443/repos/jtarchie/test/statuses/#{@sha}", method: :post)
 
-            put(params: { status: 'success', path: 'resource' }, source: { repo: 'jtarchie/test'})
+            put(params: { status: 'success', path: 'resource' }, source: { repo: 'jtarchie/test' })
 
             body = request_body('post', "https://api.github.com:443/repos/jtarchie/test/statuses/#{@sha}")
             expect(JSON.parse(body)).to include('target_url' => 'http://atc-endpoint.com/builds/1234')
@@ -130,7 +130,7 @@ describe 'out' do
         it 'sets the a default context on the status' do
           proxy.stub("https://api.github.com:443/repos/jtarchie/test/statuses/#{@sha}", method: :post)
 
-          put(params: { status: 'success', path: 'resource' }, source: { repo: 'jtarchie/test'})
+          put(params: { status: 'success', path: 'resource' }, source: { repo: 'jtarchie/test' })
 
           body = request_body('post', "https://api.github.com:443/repos/jtarchie/test/statuses/#{@sha}")
           expect(JSON.parse(body)).to include('context' => 'concourse-ci/status')
@@ -140,7 +140,7 @@ describe 'out' do
           it 'sets the context' do
             proxy.stub("https://api.github.com:443/repos/jtarchie/test/statuses/#{@sha}", method: :post)
 
-            put(params: { status: 'success', path: 'resource', context: 'my-custom-context' }, source: { repo: 'jtarchie/test'})
+            put(params: { status: 'success', path: 'resource', context: 'my-custom-context' }, source: { repo: 'jtarchie/test' })
 
             body = request_body('post', "https://api.github.com:443/repos/jtarchie/test/statuses/#{@sha}")
             expect(JSON.parse(body)).to include('context' => 'concourse-ci/my-custom-context')
