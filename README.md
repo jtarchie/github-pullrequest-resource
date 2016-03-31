@@ -20,7 +20,9 @@ In your bosh deployment manifest, add to the `groundcrew.additional_resource_typ
 * `repo`: *Required.* The repo name on github.
     Example: `jtarchie/pullrequest-resource`
 
-* `access_token`: *Required.* An access token with `repo:status` access.
+* `access_token`: *Required.* An access token with `repo:status` access is
+  required for *public* repos. An access tocken with `repo` access is required for
+  *private* repos.
 
 * `uri`: *Optional.* The URI to the github repo. By default, it assumes
   https://github.com/`repo`.
