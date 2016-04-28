@@ -2,6 +2,7 @@
 source 'https://rubygems.org'
 
 gem 'octokit'
+gem 'httpclient'
 
 group :development do
   gem 'pry'

@@ -1,4 +1,10 @@
 # encoding: utf-8
+
+require 'faraday'
+# httpclient and excon are the only Faraday adpater which support
+# the no_proxy environment variable atm
+::Faraday.default_adapter= :httpclient
+
 require 'octokit'
 require 'fileutils'
 

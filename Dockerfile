@@ -8,7 +8,7 @@ RUN apk add --update \
   openssh-client \
   ruby-json \
   ca-certificates
-RUN gem install octokit --no-rdoc --no-ri
+RUN gem install octokit httpclient --no-rdoc --no-ri
 
 ADD assets/ /opt/resource/
 RUN chmod +x /opt/resource/*

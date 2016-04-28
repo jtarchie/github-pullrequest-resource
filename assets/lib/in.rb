@@ -5,9 +5,9 @@ destination = ARGV.shift
 
 require 'rubygems'
 require 'json'
+require_relative 'common'
 require 'octokit'
 require 'English'
-require_relative 'common'
 
 def uri
   input['source']['uri'] || "https://github.com/#{input['source']['repo']}"

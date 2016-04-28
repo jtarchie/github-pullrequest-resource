@@ -3,8 +3,8 @@
 
 require 'rubygems'
 require 'json'
-require 'octokit'
 require_relative 'common'
+require 'octokit'
 
 repo = Repository.new(name: input['source']['repo'])
 

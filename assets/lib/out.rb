@@ -5,8 +5,8 @@ destination = ARGV.shift
 
 require 'rubygems'
 require 'json'
-require 'octokit'
 require_relative 'common'
+require 'octokit'
 
 raise %(`status` "#{input['params']['status']}" is not supported -- only success, failure, error, or pending) unless %w(success failure error pending).include?(input['params']['status'])
 raise '`path` required in `params`' unless input['params'].key?('path')
