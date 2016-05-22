@@ -76,7 +76,7 @@ Set the status message for `concourse-ci` context on specified pull request.
 
 * `context`: *Optional.* The context on the specified pull request
   (defaults to `status`). Any context will be prepended with `concourse-ci`, so
-  a status of `unit-tests` will appear as `concourse-ci/unit-tests` on Github.
+  a context of `unit-tests` will appear as `concourse-ci/unit-tests` on Github.
 
 ## Example pipeline
 
