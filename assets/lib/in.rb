@@ -30,6 +30,7 @@ Dir.chdir(destination) do
   system("git checkout pr-#{id} 1>&2")
   system("git config --add pullrequest.url #{pr['html_url']} 1>&2")
   system("git config --add pullrequest.id #{pr['number']} 1>&2")
+  system("git config --add pullrequest.branch #{pr['head']['ref']} 1>&2")
 end
 
 puts JSON.generate(version:  { ref: ref, pr: id.to_s },

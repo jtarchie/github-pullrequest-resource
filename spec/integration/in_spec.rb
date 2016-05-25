@@ -23,7 +23,7 @@ describe 'get' do
 
   before do
     proxy.stub('https://api.github.com:443/repos/jtarchie/test/pulls/1')
-         .and_return(json: { html_url: 'http://example.com', number: 1 })
+         .and_return(json: { html_url: 'http://example.com', number: 1, head: { ref: 'foo' } })
 
     git('init -q')
     @ref = commit('init')
@@ -58,6 +58,12 @@ describe 'get' do
 
     value = git('rev-parse --abbrev-ref HEAD', dest_dir)
     expect(value).to eq 'pr-1'
+  end
+
+  it 'sets original branch ref' do
+    get(version: { ref: @ref, pr: '1' }, source: { uri: git_uri, repo: 'jtarchie/test' })
+    value = git('config pullrequest.branch', dest_dir)
+    expect(value).to eq 'foo'
   end
 
   context 'when the git clone fails' do
