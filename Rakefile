@@ -8,7 +8,7 @@ task test: :build do
 end
 
 task :deploy do
-  current_tag = `git tag -l`.split(/\n/).map{|v|v=~/v(\d+)/;$1.to_i}.sort.last
+  current_tag = `git tag -l`.split(/\n/).map { |v| v =~ /v(\d+)/; Regexp.last_match(1).to_i }.sort.last
   next_tag    = current_tag + 1
   puts "Deploying tag #{next_tag}"
   system("git tag v#{next_tag}")
