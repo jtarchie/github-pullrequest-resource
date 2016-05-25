@@ -57,10 +57,10 @@ describe 'get' do
     get(version: { ref: @ref, pr: '1' }, source: { uri: git_uri, repo: 'jtarchie/test' })
 
     value = git('rev-parse --abbrev-ref HEAD', dest_dir)
-    expect(value).to eq 'pr-1'
+    expect(value).to eq 'foo'
   end
 
-  it 'sets original branch ref' do
+  it 'sets config variable to branch name' do
     get(version: { ref: @ref, pr: '1' }, source: { uri: git_uri, repo: 'jtarchie/test' })
     value = git('config pullrequest.branch', dest_dir)
     expect(value).to eq 'foo'
