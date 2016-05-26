@@ -8,11 +8,17 @@ Please checkout our [CI Pipeline](http://ci.passed.fail/pipelines/jtarchie-pullr
 
 ## Deploying to Concourse
 
-In your bosh deployment manifest, add to the `groundcrew.additional_resource_types` with the following:
+You can use the docker image by defining the [resource type](http://concourse.ci/configuring-resource-types.html) in your pipeline YAML.
+
+For example:
 
 ```yaml
-- image: docker:///jtarchie/pr
-  type: pull-request
+
+resource_types:
+- name: pull-request
+  type: docker-image
+  source:
+    repository: jtarchie/pr
 ```
 
 ## Source Configuration
@@ -61,8 +67,17 @@ To ensure that `check` can iterate over all PRs, you must explicitly define an
 
 Clones the repository to the destination, and locks it down to a given ref.
 
-Submodules are initialized and updated recursively.
+Submodules are initialized and updated recursively, there is no option to to disable that, currently.
 
+There is `git config` information set on the repo about the PR, which can be consumed within your tasks.
+
+For example:
+
+```bash
+git config --get pullrequest.url    # returns the URL to the pull request
+git config --get pullrequest.branch # returns the branch name used for the pull request
+git config --get pullrequest.id     # returns the ID number of the PR
+```
 
 ### `out`: Update the status of a pull request
 
@@ -127,15 +142,16 @@ Tests can be run two ways, for local feedback and to see how it will run on the 
 
 1. Local, requires `ruby`
 
-```sh
-gem install bundler
-bundle install
-bundle exec rspec
-```
-2. Container, requires requires `ruby` and `docker`
+  ```sh
+  gem install bundler
+  bundle install
+  bundle exec rspec
+  ```
+  
+1. Container, requires requires `ruby` and `docker`
 
-```sh
-gem install bundler
-bundle install
-rake test
-```
+  ```sh
+  gem install bundler
+  bundle install
+  rake test
+  ```
