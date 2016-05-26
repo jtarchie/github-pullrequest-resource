@@ -98,6 +98,11 @@ Set the status message for `concourse-ci` context on specified pull request.
 This is what I am currently using to test this resource on Concourse.
 
 ```yaml
+resource_types:
+- name: pull-request
+  type: docker-image
+  source:
+    repository: jtarchie/pr
 resources:
 - name: repo
   type: pull-request
