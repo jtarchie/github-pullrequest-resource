@@ -59,7 +59,7 @@ describe 'check' do
       end
 
       context 'and the version is the same as the pull request' do
-        it 'returns nothing' do
+        it 'returns no versions' do
           payload = { version: { ref: 'abcdef', pr: '1' }, source: { repo: 'jtarchie/test' } }
 
           expect(check(payload)).to eq []
@@ -73,12 +73,12 @@ describe 'check' do
              .and_return(json: [{ state: 'pending', context: 'concourse-ci' }])
       end
 
-      it 'returns SHA of the pull request' do
+      it 'returns no versions' do
         expect(check(source: { repo: 'jtarchie/test' }, version: {})).to eq []
       end
 
       context 'and the version is the same as the pull request' do
-        it 'returns nothing' do
+        it 'returns no versions' do
           payload = { version: { ref: 'abcdef', pr: '1' }, source: { repo: 'jtarchie/test' } }
 
           expect(check(payload)).to eq []
