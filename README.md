@@ -88,6 +88,7 @@ Set the status message for `concourse-ci` context on specified pull request.
 * `path`: *Required.* The path of the repository to reference the pull request.
 
 * `status`: *Required.* The status of success, failure, error, or pending.
+  * [`on_success`](https://concourse.ci/on-success-step.html) and [`on_falure`](https://concourse.ci/on-failure-step.html) triggers may be useful for you when you wanted to reflect build result to the PR (see the example below).
 
 * `context`: *Optional.* The context on the specified pull request
   (defaults to `status`). Any context will be prepended with `concourse-ci`, so
@@ -134,11 +135,16 @@ jobs:
       inputs:
       - name: repo
         path: ""
-  - put: repo
-    params:
-      path: repo
-      status: success
-
+    on_success:
+      put: repo
+      params:
+        path: repo
+        status: success
+    on_failure:
+      put: repo
+      params:
+        path: repo
+        status: failure
 ```
 
 ## Tests
@@ -152,7 +158,7 @@ Tests can be run two ways, for local feedback and to see how it will run on the 
   bundle install
   bundle exec rspec
   ```
-  
+
 1. Container, requires requires `ruby` and `docker`
 
   ```sh
