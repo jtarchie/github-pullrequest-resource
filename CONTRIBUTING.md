@@ -12,7 +12,7 @@
 
 * Ensure the PR description clearly describes the problem and solution. Include the relevant issue number if applicable.
 
-* Run the tests! This will give you and us a higher confidence that nothing broke.
+* Write a test for your feature. Run all the tests! This will give you and us a higher confidence that nothing broke.
 
 ## **Do you intend to add a new feature or change an existing one?**
 
