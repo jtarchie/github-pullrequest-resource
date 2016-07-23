@@ -51,6 +51,10 @@ resource_types:
 * `api_endpoint`: *Optional.* If the repository is located on a GitHub Enterprise
   instance you need to specify the base api endpoint (e.g. "https://\<hostname\>/api/v3/").
 
+* `every`: *Optional* If set to `true`, it will override the `check` step so every pull request can be iterated
+through, without relying on a status being on it. This feature should only be used in
+concourse version 1.2.x and higher and the [`version: every`](http://concourse.ci/get-step.html#get-version).
+
 ## Behavior
 
 ### `check`: Check for new pull requests

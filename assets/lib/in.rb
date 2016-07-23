@@ -17,6 +17,8 @@ def ref
   input['version']['ref']
 end
 
+$stderr.puts 'DEPRECATION: Please note that you should update to using `version: every` on your `get` for this resource.'
+
 pr = Octokit.pull_request(input['source']['repo'], input['version']['pr'])
 id = pr['number']
 branch_ref = pr['head']['ref']

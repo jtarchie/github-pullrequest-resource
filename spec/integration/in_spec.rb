@@ -72,4 +72,11 @@ describe 'get' do
       expect(error).to include 'git clone failed'
     end
   end
+
+  context 'when `every` is not defined' do
+    it 'shows a deprecation warning' do
+      _, error = get(version: { ref: @ref, pr: '1' }, source: { uri: git_uri, repo: 'jtarchie/test' })
+      expect(error).to include 'DEPRECATION: Please note that you should update to using `version: every` on your `get` for this resource.'
+    end
+  end
 end
