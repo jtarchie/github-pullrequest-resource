@@ -11,7 +11,7 @@ load_pubkey() {
     eval $(ssh-agent) >/dev/null 2>&1
     trap "kill $SSH_AGENT_PID" 0
 
-    ssh-add $private_key_path >/dev/null 2>&1
+    SSH_ASKPASS=/opt/resource/askpass.sh DISPLAY= ssh-add $private_key_path >/dev/null
 
     mkdir -p ~/.ssh
     cat > ~/.ssh/config <<EOF
@@ -20,4 +20,27 @@ LogLevel quiet
 EOF
     chmod 0600 ~/.ssh/config
   fi
+}
+
+configure_git_ssl_verification() {
+  skip_ssl_verification=$(jq -r '.source.skip_ssl_verification // false' < $1)
+  if [ "$skip_ssl_verification" = "true" ]; then
+    export GIT_SSL_NO_VERIFY=true
+  fi
+}
+
+configure_credentials() {
+  local username=$(jq -r '.source.username // ""' < $1)
+  local password=$(jq -r '.source.password // ""' < $1)
+
+  rm -f $HOME/.netrc
+  if [ "$username" != "" -a "$password" != "" ]; then
+    echo "default login $username password $password" > $HOME/.netrc
+  fi
+}
+
+configure_git_global() {
+  local git_config_payload="$1"
+  eval $(echo "$git_config_payload" | \
+    jq -r ".[] | \"git config --global '\\(.name)' '\\(.value)'; \"")
 }

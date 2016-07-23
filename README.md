@@ -55,6 +55,23 @@ resource_types:
 through, without relying on a status being on it. This feature should only be used in
 concourse version 1.2.x and higher and the [`version: every`](http://concourse.ci/get-step.html#get-version).
 
+* `username`: *Optional.* Username for HTTP(S) auth when pulling/pushing.
+  This is needed when only HTTP/HTTPS protocol for git is available (which does not support private key auth)
+  and auth is required.
+
+* `password`: *Optional.* Password for HTTP(S) auth when pulling/pushing.
+
+* `skip_ssl_verification`: *Optional.* Skips git ssl verification by exporting
+  `GIT_SSL_NO_VERIFY=true`.
+
+* `git_config`: *Optional*. If specified as (list of pairs `name` and `value`)
+  it will configure git global options, setting each name with each value.
+
+  This can be useful to set options like `credential.helper` or similar.
+
+  See the [`git-config(1)` manual page](https://www.kernel.org/pub/software/scm/git/docs/git-config.html)
+  for more information and documentation of existing git options.
+
 ## Behavior
 
 ### `check`: Check for new pull requests
