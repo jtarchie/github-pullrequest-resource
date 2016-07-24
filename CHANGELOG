@@ -1,3 +1,14 @@
+# v13 @ 7/23/2016
+
+* The `every` flag can be set on `source`. This removes the need to always set a status on
+a PR, which helps with the iteration. Consider this *beta*, please comment on this [issue](https://github.com/jtarchie/pullrequest-resource/issues/15).
+
+* Pulled [git resource](https://github.com/concourse/git-resource) configuration steps for `in`.
+  * username - Username for HTTP(S)
+	* password - Password for HTTP(S)
+	* skip_ssl_verification - Skips git ssl verification
+	* git_config - key value pairs for `git config`
+
 # v12 @ 5/25/2016
 
 * The branch of the checked out PR will be the original name of from the PR. (Thomas and Benjamin)
