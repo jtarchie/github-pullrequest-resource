@@ -19,6 +19,19 @@ describe 'check' do
     end
   end
 
+  context 'when targetting a base branch other than master' do
+    must_stub_query_params
+
+    before do
+      proxy.stub('https://api.github.com:443/repos/jtarchie/test/pulls?base=my-base-branch&direction=desc&per_page=100&sort=updated&state=open')
+           .and_return(json: [{ number: 1, head: { sha: 'abcdef' } }])
+    end
+
+    it 'retrieves pull requests for the specified base branch' do
+      expect(check(source: { repo: 'jtarchie/test', base: 'my-base-branch' })).to eq [{ 'ref' => 'abcdef', 'pr' => '1' }]
+    end
+  end
+
   context 'with check for `version: every`' do
     context 'when there are no pull requests' do
       before do
@@ -43,8 +56,10 @@ describe 'check' do
     end
 
     context 'when there is an open pull request' do
+      must_stub_query_params
+
       before do
-        proxy.stub('https://api.github.com:443/repos/jtarchie/test/pulls')
+        proxy.stub('https://api.github.com:443/repos/jtarchie/test/pulls?direction=desc&per_page=100&sort=updated&state=open')
              .and_return(json: [{ number: 1, head: { sha: 'abcdef' } }])
       end
 

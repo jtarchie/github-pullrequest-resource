@@ -71,3 +71,12 @@ def with_resource
   FileUtils.cp_r(dest_dir, File.join(tmp_dir, 'resource'))
   yield(tmp_dir)
 end
+
+def must_stub_query_params
+  around do |example|
+    old_strip_params = Billy.config.strip_query_params
+    Billy.config.strip_query_params = false
+    example.run
+    Billy.config.strip_query_params = old_strip_params
+  end
+end

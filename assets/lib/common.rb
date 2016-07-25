@@ -79,8 +79,8 @@ class Repository
     @name = name
   end
 
-  def pull_requests
-    @pull_requests ||= Octokit.pulls(name, state: 'open', sort: 'updated', direction: 'desc').map do |pr|
+  def pull_requests(args = {})
+    @pull_requests ||= Octokit.pulls(name, pulls_options(args)).map do |pr|
       PullRequest.new(repo: self, pr: pr)
     end
   end
@@ -90,8 +90,8 @@ class Repository
     PullRequest.new(repo: self, pr: pr)
   end
 
-  def next_pull_request(id: nil, sha: nil)
-    return if pull_requests.empty?
+  def next_pull_request(id: nil, sha: nil, base: nil)
+    return if pull_requests(base: base).empty?
 
     if id && sha
       current = pull_requests.find { |pr| pr.equals?(id: id, sha: sha) }
@@ -101,6 +101,16 @@ class Repository
     pull_requests.find do |pr|
       pr != current && pr.ready?
     end
+  end
+
+  private
+
+  def pulls_options(base: nil)
+    base ? default_opts.merge(base: base) : default_opts
+  end
+
+  def default_opts
+    { state: 'open', sort: 'updated', direction: 'desc' }
   end
 end
 
