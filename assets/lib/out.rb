@@ -37,4 +37,12 @@ Status.new(
   context: context
 ).create!
 
+if input['params']['comment']
+  comment_path = File.join(destination, input['params']['comment'])
+  raise %(`path` "#{input['params']['comment']}" does not exist) unless File.exist?(comment_path)
+
+  comment = File.read(comment_path, encoding: Encoding::UTF_8)
+  Octokit.add_comment(input['source']['repo'], id, comment)
+end
+
 json!(version: version, metadata: metadata)
