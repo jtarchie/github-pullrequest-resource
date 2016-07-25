@@ -113,6 +113,8 @@ Set the status message for `concourse-ci` context on specified pull request.
   (defaults to `status`). Any context will be prepended with `concourse-ci`, so
   a context of `unit-tests` will appear as `concourse-ci/unit-tests` on Github.
 
+* `comment`: *Optional.* The file path of the comment message. Comment owner is same with the owner of `access_token`.
+
 ## Example pipeline
 
 This is what I am currently using to test this resource on Concourse.
