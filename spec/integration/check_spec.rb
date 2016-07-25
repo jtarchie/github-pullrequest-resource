@@ -34,9 +34,6 @@ describe 'check' do
         it 'returns no versions' do
           payload = { version: { ref: '1' }, source: { repo: 'jtarchie/test', every: true } }
 
-          proxy.stub('https://api.github.com:443/repos/jtarchie/test/pulls/1')
-               .and_return(json: {})
-
           expect(check(payload)).to eq []
         end
       end
@@ -95,9 +92,6 @@ describe 'check' do
       context 'when there is a last known version' do
         it 'returns no versions' do
           payload = { version: { ref: '1' }, source: { repo: 'jtarchie/test' } }
-
-          proxy.stub('https://api.github.com:443/repos/jtarchie/test/pulls/1')
-               .and_return(json: {})
 
           expect(check(payload)).to eq []
         end
