@@ -15,6 +15,10 @@ def ref
   input['version']['ref']
 end
 
+def remote_ref
+  input['source']['fetch_merge'] ? 'merge' : 'head'
+end
+
 $stderr.puts 'DEPRECATION: Please note that you should update to using `version: every` on your `get` for this resource.'
 
 pr = Octokit.pull_request(input['source']['repo'], input['version']['pr'])
@@ -27,7 +31,7 @@ raise 'git clone failed' unless $CHILD_STATUS.exitstatus == 0
 
 Dir.chdir(destination) do
   system('git submodule update --init --recursive 1>&2')
-  system("git fetch -q origin pull/#{id}/head:#{branch_ref} 1>&2")
+  raise 'git clone failed' unless system("git fetch -q origin pull/#{id}/#{remote_ref}:#{branch_ref} 1>&2")
   system("git checkout #{branch_ref} 1>&2")
   system("git config --add pullrequest.url #{pr['html_url']} 1>&2")
   system("git config --add pullrequest.id #{pr['number']} 1>&2")

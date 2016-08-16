@@ -59,6 +59,20 @@ describe 'get' do
     expect(value).to eq 'foo'
   end
 
+  it 'checks out as a branch when fetch_merge is false' do
+    get(version: { ref: @ref, pr: '1' }, source: { uri: git_uri, fetch_merge: false, repo: 'jtarchie/test' })
+
+    value = git('rev-parse --abbrev-ref HEAD', dest_dir)
+    expect(value).to eq 'foo'
+  end
+
+  it 'checks out as a merged branch when fetch_merge is true' do
+    get(version: { ref: @ref, pr: '1' }, source: { uri: git_uri, fetch_merge: true, repo: 'jtarchie/test' })
+
+    value = git('rev-parse --abbrev-ref HEAD', dest_dir)
+    expect(value).to eq 'master'
+  end
+
   it 'sets config variable to branch name' do
     get(version: { ref: @ref, pr: '1' }, source: { uri: git_uri, repo: 'jtarchie/test' })
     value = git('config pullrequest.branch', dest_dir)
