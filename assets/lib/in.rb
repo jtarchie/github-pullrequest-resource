@@ -25,6 +25,8 @@ pr = Octokit.pull_request(input['source']['repo'], input['version']['pr'])
 id = pr['number']
 branch_ref = pr['head']['ref']
 
+raise 'PR has merge conflicts' if pr['mergeable'] == false && input['source']['fetch_merge']
+
 system("git clone --depth 1 #{uri} #{destination} 1>&2")
 
 raise 'git clone failed' unless $CHILD_STATUS.exitstatus == 0
