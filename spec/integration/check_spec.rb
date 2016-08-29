@@ -86,8 +86,8 @@ describe 'check' do
 
       it 'returns all the pull request SHAs' do
         expect(check(source: { repo: 'jtarchie/test', every: true }, version: {})).to eq [
-          { 'ref' => 'zyxwvu', 'pr' => '2' },
-          { 'ref' => 'abcdef', 'pr' => '1' }
+          { 'ref' => 'abcdef', 'pr' => '1' },
+          { 'ref' => 'zyxwvu', 'pr' => '2' }
         ]
       end
     end
