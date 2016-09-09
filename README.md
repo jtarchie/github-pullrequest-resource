@@ -127,7 +127,7 @@ resources:
 - name: repo
   type: pull-request
   source:
-    access_token: acecss_token
+    access_token: access_token
     private_key: |
       -----BEGIN RSA PRIVATE KEY-----
       My private key.
