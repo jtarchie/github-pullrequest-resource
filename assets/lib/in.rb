@@ -29,7 +29,7 @@ raise 'PR has merge conflicts' if pr['mergeable'] == false && input['source']['f
 
 system("git clone --depth 1 #{uri} #{destination} 1>&2")
 
-raise 'git clone failed' unless $CHILD_STATUS.exitstatus == 0
+raise 'git clone failed' unless $CHILD_STATUS.exitstatus.zero?
 
 Dir.chdir(destination) do
   system('git submodule update --init --recursive 1>&2')
