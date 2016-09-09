@@ -70,6 +70,23 @@ describe 'out' do
                              ])
       end
 
+      it 'set into success mode with posting a comment' do
+        File.open(File.join(dest_dir, 'comment'), 'w+') do |f|
+          f.write('message')
+        end
+        proxy.stub("https://api.github.com:443/repos/jtarchie/test/statuses/#{@sha}", method: :post)
+        proxy.stub("https://api.github.com:443/repos/jtarchie/test/issues/1/comments", method: :post)
+             .and_return(json: { id: 1 })
+
+        output, error = put(params: { status: 'success', path: 'resource', comment: 'resource/comment' }, source: { repo: 'jtarchie/test' })
+        expect(output).to eq('version'  => { 'ref' => @sha, 'pr' => '1' },
+                             'metadata' => [
+                               { 'name' => 'status', 'value' => 'success' },
+                               { 'name' => 'url', 'value' => 'http://example.com' }
+                             ])
+      end
+
+
       context 'with bad params' do
         it 'raises an error when path is missing' do
           _, error = put(params: { status: 'pending' }, source: { repo: 'jtarchie/test' })
