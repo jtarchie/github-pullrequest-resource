@@ -58,6 +58,33 @@ describe 'out' do
                        })
     end
 
+    context 'when setting a status with a comment' do
+      before do
+        File.write(File.join(dest_dir, 'comment'), 'comment message')
+      end
+
+      it 'posts a comment to the PR\'s SHA' do
+        proxy.stub("https://api.github.com:443/repos/jtarchie/test/statuses/#{@sha}", method: :post)
+        proxy.stub('https://api.github.com:443/repos/jtarchie/test/issues/1/comments', method: :post)
+             .and_return(json: { id: 1 })
+
+        output, = put(params: { status: 'success', path: 'resource', comment: 'resource/comment' }, source: { repo: 'jtarchie/test' })
+        expect(output).to eq('version'  => { 'ref' => @sha, 'pr' => '1' },
+                             'metadata' => [
+                               { 'name' => 'status', 'value' => 'success' },
+                               { 'name' => 'url', 'value' => 'http://example.com' }
+                             ])
+      end
+
+      context 'when the message file does not exist' do
+        it 'returns a helpful error message' do
+          _, error = put(params: { status: 'success', path: 'resource', comment: 'resource/comment-doesnt-exist' }, source: { repo: 'jtarchie/test' })
+
+          expect(error).to include '`comment` "resource/comment-doesnt-exist" does not exist'
+        end
+      end
+    end
+
     context 'when acquiring a pull request' do
       it 'sets into pending mode' do
         proxy.stub("https://api.github.com:443/repos/jtarchie/test/statuses/#{@sha}", method: :post)
@@ -69,23 +96,6 @@ describe 'out' do
                                { 'name' => 'url', 'value' => 'http://example.com' }
                              ])
       end
-
-      it 'set into success mode with posting a comment' do
-        File.open(File.join(dest_dir, 'comment'), 'w+') do |f|
-          f.write('message')
-        end
-        proxy.stub("https://api.github.com:443/repos/jtarchie/test/statuses/#{@sha}", method: :post)
-        proxy.stub("https://api.github.com:443/repos/jtarchie/test/issues/1/comments", method: :post)
-             .and_return(json: { id: 1 })
-
-        output, error = put(params: { status: 'success', path: 'resource', comment: 'resource/comment' }, source: { repo: 'jtarchie/test' })
-        expect(output).to eq('version'  => { 'ref' => @sha, 'pr' => '1' },
-                             'metadata' => [
-                               { 'name' => 'status', 'value' => 'success' },
-                               { 'name' => 'url', 'value' => 'http://example.com' }
-                             ])
-      end
-
 
       context 'with bad params' do
         it 'raises an error when path is missing' do

@@ -12,6 +12,11 @@ raise '`path` required in `params`' unless input['params'].key?('path')
 path = File.join(destination, input['params']['path'])
 raise %(`path` "#{input['params']['path']}" does not exist) unless File.exist?(path)
 
+if input['params'].key?('comment')
+  comment_path = File.join(destination, input['params']['comment'])
+  raise %(`comment` "#{input['params']['comment']}" does not exist) unless File.exist?(comment_path)
+end
+
 id  = Dir.chdir(path) { `git config --get pullrequest.id`.chomp }
 sha = Dir.chdir(path) { `git rev-parse HEAD`.chomp }
 
@@ -39,8 +44,6 @@ Status.new(
 
 if input['params']['comment']
   comment_path = File.join(destination, input['params']['comment'])
-  raise %(`path` "#{input['params']['comment']}" does not exist) unless File.exist?(comment_path)
-
   comment = File.read(comment_path, encoding: Encoding::UTF_8)
   Octokit.add_comment(input['source']['repo'], id, comment)
 end
