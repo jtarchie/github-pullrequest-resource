@@ -1,3 +1,9 @@
+# v14 @ 9/8/2016
+
+* Create a comment on a pull request. [PR #24](https://github.com/jtarchie/pullrequest-resource/pull/24)
+* Only iterate over pull requests that were made against a specific branch. [PR #25](https://github.com/jtarchie/pullrequest-resource/pull/25)
+* Pull in the merged version of the pull request. This is useful to make sure it is mergeable with the current branch. [PR #29](https://github.com/jtarchie/pullrequest-resource/pull/29)
+
 # v13 @ 7/23/2016
 
 * The `every` flag can be set on `source`. This removes the need to always set a status on
