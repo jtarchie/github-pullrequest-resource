@@ -89,7 +89,7 @@ describe 'get' do
         proxy.stub('https://api.github.com:443/repos/jtarchie/test/pulls/1')
              .and_return(json: { html_url: 'http://example.com', number: 1, head: { ref: 'foo' }, mergeable: true })
 
-        get(version: { ref: @ref, pr: '1' }, source: { uri: git_uri, fetch_merge: false, repo: 'jtarchie/test' })
+        get(version: { ref: @ref, pr: '1' }, source: { uri: git_uri, repo: 'jtarchie/test' }, params: { fetch_merge: false })
 
         value = git('rev-parse --abbrev-ref HEAD', dest_dir)
         expect(value).to eq 'foo'
@@ -101,7 +101,7 @@ describe 'get' do
         proxy.stub('https://api.github.com:443/repos/jtarchie/test/pulls/1')
              .and_return(json: { html_url: 'http://example.com', number: 1, head: { ref: 'foo' }, mergeable: true })
 
-        get(version: { ref: @ref, pr: '1' }, source: { uri: git_uri, fetch_merge: true, repo: 'jtarchie/test' })
+        get(version: { ref: @ref, pr: '1' }, source: { uri: git_uri, repo: 'jtarchie/test' }, params: { fetch_merge: true })
 
         value = git('rev-parse --abbrev-ref HEAD', dest_dir)
         expect(value).to eq 'master'
@@ -115,7 +115,7 @@ describe 'get' do
         proxy.stub('https://api.github.com:443/repos/jtarchie/test/pulls/1')
              .and_return(json: { html_url: 'http://example.com', number: 1, head: { ref: 'foo' }, mergeable: false })
 
-        _, error = get(version: { ref: @ref, pr: '1' }, source: { uri: git_uri, fetch_merge: true, repo: 'jtarchie/test' })
+        _, error = get(version: { ref: @ref, pr: '1' }, source: { uri: git_uri, repo: 'jtarchie/test' }, params: { fetch_merge: true })
         expect(error).to include 'PR has merge conflicts'
       end
     end

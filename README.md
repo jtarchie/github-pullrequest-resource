@@ -70,10 +70,6 @@ concourse version 1.2.x and higher and the [`version: every`](http://concourse.c
   See the [`git-config(1)` manual page](https://www.kernel.org/pub/software/scm/git/docs/git-config.html)
   for more information and documentation of existing git options.
 
-* `fetch_merge`: *Optional*. If set to `true`, it will fetch what the result of PR
-  would be otherwise it will fetch the origin branch.
-  Defaluts to `false`.
-
 ## Behavior
 
 ### `check`: Check for new pull requests
@@ -101,6 +97,12 @@ git config --get pullrequest.url    # returns the URL to the pull request
 git config --get pullrequest.branch # returns the branch name used for the pull request
 git config --get pullrequest.id     # returns the ID number of the PR
 ```
+
+#### Parameters
+
+* `fetch_merge`: *Optional*. If set to `true`, it will fetch what the result of PR
+  would be otherwise it will fetch the origin branch.
+  Defaults to `false`.
 
 ### `out`: Update the status of a pull request
 

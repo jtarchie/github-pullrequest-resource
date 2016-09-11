@@ -118,6 +118,10 @@ def input
   @input ||= JSON.parse(ARGF.read)
 end
 
+def params
+  @params ||= input['params'] || {}
+end
+
 def json!(payload)
   puts JSON.generate(payload)
   exit
