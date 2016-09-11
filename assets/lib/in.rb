@@ -23,7 +23,7 @@ $stderr.puts 'DEPRECATION: Please note that you should update to using `version:
 
 pr = Octokit.pull_request(input['source']['repo'], input['version']['pr'])
 id = pr['number']
-branch_ref = pr['head']['ref']
+branch_ref = "pr-#{pr['head']['ref']}"
 
 raise 'PR has merge conflicts' if pr['mergeable'] == false && params['fetch_merge']
 
@@ -37,7 +37,7 @@ Dir.chdir(destination) do
   system("git checkout #{branch_ref} 1>&2")
   system("git config --add pullrequest.url #{pr['html_url']} 1>&2")
   system("git config --add pullrequest.id #{pr['number']} 1>&2")
-  system("git config --add pullrequest.branch #{branch_ref} 1>&2")
+  system("git config --add pullrequest.branch #{pr['head']['ref']} 1>&2")
 end
 
 puts JSON.generate(version:  { ref: ref, pr: id.to_s },

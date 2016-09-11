@@ -26,6 +26,7 @@ describe 'get' do
     commit('second')
 
     git("update-ref refs/pull/1/head #{@ref}")
+    git("update-ref refs/pull/1/merge #{@ref}")
   end
 
   context 'for every PR that is checked out' do
@@ -55,11 +56,11 @@ describe 'get' do
       expect(value).to eq 'http://example.com'
     end
 
-    it 'checks out as a branch' do
+    it 'checks out as a branch with a `pr-` prefix' do
       get(version: { ref: @ref, pr: '1' }, source: { uri: git_uri, repo: 'jtarchie/test' })
 
       value = git('rev-parse --abbrev-ref HEAD', dest_dir)
-      expect(value).to eq 'foo'
+      expect(value).to eq 'pr-foo'
     end
 
     it 'sets config variable to branch name' do
@@ -92,7 +93,15 @@ describe 'get' do
         get(version: { ref: @ref, pr: '1' }, source: { uri: git_uri, repo: 'jtarchie/test' }, params: { fetch_merge: false })
 
         value = git('rev-parse --abbrev-ref HEAD', dest_dir)
-        expect(value).to eq 'foo'
+        expect(value).to eq 'pr-foo'
+      end
+
+      it 'does not fail cloning' do
+        proxy.stub('https://api.github.com:443/repos/jtarchie/test/pulls/1')
+             .and_return(json: { html_url: 'http://example.com', number: 1, head: { ref: 'foo' }, mergeable: true })
+
+        _, error = get(version: { ref: @ref, pr: '1' }, source: { uri: git_uri, repo: 'jtarchie/test' }, params: { fetch_merge: false })
+        expect(error).not_to include 'git clone failed'
       end
     end
 
@@ -104,7 +113,15 @@ describe 'get' do
         get(version: { ref: @ref, pr: '1' }, source: { uri: git_uri, repo: 'jtarchie/test' }, params: { fetch_merge: true })
 
         value = git('rev-parse --abbrev-ref HEAD', dest_dir)
-        expect(value).to eq 'master'
+        expect(value).to eq 'pr-foo'
+      end
+
+      it 'does not fail cloning' do
+        proxy.stub('https://api.github.com:443/repos/jtarchie/test/pulls/1')
+             .and_return(json: { html_url: 'http://example.com', number: 1, head: { ref: 'foo' }, mergeable: true })
+
+        _, error = get(version: { ref: @ref, pr: '1' }, source: { uri: git_uri, repo: 'jtarchie/test' }, params: { fetch_merge: true })
+        expect(error).not_to include 'git clone failed'
       end
     end
   end

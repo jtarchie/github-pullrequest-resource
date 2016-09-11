@@ -80,10 +80,10 @@ describe 'check' do
 
       before do
         proxy.stub('https://api.github.com:443/repos/jtarchie/test/pulls?direction=asc&per_page=100&sort=updated&state=open')
-          .and_return(json: [
-        { number: 1, head: { sha: 'abcdef' } },
-        { number: 2, head: { sha: 'zyxwvu' } }
-        ])
+             .and_return(json: [
+                           { number: 1, head: { sha: 'abcdef' } },
+                           { number: 2, head: { sha: 'zyxwvu' } }
+                         ])
       end
 
       it 'returns all PRs oldest to newest last' do
