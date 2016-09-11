@@ -23,7 +23,7 @@ describe 'check' do
     must_stub_query_params
 
     before do
-      proxy.stub('https://api.github.com:443/repos/jtarchie/test/pulls?base=my-base-branch&direction=desc&per_page=100&sort=updated&state=open')
+      proxy.stub('https://api.github.com:443/repos/jtarchie/test/pulls?base=my-base-branch&direction=asc&per_page=100&sort=updated&state=open')
            .and_return(json: [{ number: 1, head: { sha: 'abcdef' } }])
     end
 
@@ -56,7 +56,7 @@ describe 'check' do
       must_stub_query_params
 
       before do
-        proxy.stub('https://api.github.com:443/repos/jtarchie/test/pulls?direction=desc&per_page=100&sort=updated&state=open')
+        proxy.stub('https://api.github.com:443/repos/jtarchie/test/pulls?direction=asc&per_page=100&sort=updated&state=open')
              .and_return(json: [{ number: 1, head: { sha: 'abcdef' } }])
       end
 
@@ -76,18 +76,20 @@ describe 'check' do
     end
 
     context 'when there is more than one open pull request' do
+      must_stub_query_params
+
       before do
-        proxy.stub('https://api.github.com:443/repos/jtarchie/test/pulls')
-             .and_return(json: [
-                           { number: 2, head: { sha: 'zyxwvu' } },
-                           { number: 1, head: { sha: 'abcdef' } }
-                         ])
+        proxy.stub('https://api.github.com:443/repos/jtarchie/test/pulls?direction=asc&per_page=100&sort=updated&state=open')
+          .and_return(json: [
+        { number: 1, head: { sha: 'abcdef' } },
+        { number: 2, head: { sha: 'zyxwvu' } }
+        ])
       end
 
-      it 'returns all the pull request SHAs' do
+      it 'returns all PRs oldest to newest last' do
         expect(check(source: { repo: 'jtarchie/test', every: true }, version: {})).to eq [
-          { 'ref' => 'zyxwvu', 'pr' => '2' },
-          { 'ref' => 'abcdef', 'pr' => '1' }
+          { 'ref' => 'abcdef', 'pr' => '1' },
+          { 'ref' => 'zyxwvu', 'pr' => '2' }
         ]
       end
     end

@@ -110,7 +110,7 @@ class Repository
   end
 
   def default_opts
-    { state: 'open', sort: 'updated', direction: 'desc' }
+    { state: 'open', sort: 'updated', direction: 'asc' }
   end
 end
 
