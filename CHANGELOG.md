@@ -1,3 +1,8 @@
+# v15 @ 9/11/2016
+
+* Resolve issue where `every` was returning PRs incorrect order. [Issue #27](https://github.com/jtarchie/pullrequest-resource/issues/27)
+* Resolve issue when a PR made on the `master` branch could not be checked out. [Issue #33](https://github.com/jtarchie/pullrequest-resource/issues/33)
+
 # v14 @ 9/8/2016
 
 * Create a comment on a pull request. [PR #24](https://github.com/jtarchie/pullrequest-resource/pull/24)
