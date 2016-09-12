@@ -9,7 +9,7 @@ repo = Repository.new(name: input['source']['repo'])
 input['version'] ||= {}
 
 if input['source']['every']
-  json!(repo.pull_requests.map(&:as_json))
+  json!(repo.pull_requests.map(&:as_json).reverse)
 else
   next_pull_request = repo.next_pull_request(
     id: input['version']['pr'],
