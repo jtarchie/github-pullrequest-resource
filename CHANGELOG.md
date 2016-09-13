@@ -1,3 +1,7 @@
+# v16 @ 9/13/2016
+
+* Fix issue where `git submodule` was not being called on the PR branch
+
 # v15 @ 9/11/2016
 
 * Resolve issue where `every` was returning PRs incorrect order. [Issue #27](https://github.com/jtarchie/pullrequest-resource/issues/27)
