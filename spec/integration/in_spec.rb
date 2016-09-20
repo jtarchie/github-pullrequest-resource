@@ -77,8 +77,15 @@ describe 'get' do
     end
 
     context 'when `every` is not defined' do
-      it 'shows a deprecation warning' do
+      it 'skips the deprecation warning' do
         _, error = get(version: { ref: @ref, pr: '1' }, source: { uri: git_uri, repo: 'jtarchie/test' })
+        expect(error).not_to include 'DEPRECATION: Please note that you should update to using `version: every` on your `get` for this resource.'
+      end
+    end
+
+    context 'when `every` is defined' do
+      it 'shows a deprecation warning' do
+        _, error = get(version: { ref: @ref, pr: '1' }, source: { uri: git_uri, repo: 'jtarchie/test', every: true })
         expect(error).to include 'DEPRECATION: Please note that you should update to using `version: every` on your `get` for this resource.'
       end
     end

@@ -19,7 +19,9 @@ def remote_ref
   params['fetch_merge'] ? 'merge' : 'head'
 end
 
-$stderr.puts 'DEPRECATION: Please note that you should update to using `version: every` on your `get` for this resource.'
+if input['source']['every']
+  $stderr.puts 'DEPRECATION: Please note that you should update to using `version: every` on your `get` for this resource.'
+end
 
 pr = Octokit.pull_request(input['source']['repo'], input['version']['pr'])
 id = pr['number']
