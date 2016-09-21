@@ -31,6 +31,9 @@ resource_types:
 * `uri`: *Optional.* The URI to the github repo. By default, it assumes
   https://github.com/`repo`.
 
+* `base`: *Optional.* When set, will only pull PRs made against a specific branch. The
+  default behaviour is any branch.
+
 * `base_url`: *Optional* The base URL for the Concourse deployment, used for
   linking to builds. On newer versions of Concourse ( >= v0.71.0) , the resource will
   automatically sets the URL.
