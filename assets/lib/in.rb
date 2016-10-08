@@ -19,6 +19,10 @@ def remote_ref
   params['fetch_merge'] ? 'merge' : 'head'
 end
 
+def depth
+  params['fetch_deep'] ? '' : '--depth 1'
+end
+
 if input['source']['every']
   $stderr.puts 'DEPRECATION: Please note that you should update to using `version: every` on your `get` for this resource.'
 end
@@ -29,12 +33,12 @@ branch_ref = "pr-#{pr['head']['ref']}"
 
 raise 'PR has merge conflicts' if pr['mergeable'] == false && params['fetch_merge']
 
-system("git clone --depth 1 #{uri} #{destination} 1>&2")
+system("git clone #{depth} #{uri} #{destination} 1>&2")
 
 raise 'git clone failed' unless $CHILD_STATUS.exitstatus.zero?
 
 Dir.chdir(destination) do
-  raise 'git clone failed' unless system("git fetch -q origin pull/#{id}/#{remote_ref}:#{branch_ref} 1>&2")
+  raise 'git clone failed' unless system("git fetch --tags -q origin pull/#{id}/#{remote_ref}:#{branch_ref} 1>&2")
   system("git checkout #{branch_ref} 1>&2")
   system('git submodule update --init --recursive 1>&2')
   system("git config --add pullrequest.url #{pr['html_url']} 1>&2")
