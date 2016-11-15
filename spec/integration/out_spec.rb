@@ -2,6 +2,8 @@ require 'spec_helper'
 require 'fileutils'
 
 describe 'out' do
+  include CliIntegration
+
   let(:proxy) { Billy::Proxy.new }
   let(:dest_dir) { Dir.mktmpdir }
 
@@ -28,6 +30,7 @@ describe 'out' do
 
   before do
     git('init -q')
+
     @sha = commit('test commit')
 
     proxy.stub("https://api.github.com:443/repos/jtarchie/test/statuses/#{@sha}")

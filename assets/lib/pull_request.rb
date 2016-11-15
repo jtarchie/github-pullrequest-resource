@@ -15,7 +15,11 @@ class PullRequest
   end
 
   def to_json(*)
-    { ref: sha, pr: id.to_s }.to_json
+    as_json.to_json
+  end
+
+  def as_json
+    { 'ref' => sha, 'pr' => id.to_s }
   end
 
   def id

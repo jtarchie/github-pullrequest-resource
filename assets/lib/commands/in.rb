@@ -29,16 +29,19 @@ module Commands
 
       Dir.chdir(destination) do
         raise 'git clone failed' unless system("git fetch -q origin pull/#{id}/#{remote_ref}:#{branch_ref} 1>&2")
-        system("git checkout #{branch_ref} 1>&2")
-        system('git submodule update --init --recursive 1>&2')
-        system("git config --add pullrequest.url #{pr['html_url']} 1>&2")
-        system("git config --add pullrequest.id #{pr['number']} 1>&2")
-        system("git config --add pullrequest.branch #{pr['head']['ref']} 1>&2")
+
+        system <<-BASH
+          git checkout #{branch_ref} 1>&2
+          git submodule update --init --recursive 1>&2
+          git config --add pullrequest.url #{pr['html_url']} 1>&2
+          git config --add pullrequest.id #{pr['number']} 1>&2
+          git config --add pullrequest.branch #{pr['head']['ref']} 1>&2
+        BASH
       end
 
       {
-        version:  { ref: ref, pr: id.to_s },
-        metadata: [{ name: 'url', value: pr['html_url'] }]
+        'version' =>  { 'ref' => ref, 'pr' => id.to_s },
+        'metadata' => [{ 'name' => 'url', 'value' => pr['html_url'] }]
       }
     end
 
@@ -65,7 +68,7 @@ module Commands
     end
 
     def deprecation_warning!
-      if input['source']['every']
+      unless input['source']['every']
         $stderr.puts 'DEPRECATION: Please note that you should update to using `version: every` on your `get` for this resource.'
       end
     end

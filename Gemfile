@@ -12,4 +12,5 @@ end
 group :test do
   gem 'rspec'
   gem 'puffing-billy'
+  gem 'webmock'
 end
