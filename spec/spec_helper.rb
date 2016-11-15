@@ -1,4 +1,3 @@
-
 require_relative 'support/proxy'
 require_relative 'support/cli'
 

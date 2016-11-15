@@ -16,4 +16,4 @@ configure_credentials $payload
 git_config_payload=$(jq -r '.source.git_config // []' < $payload)
 configure_git_global "${git_config_payload}"
 
-$(dirname $0)/lib/in.rb $1 >&3 < $payload
+$(dirname $0)/lib/commands/in.rb $1 >&3 < $payload

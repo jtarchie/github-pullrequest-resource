@@ -8,4 +8,4 @@ exec 1>&2 # redirect all output to stderr for logging
 payload=$(mktemp $TMPDIR/pullrequest-resource.XXXXXX)
 cat > $payload <&0
 
-$(dirname $0)/lib/check.rb $1 >&3 < $payload
+$(dirname $0)/lib/commands/check.rb $1 >&3 < $payload

@@ -1,4 +1,4 @@
-FROM jtarchie/pr 
+FROM jtarchie/pr
 
 RUN apk add --update \
     ruby-bundler \
@@ -9,5 +9,5 @@ RUN apk add --update \
 
 ADD / /opt/resource-tests/
 RUN cd /opt/resource-tests/ && \
-    bundle && \
+    bundle -j4 && \
     rspec

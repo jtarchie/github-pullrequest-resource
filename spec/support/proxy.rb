@@ -11,7 +11,7 @@ module StubCacheHandler
   def handle_request(method, url, headers, body)
     if response = super
       Billy::Cache.instance.store(method.downcase, url, headers, body, response[:headers], response[:status], response[:content])
-      return response
+      response
     end
   end
 end
