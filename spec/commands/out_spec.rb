@@ -3,7 +3,7 @@ require 'tmpdir'
 require 'webmock/rspec'
 require_relative '../../assets/lib/commands/out'
 
-describe 'out' do
+describe Commands::Out do
   let(:dest_dir) { Dir.mktmpdir }
 
   def git(cmd, dir = dest_dir)
