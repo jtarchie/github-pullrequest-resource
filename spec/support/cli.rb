@@ -13,9 +13,7 @@ module CliIntegration
     path = ['./assets/in', '/opt/resource/in'].find { |p| File.exist? p }
     payload[:source][:no_ssl_verify] = true
 
-    output, error, = with_resource do |_dir|
-      Open3.capture3("echo '#{JSON.generate(payload)}' | env http_proxy=#{proxy.url} #{path} #{dest_dir}")
-    end
+    output, error, = Open3.capture3("echo '#{JSON.generate(payload)}' | env http_proxy=#{proxy.url} #{path} #{dest_dir}")
 
     response = begin
                  JSON.parse(output)
@@ -29,9 +27,10 @@ module CliIntegration
     path = ['./assets/out', '/opt/resource/out'].find { |p| File.exist? p }
     payload[:source][:no_ssl_verify] = true
 
-    output, error, = with_resource do |dir|
-      Open3.capture3("echo '#{JSON.generate(payload)}' | env http_proxy=#{proxy.url} #{path} #{dir}")
-    end
+    resource_dir = Dir.mktmpdir
+    FileUtils.cp_r(dest_dir, File.join(resource_dir, 'resource'))
+
+    output, error, = Open3.capture3("echo '#{JSON.generate(payload)}' | env http_proxy=#{proxy.url} #{path} #{resource_dir}")
 
     response = begin
                  JSON.parse(output)

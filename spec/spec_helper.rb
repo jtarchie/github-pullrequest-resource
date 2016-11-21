@@ -11,12 +11,6 @@ RSpec.configure do |config|
   end
 end
 
-def with_resource
-  tmp_dir = Dir.mktmpdir
-  FileUtils.cp_r(dest_dir, File.join(tmp_dir, 'resource'))
-  yield(tmp_dir)
-end
-
 def must_stub_query_params
   around do |example|
     old_strip_params = Billy.config.strip_query_params

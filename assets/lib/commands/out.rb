@@ -31,13 +31,13 @@ module Commands
 
       repo = Repository.new(name: input['source']['repo'])
 
-      metadata = [{ name: 'status', value: params['status'] }]
+      metadata = [{ 'name' => 'status', 'value' => params['status'] }]
       if id.empty?
-        version = { ref: sha }
+        version = { 'ref' => sha }
       else
         pr = repo.pull_request(id: id)
-        metadata << { name: 'url', value: pr.url }
-        version = { pr: id, ref: sha }
+        metadata << { 'name' => 'url', 'value' => pr.url }
+        version = { 'pr' => id, 'ref' => sha }
       end
 
       atc_url = input['source']['base_url'] || ENV['ATC_EXTERNAL_URL']
@@ -58,8 +58,8 @@ module Commands
       end
 
       {
-        version: version,
-        metadata: metadata
+        'version' => version,
+        'metadata' => metadata
       }
     end
 
