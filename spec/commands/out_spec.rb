@@ -83,9 +83,9 @@ describe Commands::Out do
 
       context 'when the message file does not exist' do
         it 'returns a helpful error message' do
-          expect {
+          expect do
             put('params' => { 'status' => 'success', 'path' => 'resource', 'comment' => 'resource/comment-doesnt-exist' }, 'source' => { 'repo' => 'jtarchie/test' })
-          }.to raise_error '`comment` "resource/comment-doesnt-exist" does not exist'
+          end.to raise_error '`comment` "resource/comment-doesnt-exist" does not exist'
         end
       end
     end
@@ -104,22 +104,22 @@ describe Commands::Out do
 
       context 'with bad params' do
         it 'raises an error when path is missing' do
-          expect {
+          expect do
             put('params' => { 'status' => 'pending' }, 'source' => { 'repo' => 'jtarchie/test' })
-          }.to raise_error '`path` required in `params`'
+          end.to raise_error '`path` required in `params`'
         end
 
         it 'raises an error when the path does not exist' do
-          expect {
+          expect do
             put('params' => { 'status' => 'pending', 'path' => 'do not care' }, 'source' => { 'repo' => 'jtarchie/test' })
-          }.to raise_error '`path` "do not care" does not exist'
+          end.to raise_error '`path` "do not care" does not exist'
         end
 
         context 'with unsupported statuses' do
           it 'raises an error the supported ones' do
-            expect {
+            expect do
               put('params' => { 'status' => 'do not care', 'path' => 'resource' }, 'source' => { 'repo' => 'jtarchie/test' })
-            }.to raise_error '`status` "do not care" is not supported -- only success, failure, error, or pending'
+            end.to raise_error '`status` "do not care" is not supported -- only success, failure, error, or pending'
           end
         end
       end
