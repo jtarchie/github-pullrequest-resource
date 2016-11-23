@@ -32,6 +32,16 @@ class Repository
     end
   end
 
+  def pull_request_matches_paths?(id, paths)
+    files = Octokit.pull_request_files(name, id)
+    files.map do |file|
+      if File.fnmatch(paths, file['filename'])
+        return true
+      end
+    end
+    false
+  end
+
   private
 
   def pulls_options(base: nil)
