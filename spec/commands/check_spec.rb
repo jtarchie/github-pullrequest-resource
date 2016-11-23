@@ -186,5 +186,28 @@ describe Commands::Check do
         end
       end
     end
+
+    context 'when paths is specified' do
+      before do
+        stub_json('https://api.github.com:443/repos/jtarchie/test/pulls?direction=asc&per_page=100&sort=updated&state=open', [{ number: 1, head: { sha: 'abcdef' } }])
+        stub_json('https://api.github.com/repos/jtarchie/test/statuses/abcdef', [])
+      end
+
+      context 'and does not match changed files' do
+        it 'returns no versions' do
+          payload = { 'source' => { 'repo' => 'jtarchie/test', 'paths' => 'the/path/**' } }
+          stub_json('https://api.github.com/repos/jtarchie/test/pulls/1/files?per_page=100', [{'filename' => 'the/wrong/path/filename.rb'}])
+          expect(check(payload)).to eq []
+        end
+      end
+
+      context 'and does match changed files' do
+        it 'returns changed version' do
+          payload = { 'source' => { 'repo' => 'jtarchie/test', 'paths' => 'the/path/**' } }
+          stub_json('https://api.github.com/repos/jtarchie/test/pulls/1/files?per_page=100', [{'filename' => 'the/path/filename.rb'}])
+          expect(check(payload)).to eq [{"ref"=>"abcdef", "pr"=>"1"}]
+        end
+      end
+    end
   end
 end

@@ -29,7 +29,10 @@ module Commands
         base: input['source']['base']
       )
 
-      if pull_request
+      return [] unless pull_request
+      return [pull_request] unless input['source'].key?('paths')
+
+      if repo.pull_request_matches_paths?(pull_request.id, input['source']['paths'])
         [pull_request]
       else
         []
