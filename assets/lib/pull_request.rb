@@ -1,13 +1,13 @@
 require 'octokit'
 
 class PullRequest
-  def initialize(repo:, pr:)
-    @repo = repo
-    @pr = pr
+  def self.from_github(repo:, id:)
+    pr = Octokit.pull_request(repo.name, id)
+    PullRequest.new(pr: pr)
   end
 
-  def ready?
-    statuses.empty?
+  def initialize(pr:)
+    @pr = pr
   end
 
   def equals?(id:, sha:)
@@ -32,13 +32,5 @@ class PullRequest
 
   def url
     @pr['html_url']
-  end
-
-  private
-
-  def statuses
-    @statuses ||= Octokit.statuses(@repo.name, sha).select do |status|
-      status['context'] =~ /^concourse-ci/
-    end
   end
 end

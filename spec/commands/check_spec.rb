@@ -5,8 +5,9 @@ require 'json'
 describe Commands::Check do
   def check(payload)
     payload['source']['no_ssl_verify'] = true
-    payload['version'] ||= {}
-    Commands::Check.new(input: payload).output.map &:as_json
+
+    Input.instance(payload: payload)
+    Commands::Check.new.output.map &:as_json
   end
 
   def stub_json(uri, body)

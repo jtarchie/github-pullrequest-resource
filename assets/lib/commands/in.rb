@@ -9,7 +9,7 @@ module Commands
   class In < Commands::Base
     attr_reader :destination
 
-    def initialize(input:, destination:)
+    def initialize(destination:, input: Input.instance)
       @destination = destination
 
       super(input: input)
@@ -48,15 +48,15 @@ module Commands
     private
 
     def pr
-      @pr ||= Octokit.pull_request(input['source']['repo'], input['version']['pr'])
+      @pr ||= Octokit.pull_request(input.source.repo, input.version.pr)
     end
 
     def uri
-      input['source']['uri'] || "https://github.com/#{input['source']['repo']}"
+      input.source.uri || "https://github.com/#{input.source.repo}"
     end
 
     def ref
-      input['version']['ref']
+      input.version.ref
     end
 
     def remote_ref
@@ -64,11 +64,11 @@ module Commands
     end
 
     def fetch_merge
-      input.fetch('params', {})['fetch_merge']
+      input.params.fetch_merge
     end
 
     def deprecation_warning!
-      unless input['source']['every']
+      unless input.source.every
         $stderr.puts 'DEPRECATION: Please note that you should update to using `version: every` on your `get` for this resource.'
       end
     end
@@ -77,7 +77,6 @@ end
 
 if __FILE__ == $PROGRAM_NAME
   destination = ARGV.shift
-  input = JSON.parse(ARGF.read)
-  command = Commands::In.new(input: input, destination: destination)
+  command = Commands::In.new(destination: destination)
   puts JSON.generate(command.output)
 end

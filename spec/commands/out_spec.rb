@@ -17,11 +17,12 @@ describe Commands::Out do
 
   def put(payload)
     payload['source']['no_ssl_verify'] = true
+    Input.instance(payload: payload)
 
     resource_dir = Dir.mktmpdir
     FileUtils.cp_r(dest_dir, File.join(resource_dir, 'resource'))
 
-    command = Commands::Out.new(input: payload, destination: resource_dir)
+    command = Commands::Out.new(destination: resource_dir)
     command.output
   end
 

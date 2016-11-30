@@ -1,44 +1,31 @@
-require 'octokit'
-require_relative 'pull_request'
+require_relative 'filters/all'
+require_relative 'filters/context'
 
 class Repository
   attr_reader :name
 
-  def initialize(name:)
-    @name = name
+  def initialize(name:, input: Input.instance, filters: [Filters::All, Filters::Context])
+    @filters = filters
+    @name    = name
+    @input   = input
   end
 
-  def pull_requests(args = {})
-    @pull_requests ||= Octokit.pulls(name, pulls_options(args)).map do |pr|
-      PullRequest.new(repo: self, pr: pr)
+  def pull_requests(_args = {})
+    @pull_requests ||= @filters.reduce([]) do |pull_requests, filter|
+      filter.new(pull_requests: pull_requests).pull_requests
     end
   end
 
-  def pull_request(id:)
-    pr = Octokit.pull_request(name, id)
-    PullRequest.new(repo: self, pr: pr)
-  end
-
-  def next_pull_request(id: nil, sha: nil, base: nil)
-    return if pull_requests(base: base).empty?
+  def next_pull_request(id: nil, sha: nil)
+    return if pull_requests.empty?
 
     if id && sha
       current = pull_requests.find { |pr| pr.equals?(id: id, sha: sha) }
-      return if current && current.ready?
+      return if current
     end
 
     pull_requests.find do |pr|
-      pr != current && pr.ready?
+      pr != current
     end
-  end
-
-  private
-
-  def pulls_options(base: nil)
-    base ? default_opts.merge(base: base) : default_opts
-  end
-
-  def default_opts
-    { state: 'open', sort: 'updated', direction: 'asc' }
   end
 end

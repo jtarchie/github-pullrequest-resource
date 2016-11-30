@@ -16,8 +16,8 @@ describe Commands::In do
 
   def get(payload)
     payload['source']['no_ssl_verify'] = true
-    payload['version'] ||= {}
-    command = Commands::In.new(input: payload, destination: dest_dir)
+    Input.instance(payload: payload)
+    command = Commands::In.new(destination: dest_dir)
     command.output
   end
 
