@@ -6,8 +6,3 @@ RUN apk add --update \
     ruby-dev \
     openssl-dev \
     alpine-sdk
-
-ADD / /opt/resource-tests/
-RUN cd /opt/resource-tests/ && \
-    bundle -j4 && \
-    rspec

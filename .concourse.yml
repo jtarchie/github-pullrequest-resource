@@ -1,22 +1,56 @@
 resources:
-  - name: repo
+  - name: git-pr
     type: git
     source:
       uri: https://github.com/jtarchie/pullrequest-resource
       branch: master
+  - name: docker-pr
+    type: docker-image
+    source:
+      username: {{docker-username}}
+      password: {{docker-password}}
+      repository: jtarchie/pr
 
 jobs:
-  - name: tests
-    public: true
+  - name: docker
     plan:
-      - get: repo
+      - get: git-pr
+        trigger: true
+      - task: tag
+        config:
+          image_resource:
+            type: docker-image
+            source:
+              repository: alpine
+          platform: linux
+          outputs:
+            - name: tag
+          run:
+            path: sh
+            args: ["-c", "echo test > tag/name"]
+      - put: docker-pr
+        params:
+          build: git-pr
+          dockerfile: git-pr/Dockerfile.test
+          tag: tag/name
+          get_params:
+            skip_download: true
+  - name: tests
+    plan:
+      - get: git-pr
+        passed: [ docker ]
         trigger: true
       - task: rspec
+        privileged: true
         config:
-          image: docker:///jtarchie/pr#test
+          image_resource:
+            type: docker-image
+            source:
+              repository: jtarchie/pr
+              tag: test
           inputs:
-            - name: repo
+            - name: git-pr
           platform: linux
           run:
             path: sh
-            args: ['-c', 'cd repo && bundle install && bundle exec rspec']
+            args: ['-c', 'cd git-pr && bundle install && bundle exec rspec']
