@@ -1,3 +1,8 @@
+# v17 @ 9/27/2016
+
+* document the `base` option
+* improve deprecation warning to be conditional (Thanks @jmcarp)
+
 # v16 @ 9/13/2016
 
 * Fix issue where `git submodule` was not being called on the PR branch
