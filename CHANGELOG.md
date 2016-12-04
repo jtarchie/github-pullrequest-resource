@@ -1,3 +1,8 @@
+# v18 @ 12/4/2016
+
+* No new features. This was a refactor, which I'd like to production test. If
+you need to revert please lock the `resource_type` to the `v17` tag.
+
 # v17 @ 9/27/2016
 
 * document the `base` option
