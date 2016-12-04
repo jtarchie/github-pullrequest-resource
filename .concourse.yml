@@ -54,3 +54,39 @@ jobs:
           run:
             path: sh
             args: ['-c', 'cd git-pr && bundle install && bundle exec rspec']
+  - name: release
+    plan:
+      - get: git-pr
+        passed: [ tests ]
+      - task: next-tag
+        config:
+          image: /var/vcap/packages/git_resource/rootfs
+          platform: linux
+          inputs:
+            - name: git-pr
+          outputs:
+            - name: tag
+          run:
+            path: bash
+            args:
+              - -c
+              - |
+                set -eux
+                echo v > tag/prefix
+                pushd git-pr
+                  git tag -l | sed -e "s/v//" | sort -n | tail -n 1 | xargs -n 1 expr 1 + > ../tag/name
+                popd
+      - put: docker-pr
+        params:
+          build: git-pr
+          dockerfile: git-pr/Dockerfile
+          tag: tag/name
+          tag_prefix: v
+          tag_as_latest: true
+          get_params:
+            skip_download: true
+      - put: git-pr
+        params:
+          only_tag: true
+          tag: tag/name
+          tag_prefix: tag/prefix
