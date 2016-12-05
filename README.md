@@ -96,9 +96,10 @@ There is `git config` information set on the repo about the PR, which can be con
 For example:
 
 ```bash
-git config --get pullrequest.url    # returns the URL to the pull request
-git config --get pullrequest.branch # returns the branch name used for the pull request
-git config --get pullrequest.id     # returns the ID number of the PR
+git config --get pullrequest.url        # returns the URL to the pull request
+git config --get pullrequest.branch     # returns the branch name used for the pull request
+git config --get pullrequest.id         # returns the ID number of the PR
+git config --get pullrequest.basebranch # returns the base branch used for the pull request
 ```
 
 #### Parameters
