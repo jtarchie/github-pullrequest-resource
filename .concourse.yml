@@ -2,8 +2,9 @@ resources:
   - name: git-pr
     type: git
     source:
-      uri: https://github.com/jtarchie/pullrequest-resource
+      uri: git@github.com:jtarchie/pullrequest-resource
       branch: master
+      private_key: {{github-private-key}}
   - name: docker-pr
     type: docker-image
     source:
@@ -87,6 +88,7 @@ jobs:
             skip_download: true
       - put: git-pr
         params:
+          repository: git-pr
           only_tag: true
           tag: tag/name
           tag_prefix: tag/prefix
