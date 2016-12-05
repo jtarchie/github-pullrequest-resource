@@ -91,4 +91,4 @@ jobs:
           repository: git-pr
           only_tag: true
           tag: tag/name
-          tag_prefix: tag/prefix
+          tag_prefix: v
