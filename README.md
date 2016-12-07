@@ -125,6 +125,10 @@ Set the status message for `concourse-ci` context on specified pull request.
 
 * `comment`: *Optional.* The file path of the comment message. Comment owner is same with the owner of `access_token`.
 
+* `merge`: *Optional.* Use this to merge the PR into the target branch of the PR. There are three available merge methods -- `merge`, `squash`, or `rebase`. Please this [doc](https://developer.github.com/changes/2016-09-26-pull-request-merge-api-update/) for more information.
+
+* `merge_commit_msg`: *Optional.* Used with `merge` to set the commit message for the merge. Specify a file path to the merge commit message.
+
 ## Example pipeline
 
 This is what I am currently using to test this resource on Concourse.
