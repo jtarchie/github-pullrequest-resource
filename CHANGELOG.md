@@ -1,3 +1,7 @@
+# v19 @ 12/6/2016
+
+* add meta field for target branch `basebranch` (Thanks @arwineap)
+
 # v18 @ 12/4/2016
 
 * No new features. This was a refactor, which I'd like to production test. If
