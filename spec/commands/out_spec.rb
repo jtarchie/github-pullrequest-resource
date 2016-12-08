@@ -68,6 +68,18 @@ describe Commands::Out do
                              ])
       end
 
+      context 'on merge failure' do
+        it 'raises an error' do
+          stub_status_post
+          stub_request(:put, 'https://api.github.com/repos/jtarchie/test/pulls/merge')
+            .to_return(status: 405)
+
+          expect {
+            put('params' => { 'status' => 'success', 'merge' => { 'method' => 'merge' }, 'path' => 'resource' }, 'source' => { 'repo' => 'jtarchie/test' })
+          }.to raise_error Octokit::MethodNotAllowed
+        end
+      end
+
       context 'with a commit message' do
         it 'sets the commit message' do
           File.write(File.join(dest_dir, 'merge_commit_msg'), 'merge commit message')
