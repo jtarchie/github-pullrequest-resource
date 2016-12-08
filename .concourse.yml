@@ -3,6 +3,11 @@ resource_types:
     type: docker-image
     source:
       repository: jtarchie/pr
+  - name: pull-request-test
+    type: docker-image
+    source:
+      repository: jtarchie/pr
+      tag: test
 
 resources:
   - name: git-pr
@@ -24,8 +29,26 @@ resources:
       every: true
       private_key: {{github-private-key}}
       repo: jtarchie/pullrequest-resource
+  - name: merge-pull-requests
+    type: pull-request-test
+    source:
+      access_token: {{github-access-token}}
+      every: true
+      private_key: {{github-private-key}}
+      base: test-merge
+      repo: jtarchie/pullrequest-resource
 
 jobs:
+  - name: test-pr-merge
+    plan:
+      - get: merge-pull-requests
+      - put: merge-pull-requests
+        params:
+          path: merge-pull-requests
+          status: success
+          merge:
+            method: merge
+            commit_msg: merge-pull-requests/README.md
   - name: pr tests
     plan:
       - get: git-pull-requests
