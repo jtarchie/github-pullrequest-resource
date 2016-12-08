@@ -2,6 +2,18 @@ require 'json'
 require 'ostruct'
 
 class Input
+  class Params < OpenStruct
+    class Merge < OpenStruct
+      def method
+        self['method']
+      end
+    end
+
+    def merge
+      Merge.new(self['merge'] || {})
+    end
+  end
+
   def self.instance(payload: nil)
     @instance = new(payload: payload) if payload
     @instance ||= begin
@@ -27,6 +39,6 @@ class Input
   end
 
   def params
-    OpenStruct.new @payload.fetch('params', {})
+    Params.new @payload.fetch('params', {})
   end
 end

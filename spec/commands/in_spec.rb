@@ -87,7 +87,6 @@ describe Commands::In do
         value = git('config pullrequest.basebranch', dest_dir)
         expect(value).to eq 'master'
       end
-
     end
 
     context 'when the git clone fails' do
@@ -129,7 +128,7 @@ describe Commands::In do
 
         get('version' => { 'ref' => @ref, 'pr' => '1' }, 'source' => { 'uri' => git_uri, 'repo' => 'jtarchie/test' }, 'params' => { 'fetch_merge' => false })
 
-            value = git('rev-parse --abbrev-ref HEAD', dest_dir)
+        value = git('rev-parse --abbrev-ref HEAD', dest_dir)
         expect(value).to eq 'pr-foo'
       end
 

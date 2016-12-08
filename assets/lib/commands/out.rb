@@ -26,9 +26,9 @@ module Commands
         raise %(`comment` "#{params.comment}" does not exist) unless File.exist?(comment_path)
       end
 
-      if params.merge_commit_msg
-        commit_path = File.join(destination, params.merge_commit_msg)
-        raise %(`merge_commit_msg` "#{params.merge_commit_msg}" does not exist) unless File.exist?(commit_path)
+      if params.merge.commit_msg
+        commit_path = File.join(destination, params.merge.commit_msg)
+        raise %(`merge.commit_msg` "#{params.merge.commit_msg}" does not exist) unless File.exist?(commit_path)
       end
 
       id  = Dir.chdir(path) { `git config --get pullrequest.id`.chomp }
@@ -63,18 +63,17 @@ module Commands
         metadata << { 'name' => 'comment', 'value' => comment }
       end
 
-      if params.merge
-        commit_msg = if params.merge_commit_msg
-          commit_path = File.join(destination, params.merge_commit_msg)
-          File.read(commit_path, encoding: Encoding::UTF_8)
-        else
-          ""
+      if params.merge.method
+        commit_msg = if params.merge.commit_msg
+                       commit_path = File.join(destination, params.merge.commit_msg)
+                       File.read(commit_path, encoding: Encoding::UTF_8)
+                     else
+                       ''
         end
-        Octokit.merge_pull_request(input.source.repo, id, commit_msg, merge_method: params.merge, accept: 'application/vnd.github.polaris-preview')
-        metadata << { 'name' => 'merge', 'value' => params.merge }
+        Octokit.merge_pull_request(input.source.repo, id, commit_msg, merge_method: params.merge.method, accept: 'application/vnd.github.polaris-preview')
+        metadata << { 'name' => 'merge', 'value' => params.merge.method }
         metadata << { 'name' => 'merge_commit_msg', 'value' => commit_msg }
       end
-
 
       {
         'version' => version,
@@ -90,7 +89,7 @@ module Commands
 
     def check_defaults!
       raise %(`status` "#{params.status}" is not supported -- only success, failure, error, or pending) unless %w(success failure error pending).include?(params.status)
-      raise %(`merge` "#{params.merge}" is not supported -- only merge, squash, or rebase) if params.merge && !%w(merge squash rebase).include?(params.merge)
+      raise %(`merge.method` "#{params.merge.method}" is not supported -- only merge, squash, or rebase) if params.merge.method && !%w(merge squash rebase).include?(params.merge.method)
       raise '`path` required in `params`' unless params.path
     end
   end
