@@ -160,8 +160,8 @@ describe Commands::Check do
     context 'when there is more than one open pull request' do
       before do
         stub_json('https://api.github.com/repos/jtarchie/test/pulls?direction=asc&per_page=100&sort=updated&state=open', [
-                    { number: 2, head: { sha: 'zyxwvu' } },
-                    { number: 1, head: { sha: 'abcdef' } }
+                    { number: 2, head: { sha: 'zyxwvu', repo: { full_name: 'someotherowner/repo' } }, base: { repo: { full_name: 'jtarchie/test' } } },
+                    { number: 1, head: { sha: 'abcdef', repo: { full_name: 'jtarchie/test' } }, base: { repo: { full_name: 'jtarchie/test' } } }
                   ])
       end
 
@@ -186,6 +186,14 @@ describe Commands::Check do
           expect(check(payload)).to eq []
         end
       end
+
+			context 'and `disallow_forks` is set to true' do
+				it 'returns the most recently updated internal pull request' do
+          stub_json('https://api.github.com:443/repos/jtarchie/test/statuses/abcdef', [])
+
+					expect(check('source' => { 'repo' => 'jtarchie/test', 'disable_forks' => true })).to eq [{ 'ref' => 'abcdef', 'pr' => '1' }]
+				end
+			end
     end
   end
 end

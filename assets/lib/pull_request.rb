@@ -10,6 +10,10 @@ class PullRequest
     @pr = pr
   end
 
+  def from_fork?
+    base_repo != head_repo
+  end
+
   def equals?(id:, sha:)
     [self.sha, self.id.to_s] == [sha, id.to_s]
   end
@@ -32,5 +36,15 @@ class PullRequest
 
   def url
     @pr['html_url']
+  end
+
+  private
+
+  def base_repo
+    @pr['base']['repo']['full_name']
+  end
+
+  def head_repo
+    @pr['head']['repo']['full_name']
   end
 end
