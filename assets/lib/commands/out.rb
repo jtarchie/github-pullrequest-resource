@@ -70,7 +70,7 @@ module Commands
                      else
                        ''
         end
-        Octokit.merge_pull_request(input.source.repo, id, commit_msg, merge_method: params.merge.method, accept: 'application/vnd.github.polaris-preview')
+        Octokit.merge_pull_request(input.source.repo, id, commit_msg, merge_method: params.merge.method, accept: 'application/vnd.github.polaris-preview+json')
         metadata << { 'name' => 'merge', 'value' => params.merge.method }
         metadata << { 'name' => 'merge_commit_msg', 'value' => commit_msg }
       end
