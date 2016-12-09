@@ -74,9 +74,9 @@ describe Commands::Out do
           stub_request(:put, 'https://api.github.com/repos/jtarchie/test/pulls/merge')
             .to_return(status: 405)
 
-          expect {
+          expect do
             put('params' => { 'status' => 'success', 'merge' => { 'method' => 'merge' }, 'path' => 'resource' }, 'source' => { 'repo' => 'jtarchie/test' })
-          }.to raise_error Octokit::MethodNotAllowed
+          end.to raise_error Octokit::MethodNotAllowed
         end
       end
 

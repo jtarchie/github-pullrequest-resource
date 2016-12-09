@@ -187,13 +187,13 @@ describe Commands::Check do
         end
       end
 
-			context 'and `disallow_forks` is set to true' do
-				it 'returns the most recently updated internal pull request' do
+      context 'and `disallow_forks` is set to true' do
+        it 'returns the most recently updated internal pull request' do
           stub_json('https://api.github.com:443/repos/jtarchie/test/statuses/abcdef', [])
 
-					expect(check('source' => { 'repo' => 'jtarchie/test', 'disable_forks' => true })).to eq [{ 'ref' => 'abcdef', 'pr' => '1' }]
-				end
-			end
+          expect(check('source' => { 'repo' => 'jtarchie/test', 'disable_forks' => true })).to eq [{ 'ref' => 'abcdef', 'pr' => '1' }]
+        end
+      end
     end
   end
 end
