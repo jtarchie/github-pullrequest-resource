@@ -65,6 +65,12 @@ were created via users that forked from your repo.
 
 * `password`: *Optional.* Password for HTTP(S) auth when pulling/pushing.
 
+* `paths`: *Optional.* If specified (as a list of glob patterns), only changes
+  to the specified files will yield new versions from `check`.
+
+* `ignore_paths`: *Optional.* The inverse of `paths`; changes to the specified
+  files are ignored.
+
 * `skip_ssl_verification`: *Optional.* Skips git ssl verification by exporting
   `GIT_SSL_NO_VERIFY=true`.
 

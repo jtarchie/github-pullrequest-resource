@@ -1,11 +1,12 @@
 require_relative 'filters/all'
 require_relative 'filters/context'
 require_relative 'filters/fork'
+require_relative 'filters/path'
 
 class Repository
   attr_reader :name
 
-  def initialize(name:, input: Input.instance, filters: [Filters::All, Filters::Fork, Filters::Context])
+  def initialize(name:, input: Input.instance, filters: [Filters::All, Filters::Path, Filters::Fork, Filters::Context])
     @filters = filters
     @name    = name
     @input   = input
