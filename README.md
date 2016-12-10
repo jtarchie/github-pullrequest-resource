@@ -197,9 +197,7 @@ jobs:
 
 ## Tests
 
-Tests can be run two ways, for local feedback and to see how it will run on the resource container.
-
-1. Local, requires `ruby`
+Requires `ruby` to be installed.
 
   ```sh
   gem install bundler
@@ -207,10 +205,3 @@ Tests can be run two ways, for local feedback and to see how it will run on the 
   bundle exec rspec
   ```
 
-1. Container, requires requires `ruby` and `docker`
-
-  ```sh
-  gem install bundler
-  bundle install
-  rake test
-  ```
