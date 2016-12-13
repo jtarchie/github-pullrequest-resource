@@ -52,12 +52,8 @@ resource_types:
 * `api_endpoint`: *Optional.* If the repository is located on a GitHub Enterprise
   instance you need to specify the base api endpoint (e.g. "https://\<hostname\>/api/v3/").
 
-* `every`: *Optional* If set to `true`, it will override the `check` step so every pull request can be iterated
-through, without relying on a status being on it. This feature should only be used in
-concourse version 1.2.x and higher and the [`version: every`](http://concourse.ci/get-step.html#get-version).
-
 * `disable_forks`: *Optional.* If set to `true`, it will filter out pull requests that
-were created via users that forked from your repo.
+  were created via users that forked from your repo.
 
 * `username`: *Optional.* Username for HTTP(S) auth when pulling/pushing.
   This is needed when only HTTP/HTTPS protocol for git is available (which does not support private key auth)
@@ -96,7 +92,8 @@ To ensure that `check` can iterate over all PRs, you must explicitly define an
 
 ### `in`: Clone the repository, at the given pull request ref
 
-Clones the repository to the destination, and locks it down to a given ref.
+Clones the repository to the destination, and locks it down to a given ref. It is important
+to specify `version: every`, otherwise you will only ever get the latest PR.
 
 Submodules are initialized and updated recursively, there is no option to to disable that, currently.
 
@@ -166,6 +163,7 @@ jobs:
 - name: test pull request
   plan:
   - get: repo
+		version: every
     trigger: true
   - put: repo
     params:

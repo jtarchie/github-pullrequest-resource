@@ -98,26 +98,6 @@ describe Commands::In do
         end.to raise_error('git clone failed')
       end
     end
-
-    context 'when `every` is not defined' do
-      it 'skips the deprecation warning' do
-        stub_json('https://api.github.com:443/repos/jtarchie/test/pulls/1', html_url: 'http://example.com', number: 1, head: { ref: 'foo' }, base: { ref: 'master' })
-
-        expect do
-          get('version' => { 'ref' => @ref, 'pr' => '1' }, 'source' => { 'uri' => git_uri, 'repo' => 'jtarchie/test' })
-        end.to output("DEPRECATION: Please note that you should update to using `version: every` on your `get` for this resource.\n").to_stderr
-      end
-    end
-
-    context 'when `every` is defined' do
-      it 'shows a deprecation warning' do
-        stub_json('https://api.github.com:443/repos/jtarchie/test/pulls/1', html_url: 'http://example.com', number: 1, head: { ref: 'foo' }, base: { ref: 'master' })
-
-        expect do
-          get('version' => { 'ref' => @ref, 'pr' => '1' }, 'source' => { 'uri' => git_uri, 'repo' => 'jtarchie/test', 'every' => true })
-        end.not_to output("DEPRECATION: Please note that you should update to using `version: every` on your `get` for this resource.\n").to_stderr
-      end
-    end
   end
 
   context 'when the PR is meregable' do

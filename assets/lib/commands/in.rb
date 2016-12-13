@@ -16,8 +16,6 @@ module Commands
     end
 
     def output
-      deprecation_warning!
-
       id = pr['number']
       branch_ref = "pr-#{pr['head']['ref']}"
 
@@ -66,12 +64,6 @@ module Commands
 
     def fetch_merge
       input.params.fetch_merge
-    end
-
-    def deprecation_warning!
-      unless input.source.every
-        $stderr.puts 'DEPRECATION: Please note that you should update to using `version: every` on your `get` for this resource.'
-      end
     end
   end
 end

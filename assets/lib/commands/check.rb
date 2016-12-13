@@ -7,31 +7,10 @@ require_relative '../repository'
 module Commands
   class Check < Commands::Base
     def output
-      if return_all_versions?
-        repo.pull_requests
-      else
-        next_pull_request
-      end
+      repo.pull_requests
     end
 
     private
-
-    def return_all_versions?
-      input.source.every == true
-    end
-
-    def next_pull_request
-      pull_request = repo.next_pull_request(
-        id: input.version.pr,
-        sha: input.version.ref
-      )
-
-      if pull_request
-        [pull_request]
-      else
-        []
-      end
-    end
 
     def repo
       @repo ||= Repository.new(name: input.source.repo)
