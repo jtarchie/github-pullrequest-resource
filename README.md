@@ -56,7 +56,7 @@ resource_types:
 through, without relying on a status being on it. This feature should only be used in
 concourse version 1.2.x and higher and the [`version: every`](http://concourse.ci/get-step.html#get-version).
 
-* `disbale_forks`: *Optional.* If set to `true`, it will not filter out pull requests that
+* `disable_forks`: *Optional.* If set to `true`, it will filter out pull requests that
 were created via users that forked from your repo.
 
 * `username`: *Optional.* Username for HTTP(S) auth when pulling/pushing.

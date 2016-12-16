@@ -187,7 +187,7 @@ describe Commands::Check do
         end
       end
 
-      context 'and `disallow_forks` is set to true' do
+      context 'and `disable_forks` is set to true' do
         it 'returns the most recently updated internal pull request' do
           stub_json('https://api.github.com:443/repos/jtarchie/test/statuses/abcdef', [])
 
