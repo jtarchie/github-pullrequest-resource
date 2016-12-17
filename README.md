@@ -163,7 +163,7 @@ jobs:
 - name: test pull request
   plan:
   - get: repo
-		version: every
+    version: every
     trigger: true
   - put: repo
     params:
