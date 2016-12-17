@@ -1,3 +1,10 @@
+# v20 @ 12/17/2016
+
+* disable PRs that were made from forks with `disable_forks` [Thanks @henrytk](https://github.com/jtarchie/pullrequest-resource/issues/43)
+* PRs only trigger when matching `paths` or `ignore_paths` [Thanks @ahume](https://github.com/jtarchie/pullrequest-resource/issues/42)
+* refactored so adding filters is easier and testable
+* finally deprecated `every`, you should always be using `version: every`
+
 # v19 @ 12/6/2016
 
 * add meta field for target branch `basebranch` (Thanks @arwineap)
