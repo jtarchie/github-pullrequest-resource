@@ -26,14 +26,13 @@ resources:
     type: pull-request
     source:
       access_token: {{github-access-token}}
-      every: true
       private_key: {{github-private-key}}
       repo: jtarchie/pullrequest-resource
+      base: master
   - name: merge-pull-requests
     type: pull-request-test
     source:
       access_token: {{github-access-token}}
-      every: true
       private_key: {{github-private-key}}
       base: test-merge
       repo: jtarchie/pullrequest-resource
@@ -41,7 +40,11 @@ resources:
 jobs:
   - name: test-pr-merge
     plan:
+      - get: git-pr
+        passed: [ 'tests' ]
+        trigger: true
       - get: merge-pull-requests
+        trigger: true
       - put: merge-pull-requests
         params:
           path: merge-pull-requests
@@ -123,7 +126,7 @@ jobs:
   - name: release
     plan:
       - get: git-pr
-        passed: [ tests ]
+        passed: [ 'test-pr-merge' ]
       - task: next-tag
         config:
           image: /var/vcap/packages/git_resource/rootfs
