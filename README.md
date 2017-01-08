@@ -131,7 +131,7 @@ Set the status message for `concourse-ci` context on specified pull request.
 
 * `comment`: *Optional.* The file path of the comment message. Comment owner is same with the owner of `access_token`.
 
-* EXPERIMENTAL *
+** EXPERIMENTAL **
 
 These are experimental features according to [Github documentation](https://developer.github.com/v3/pulls/#merge-a-pull-request-merge-button). 
 
