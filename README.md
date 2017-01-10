@@ -141,57 +141,7 @@ These are experimental features according to [Github documentation](https://deve
 
 ## Example pipeline
 
-This is what I am currently using to test this resource on Concourse.
-
-```yaml
-resource_types:
-- name: pull-request
-  type: docker-image
-  source:
-    repository: jtarchie/pr
-resources:
-- name: repo
-  type: pull-request
-  source:
-    access_token: access_token
-    private_key: |
-      -----BEGIN RSA PRIVATE KEY-----
-      My private key.
-      -----END RSA PRIVATE KEY-----
-    repo: jtarchie/pullrequest-resource
-jobs:
-- name: test pull request
-  plan:
-  - get: repo
-    version: every
-    trigger: true
-  - put: repo
-    params:
-      path: repo
-      status: pending
-  - task: do something with git
-    config:
-      platform: linux
-      image: docker:///concourse/git-resource
-      run:
-        path: sh
-        args:
-        - -c
-        - cd repo && git --no-pager show
-      inputs:
-      - name: repo
-        path: ""
-    on_success:
-      put: repo
-      params:
-        path: repo
-        status: success
-    on_failure:
-      put: repo
-      params:
-        path: repo
-        status: failure
-```
+Please see this repo's [pipeline](https://github.com/jtarchie/pullrequest-resource/blob/master/.concourse.yml) for a perfect example.
 
 ## Tests
 
