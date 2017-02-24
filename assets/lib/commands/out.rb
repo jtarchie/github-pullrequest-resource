@@ -1,7 +1,6 @@
 #!/usr/bin/env ruby
 
 require 'json'
-require 'octokit'
 require_relative 'base'
 require_relative '../repository'
 require_relative '../status'

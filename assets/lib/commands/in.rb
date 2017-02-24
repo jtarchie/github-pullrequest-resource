@@ -1,6 +1,5 @@
 #!/usr/bin/env ruby
 
-require 'octokit'
 require 'English'
 require 'json'
 require_relative 'base'
