@@ -70,6 +70,9 @@ resource_types:
 * `skip_ssl_verification`: *Optional.* Skips git ssl verification by exporting
   `GIT_SSL_NO_VERIFY=true`.
 
+* `master_depth`: *Optional*. Allows for the depth of the master branch 
+  to be configured. Default: 1
+
 * `git_config`: *Optional*. If specified as (list of pairs `name` and `value`)
   it will configure git global options, setting each name with each value.
 

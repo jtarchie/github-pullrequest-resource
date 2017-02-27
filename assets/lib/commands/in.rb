@@ -18,10 +18,11 @@ module Commands
     def output
       id = pr['number']
       branch_ref = "pr-#{pr['head']['ref']}"
+      depth = input.source.master_depth || 1
 
       raise 'PR has merge conflicts' if pr['mergeable'] == false && fetch_merge
 
-      system("git clone --depth 1 #{uri} #{destination} 1>&2")
+      system("git clone --depth #{depth} #{uri} #{destination} 1>&2")
 
       raise 'git clone failed' unless $CHILD_STATUS.exitstatus.zero?
 
