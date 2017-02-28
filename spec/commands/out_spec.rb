@@ -234,6 +234,15 @@ describe Commands::Out do
             put('params' => { 'status' => 'success', 'path' => 'resource', 'context' => 'my-custom-context' }, 'source' => { 'repo' => 'jtarchie/test' })
           end
         end
+
+        context 'with setting multiple contextes' do
+          it 'sets the context for each' do
+            stub_status_post.with(body: hash_including('context' => 'concourse-ci/my-custom-context1'))
+            stub_status_post.with(body: hash_including('context' => 'concourse-ci/my-custom-context2'))
+
+            put('params' => { 'status' => 'success', 'path' => 'resource', 'context' => ['my-custom-context1', 'my-custom-context2'] }, 'source' => { 'repo' => 'jtarchie/test' })
+          end
+        end
       end
 
       context 'and the build failed' do

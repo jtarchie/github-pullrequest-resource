@@ -45,15 +45,18 @@ module Commands
       end
 
       atc_url = input.source.base_url || ENV['ATC_EXTERNAL_URL']
-      context = params.context || 'status'
+      contextes = params.context || ['status']
+      contextes = [contextes] unless contextes.is_a?(Array)
 
-      Status.new(
-        state: params.status,
-        atc_url: atc_url,
-        sha: sha,
-        repo: repo,
-        context: context
-      ).create!
+      contextes.each do |context|
+        Status.new(
+          state: params.status,
+          atc_url: atc_url,
+          sha: sha,
+          repo: repo,
+          context: context
+        ).create!
+      end
 
       if params.comment
         comment_path = File.join(destination, params.comment)
