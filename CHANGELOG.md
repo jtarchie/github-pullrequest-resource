@@ -1,3 +1,10 @@
+# v21 @ 2/27/2017
+
+* support multiple `contextes` in a single `put`
+* specify `depth` and `submodule` on a `git clone`
+* fix typo in README [Thanks @trizko](https://github.com/jtarchie/pullrequest-resource/pull/57)
+* fix issue with Github API proxying [Thanks @databus](https://github.com/jtarchie/pullrequest-resource/pull/56)
+
 # v20 @ 12/17/2016
 
 * disable PRs that were made from forks with `disable_forks` [Thanks @henrytk](https://github.com/jtarchie/pullrequest-resource/issues/43)
