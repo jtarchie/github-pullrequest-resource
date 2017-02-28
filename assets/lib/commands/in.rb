@@ -15,12 +15,12 @@ module Commands
     end
 
     def output
-      id = pr['number']
+      id         = pr['number']
       branch_ref = "pr-#{pr['head']['ref']}"
 
       raise 'PR has merge conflicts' if pr['mergeable'] == false && fetch_merge
 
-      system("git clone --depth 1 #{uri} #{destination} 1>&2")
+      system("git clone #{depth_flag} #{uri} #{destination} 1>&2")
 
       raise 'git clone failed' unless $CHILD_STATUS.exitstatus.zero?
 
@@ -29,12 +29,20 @@ module Commands
 
         system <<-BASH
           git checkout #{branch_ref} 1>&2
-          git submodule update --init --recursive 1>&2
           git config --add pullrequest.url #{pr['html_url']} 1>&2
           git config --add pullrequest.id #{pr['number']} 1>&2
           git config --add pullrequest.branch #{pr['head']['ref']} 1>&2
           git config --add pullrequest.basebranch #{pr['base']['ref']} 1>&2
         BASH
+
+        case input.params.git.submodules
+        when 'all', nil
+          system("git submodule update --init --recursive #{depth_flag} 1>&2")
+        when Array
+          input.params.git.submodules.each do |path|
+            system("git submodule update --init --recursive #{depth_flag} #{path} 1>&2")
+          end
+        end
       end
 
       {
@@ -63,6 +71,14 @@ module Commands
 
     def fetch_merge
       input.params.fetch_merge
+    end
+
+    def depth_flag
+      if depth = input.params.git.depth
+        "--depth #{depth}"
+      else
+        '--depth 1'
+      end
     end
   end
 end

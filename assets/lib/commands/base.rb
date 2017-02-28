@@ -7,7 +7,6 @@ require 'faraday'
 require 'octokit'
 require_relative '../input'
 
-
 module Commands
   class Base
     attr_reader :input

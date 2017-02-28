@@ -110,6 +110,14 @@ git config --get pullrequest.basebranch # returns the base branch used for the p
 
 #### Parameters
 
+* `git.depth`: *Optional.* If a positive integer is given, *shallow* clone the
+  repository using the `--depth` option. 
+
+* `git.submodules`: *Optional.* If `none`, submodules will not be
+  fetched. If specified as a list of paths, only the given paths will be
+  fetched. If not specified, or if `all` is explicitly specified, all
+  submodules are fetched.
+
 * `fetch_merge`: *Optional*. If set to `true`, it will fetch what the result of PR
   would be otherwise it will fetch the origin branch.
   Defaults to `false`.

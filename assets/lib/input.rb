@@ -12,6 +12,10 @@ class Input
     def merge
       Merge.new(self['merge'] || {})
     end
+
+    def git
+      OpenStruct.new(self['git'] || {})
+    end
   end
 
   def self.instance(payload: nil)

@@ -156,4 +156,57 @@ describe Commands::In do
       end
     end
   end
+
+  fcontext 'with specific `git` params' do
+    before do
+      stub_json('https://api.github.com:443/repos/jtarchie/test/pulls/1',
+                html_url: 'http://example.com', number: 1,
+                head: { ref: 'foo' },
+                base: { ref: 'master' })
+    end
+
+    def expect_arg(*args)
+      allow_any_instance_of(Commands::In).to receive(:system).and_call_original
+      expect_any_instance_of(Commands::In).to receive(:system).with(*args).and_call_original
+    end
+
+    def dont_expect_arg(*args)
+      allow_any_instance_of(Commands::In).to receive(:system).and_call_original
+      expect_any_instance_of(Commands::In).not_to receive(:system).with(*args).and_call_original
+    end
+
+    it 'gets all the submodules' do
+      expect_arg /git submodule update --init --recursive/
+      get('version' => { 'ref' => @ref, 'pr' => '1' }, 'source' => { 'uri' => git_uri, 'repo' => 'jtarchie/test' }, 'params' => {})
+    end
+
+    it 'gets all the submodules explicitly' do
+      expect_arg /git submodule update --init --recursive/
+      get('version' => { 'ref' => @ref, 'pr' => '1' }, 'source' => { 'uri' => git_uri, 'repo' => 'jtarchie/test' }, 'params' => { 'git' => { 'submodules' => 'all' } })
+    end
+
+    it 'gets no submodules' do
+      dont_expect_arg /git submodule update --init --recursive/
+      get('version' => { 'ref' => @ref, 'pr' => '1' }, 'source' => { 'uri' => git_uri, 'repo' => 'jtarchie/test' }, 'params' => { 'git' => { 'submodules' => 'none' } })
+    end
+
+    it 'get submodules with paths' do
+      expect_arg /git submodule update --init --recursive --depth 1 path1/
+      expect_arg /git submodule update --init --recursive --depth 1 path2/
+      get('version' => { 'ref' => @ref, 'pr' => '1' }, 'source' => { 'uri' => git_uri, 'repo' => 'jtarchie/test' }, 'params' => { 'git' => { 'submodules' => %w(path1 path2) } })
+    end
+
+    it 'checkouts everything by depth' do
+      expect_arg /git submodule update --init --recursive --depth 100 path1/
+      expect_arg /git clone --depth 100/
+      get('version' => { 'ref' => @ref, 'pr' => '1' },
+          'source' => { 'uri' => git_uri, 'repo' => 'jtarchie/test' },
+          'params' => {
+            'git' => {
+              'submodules' => %w(path1 path2),
+              'depth' => 100
+            }
+          })
+    end
+  end
 end
