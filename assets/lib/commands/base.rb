@@ -1,10 +1,12 @@
 require 'faraday'
+# httpclient and excon are the only Faraday adpater which support
+# the no_proxy environment variable atm
+# NOTE: this has to be set before require octokit
+::Faraday.default_adapter = :httpclient
+
 require 'octokit'
 require_relative '../input'
 
-# httpclient and excon are the only Faraday adpater which support
-# the no_proxy environment variable atm
-::Faraday.default_adapter = :httpclient
 
 module Commands
   class Base
