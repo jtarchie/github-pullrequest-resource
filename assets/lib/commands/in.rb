@@ -77,7 +77,7 @@ module Commands
       if depth = input.params.git.depth
         "--depth #{depth}"
       else
-        '--depth 1'
+        ''
       end
     end
   end

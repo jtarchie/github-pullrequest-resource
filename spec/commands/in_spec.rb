@@ -191,8 +191,8 @@ describe Commands::In do
     end
 
     it 'get submodules with paths' do
-      expect_arg /git submodule update --init --recursive --depth 1 path1/
-      expect_arg /git submodule update --init --recursive --depth 1 path2/
+      expect_arg /git submodule update --init --recursive  path1/
+      expect_arg /git submodule update --init --recursive  path2/
       get('version' => { 'ref' => @ref, 'pr' => '1' }, 'source' => { 'uri' => git_uri, 'repo' => 'jtarchie/test' }, 'params' => { 'git' => { 'submodules' => %w(path1 path2) } })
     end
 
