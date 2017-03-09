@@ -55,6 +55,9 @@ resource_types:
 * `disable_forks`: *Optional.* If set to `true`, it will filter out pull requests that
   were created via users that forked from your repo.
 
+* `label`: *Optional.* If set to a string it will only return pull requests that have been
+marked with that specific label. It is case insensitive.
+
 * `username`: *Optional.* Username for HTTP(S) auth when pulling/pushing.
   This is needed when only HTTP/HTTPS protocol for git is available (which does not support private key auth)
   and auth is required.
