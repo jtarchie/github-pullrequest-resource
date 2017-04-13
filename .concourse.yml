@@ -129,7 +129,10 @@ jobs:
         passed: [ 'test-pr-merge' ]
       - task: next-tag
         config:
-          image: /var/vcap/packages/git_resource/rootfs
+          image_resource:
+            type: docker-image
+            source:
+              repository: concourse/git-resource
           platform: linux
           inputs:
             - name: git-pr
