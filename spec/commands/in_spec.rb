@@ -98,6 +98,29 @@ describe Commands::In do
         end.to raise_error('git clone failed')
       end
     end
+
+    context 'disabling `git` operations' do
+      def dest_dir
+        @dest_dir ||= Dir.mktmpdir
+      end
+
+      before(:all) do
+        stub_json('https://api.github.com:443/repos/jtarchie/test/pulls/1', html_url: 'http://example.com', number: 1, head: { ref: 'foo' }, base: { ref: 'master' })
+        @output = get('version' => { 'ref' => @ref, 'pr' => '1' }, 'source' => { 'uri' => git_uri, 'repo' => 'jtarchie/test' }, 'params' => { 'skip' => true })
+      end
+
+      it 'can be disabled so' do
+        expect(git('log', dest_dir)).to eq ''
+      end
+
+      it 'returns the correct JSON metadata' do
+        expect(@output).to eq('version' => { 'ref' => @ref, 'pr' => '1' },
+                              'metadata' => [{
+                                'name' => 'url',
+                                'value' => 'http://example.com'
+                              }])
+      end
+    end
   end
 
   context 'when the PR is meregable' do
@@ -157,7 +180,7 @@ describe Commands::In do
     end
   end
 
-  fcontext 'with specific `git` params' do
+  context 'with specific `git` params' do
     before do
       stub_json('https://api.github.com:443/repos/jtarchie/test/pulls/1',
                 html_url: 'http://example.com', number: 1,
