@@ -2,3 +2,4 @@
 example/
 .bundle
 bin
+.secrets.yml
