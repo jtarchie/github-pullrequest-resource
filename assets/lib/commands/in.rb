@@ -20,29 +20,27 @@ module Commands
 
       raise 'PR has merge conflicts' if pr['mergeable'] == false && fetch_merge
 
-      unless input.params.skip
-        system("git clone #{depth_flag} #{uri} #{destination} 1>&2")
+      system("git clone #{depth_flag} #{uri} #{destination} 1>&2")
 
-        raise 'git clone failed' unless $CHILD_STATUS.exitstatus.zero?
+      raise 'git clone failed' unless $CHILD_STATUS.exitstatus.zero?
 
-        Dir.chdir(destination) do
-          raise 'git clone failed' unless system("git fetch -q origin pull/#{id}/#{remote_ref}:#{branch_ref} 1>&2")
+      Dir.chdir(destination) do
+        raise 'git clone failed' unless system("git fetch -q origin pull/#{id}/#{remote_ref}:#{branch_ref} 1>&2")
 
-          system <<-BASH
+        system <<-BASH
           git checkout #{branch_ref} 1>&2
           git config --add pullrequest.url #{pr['html_url']} 1>&2
           git config --add pullrequest.id #{pr['number']} 1>&2
           git config --add pullrequest.branch #{pr['head']['ref']} 1>&2
           git config --add pullrequest.basebranch #{pr['base']['ref']} 1>&2
-          BASH
+        BASH
 
-          case input.params.git.submodules
-          when 'all', nil
-            system("git submodule update --init --recursive #{depth_flag} 1>&2")
-          when Array
-            input.params.git.submodules.each do |path|
-              system("git submodule update --init --recursive #{depth_flag} #{path} 1>&2")
-            end
+        case input.params.git.submodules
+        when 'all', nil
+          system("git submodule update --init --recursive #{depth_flag} 1>&2")
+        when Array
+          input.params.git.submodules.each do |path|
+            system("git submodule update --init --recursive #{depth_flag} #{path} 1>&2")
           end
         end
       end

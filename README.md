@@ -125,9 +125,6 @@ git config --get pullrequest.basebranch # returns the base branch used for the p
   would be otherwise it will fetch the origin branch.
   Defaults to `false`.
 
-* `skip`: *Optional*. If set to `true`, it will skip checking out and setting up
-  meta information. Only use with `get_params` to make it `put` happen *faster*.
-
 ### `out`: Update the status of a pull request
 
 Set the status message for `concourse-ci` context on specified pull request.
