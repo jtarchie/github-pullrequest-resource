@@ -52,8 +52,8 @@ resource_types:
 * `api_endpoint`: *Optional.* If the repository is located on a GitHub Enterprise
   instance you need to specify the base api endpoint (e.g. "https://\<hostname\>/api/v3/").
 
-* `disable_forks`: *Optional.* If set to `true`, it will filter out pull requests that
-  were created via users that forked from your repo.
+* `disable_forks`: *Optional*, default false. If set to `true`, it will filter
+  out pull requests that were created via users that forked from your repo.
 
 * `label`: *Optional.* If set to a string it will only return pull requests that have been
 marked with that specific label. It is case insensitive.
@@ -116,14 +116,12 @@ git config --get pullrequest.basebranch # returns the base branch used for the p
 * `git.depth`: *Optional.* If a positive integer is given, *shallow* clone the
   repository using the `--depth` option. 
 
-* `git.submodules`: *Optional.* If `none`, submodules will not be
+* `git.submodules`: *Optional*, default `all`. If `none`, submodules will not be
   fetched. If specified as a list of paths, only the given paths will be
-  fetched. If not specified, or if `all` is explicitly specified, all
-  submodules are fetched.
+  fetched. If `all`, all submodules are fetched.
 
-* `fetch_merge`: *Optional*. If set to `true`, it will fetch what the result of PR
-  would be otherwise it will fetch the origin branch.
-  Defaults to `false`.
+* `fetch_merge`: *Optional*, default `false`. If set to `true`, it will fetch
+  what the result of PR would be otherwise it will fetch the origin branch.
 
 ### `out`: Update the status of a pull request
 
