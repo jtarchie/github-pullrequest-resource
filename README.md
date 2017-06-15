@@ -25,7 +25,7 @@ resource_types:
     Example: `jtarchie/pullrequest-resource`
 
 * `access_token`: *Required.* An access token with `repo:status` access is
-  required for *public* repos. An access tocken with `repo` access is required for
+  required for *public* repos. An access token with `repo` access is required for
   *private* repos.
 
 * `uri`: *Optional.* The URI to the github repo. By default, it assumes
