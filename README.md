@@ -120,8 +120,11 @@ git config --get pullrequest.basebranch # returns the base branch used for the p
   fetched. If specified as a list of paths, only the given paths will be
   fetched. If `all`, all submodules are fetched.
 
+* `git.disable_lfs`: *Optional.* If `true`, will not fetch Git LFS files.
+
 * `fetch_merge`: *Optional*, default `false`. If set to `true`, it will fetch
   what the result of PR would be otherwise it will fetch the origin branch.
+
 
 ### `out`: Update the status of a pull request
 

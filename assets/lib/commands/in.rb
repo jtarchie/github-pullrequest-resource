@@ -43,6 +43,11 @@ module Commands
             system("git submodule update --init --recursive #{depth_flag} #{path} 1>&2")
           end
         end
+
+        unless input.params.git.disable_lfs
+          system('git lfs fetch 1>&2')
+          system('git lfs checkout 1>&2')
+        end
       end
 
       {

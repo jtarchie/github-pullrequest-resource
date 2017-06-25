@@ -175,6 +175,18 @@ describe Commands::In do
       expect_any_instance_of(Commands::In).not_to receive(:system).with(*args).and_call_original
     end
 
+    it 'gets lfs' do
+      expect_arg /git lfs fetch/
+      expect_arg /git lfs checkout/
+      get('version' => { 'ref' => @ref, 'pr' => '1' }, 'source' => { 'uri' => git_uri, 'repo' => 'jtarchie/test' }, 'params' => {})
+    end
+
+    it 'disables lfs' do
+      dont_expect_arg /git lfs fetch/
+      dont_expect_arg /git lfs checkout/
+      get('version' => { 'ref' => @ref, 'pr' => '1' }, 'source' => { 'uri' => git_uri, 'repo' => 'jtarchie/test' }, 'params' => {'git' => {'disable_lfs' => true}})
+    end
+
     it 'gets all the submodules' do
       expect_arg /git submodule update --init --recursive/
       get('version' => { 'ref' => @ref, 'pr' => '1' }, 'source' => { 'uri' => git_uri, 'repo' => 'jtarchie/test' }, 'params' => {})
