@@ -1,3 +1,17 @@
+# v24 @ 6/26/2017
+
+* `README.md` updates from @cjcjameson and @richarddowner
+* Add support for `git-lfs`
+
+# v23 @ 3/9/2017
+
+* update LICENSE file
+* support filtering PRs with a specific `label`
+
+# v22 @ 3/1/2017
+
+* remove default `--depth 1` when none is specified
+
 # v21 @ 2/27/2017
 
 * support multiple `contextes` in a single `put`
