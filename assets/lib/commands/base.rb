@@ -1,10 +1,16 @@
 require 'faraday'
-# httpclient and excon are the only Faraday adpater which support
-# the no_proxy environment variable atm
-# NOTE: this has to be set before require octokit
-::Faraday.default_adapter = :httpclient
-
 require 'octokit'
+require 'faraday-http-cache'
+
+stack = Faraday::RackBuilder.new do |builder|
+  builder.use Faraday::HttpCache, serializer: Marshal, shared_cache: false
+  builder.use Octokit::Response::RaiseError
+  # httpclient and excon are the only Faraday adpater which support
+  # the no_proxy environment variable atm
+  builder.adapter :httpclient
+end
+Octokit.middleware = stack
+
 require_relative '../input'
 
 module Commands
