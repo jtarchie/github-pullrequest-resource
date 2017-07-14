@@ -8,7 +8,22 @@ module Filters
     end
 
     def pull_requests
-      @pull_requests ||= Octokit.pulls(input.source.repo, pull_options).map do |pr|
+
+      if File.file?('etag.txt')
+        Octokit.connection_options[:headers]['If-None-Match'] = File.open('etag.txt', "rb").read
+      end
+
+      pulls = Octokit.pulls(input.source.repo, pull_options)
+
+      File.open('etag.txt', 'w') { |file| file.write(Octokit.last_response.headers[:etag]) }
+
+      if pulls == ""
+        pulls = JSON.load(File.open('pulls.json', "rb").read)
+      else
+        File.open('pulls.json', 'w') { |file| file.write(pulls.map(&:to_h).to_json) }
+      end
+
+      @pull_requests ||= pulls.map do |pr|
         PullRequest.new(pr: pr)
       end
     end
