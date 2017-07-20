@@ -8,7 +8,7 @@ RUN apk add --update openssh-client
 RUN apk add --update perl
 RUN apk add --update ruby
 RUN apk add --update ruby-json
-RUN gem install octokit httpclient faraday-http-cache --no-rdoc --no-ri
+RUN gem install octokit activesupport httpclient faraday-http-cache --no-rdoc --no-ri
 
 ADD assets/ /opt/resource/
 RUN chmod +x /opt/resource/*

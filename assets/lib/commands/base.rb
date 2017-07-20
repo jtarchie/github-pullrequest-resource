@@ -1,9 +1,12 @@
 require 'faraday'
 require 'octokit'
 require 'faraday-http-cache'
+require 'active_support/cache'
+require 'active_support/cache/file_store'
 
 stack = Faraday::RackBuilder.new do |builder|
-  builder.use Faraday::HttpCache, serializer: Marshal, shared_cache: false
+  storer = ActiveSupport::Cache::FileStore.new('/tmp', namespace: 'pullrequest')
+  builder.use Faraday::HttpCache, store: storer, serializer: Marshal, shared_cache: true
   builder.use Octokit::Response::RaiseError
   # httpclient and excon are the only Faraday adpater which support
   # the no_proxy environment variable atm
