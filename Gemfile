@@ -3,6 +3,7 @@ source 'https://rubygems.org'
 gem 'octokit'
 gem 'httpclient'
 gem 'faraday-http-cache'
+gem 'activesupport'
 
 group :development do
   gem 'pry'
