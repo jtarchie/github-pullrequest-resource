@@ -141,11 +141,7 @@ Set the status message for `concourse-ci` context on specified pull request.
   (defaults to `status`). Any context will be prepended with `concourse-ci`, so
   a context of `unit-tests` will appear as `concourse-ci/unit-tests` on Github.
 
-* `comment`: *Optional.* The file path of the comment message. Comment owner is same with the owner of `access_token`.
-
-** EXPERIMENTAL **
-
-These are experimental features according to [Github documentation](https://developer.github.com/v3/pulls/#merge-a-pull-request-merge-button). 
+* `comment`: *Optional.* The file path of the comment message. Comment owner is same with the owner of `access_token`. 
 
 * `merge.method`: *Optional.* Use this to merge the PR into the target branch of the PR. There are three available merge methods -- `merge`, `squash`, or `rebase`. Please this [doc](https://developer.github.com/changes/2016-09-26-pull-request-merge-api-update/) for more information.
 
