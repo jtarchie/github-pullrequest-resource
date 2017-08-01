@@ -1,3 +1,8 @@
+# v25 @ 8/1/2017
+
+* support caching of API requests to Github. This decreases hitting the
+rate limit per hour. It does not reduce the number of request, though.
+
 # v24 @ 6/26/2017
 
 * `README.md` updates from @cjcjameson and @richarddowner
