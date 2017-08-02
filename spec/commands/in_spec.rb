@@ -184,7 +184,7 @@ describe Commands::In do
     it 'disables lfs' do
       dont_expect_arg /git lfs fetch/
       dont_expect_arg /git lfs checkout/
-      get('version' => { 'ref' => @ref, 'pr' => '1' }, 'source' => { 'uri' => git_uri, 'repo' => 'jtarchie/test' }, 'params' => {'git' => {'disable_lfs' => true}})
+      get('version' => { 'ref' => @ref, 'pr' => '1' }, 'source' => { 'uri' => git_uri, 'repo' => 'jtarchie/test' }, 'params' => { 'git' => { 'disable_lfs' => true } })
     end
 
     it 'gets all the submodules' do

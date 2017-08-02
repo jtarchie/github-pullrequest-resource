@@ -87,12 +87,12 @@ describe Commands::Check do
   end
 
   context 'when paginating through many PRs' do
-    def stub_body_json(uri, body, headers={})
+    def stub_body_json(uri, body, headers = {})
       stub_request(:get, uri)
         .to_return(headers: {
           'Content-Type' => 'application/json',
-          'ETag' => Digest::MD5.hexdigest(body.to_json),
-      }.merge(headers), body: body.to_json)
+          'ETag' => Digest::MD5.hexdigest(body.to_json)
+        }.merge(headers), body: body.to_json)
     end
 
     def stub_cache_json(uri)
@@ -104,18 +104,16 @@ describe Commands::Check do
       pull_requests = (1..100).map do |i|
         { number: i, head: { sha: "abcdef-#{i}", repo: { full_name: 'jtarchie/test' } }, base: { repo: { full_name: 'jtarchie/test' } } }
       end
-      stub_body_json('https://api.github.com/repos/jtarchie/test/pulls?direction=asc&per_page=100&sort=updated&state=open', pull_requests[0..49], {
-          'Link' => "<https://api.github.com/repos/jtarchie/test/pulls?direction=asc&per_page=100&sort=updated&state=open&page=2>; rel=\"next\""
-      })
+      stub_body_json('https://api.github.com/repos/jtarchie/test/pulls?direction=asc&per_page=100&sort=updated&state=open', pull_requests[0..49], 'Link' => '<https://api.github.com/repos/jtarchie/test/pulls?direction=asc&per_page=100&sort=updated&state=open&page=2>; rel="next"')
       stub_body_json('https://api.github.com/repos/jtarchie/test/pulls?direction=asc&per_page=100&sort=updated&state=open&page=2', pull_requests[50..99])
 
-      first_prs = check('source' => { 'repo' => 'jtarchie/test' } )
+      first_prs = check('source' => { 'repo' => 'jtarchie/test' })
       expect(first_prs.length).to eq 100
       Billy.proxy.reset
 
       stub_cache_json('https://api.github.com/repos/jtarchie/test/pulls?direction=asc&per_page=100&sort=updated&state=open')
       stub_cache_json('https://api.github.com/repos/jtarchie/test/pulls?direction=asc&per_page=100&sort=updated&state=open&page=2')
-      second_prs = check('source' => { 'repo' => 'jtarchie/test' } )
+      second_prs = check('source' => { 'repo' => 'jtarchie/test' })
 
       expect(first_prs).to eq second_prs
       # expect A == B
