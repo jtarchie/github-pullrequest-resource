@@ -151,6 +151,8 @@ Set the status message for `concourse-ci` context on specified pull request.
 
 Please see this repo's [pipeline](https://github.com/jtarchie/pullrequest-resource/blob/master/.concourse.yml) for a perfect example.
 
+There's also an [example](https://github.com/starkandwayne/concourse-pullrequest-playtime) by @starkandwayne.
+
 ## Tests
 
 Requires `ruby` to be installed.
