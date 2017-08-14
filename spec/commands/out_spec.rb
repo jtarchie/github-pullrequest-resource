@@ -233,6 +233,18 @@ describe Commands::Out do
 
             put('params' => { 'status' => 'success', 'path' => 'resource', 'context' => 'my-custom-context' }, 'source' => { 'repo' => 'jtarchie/test' })
           end
+
+          context 'with build specific environment variables' do
+            %w(BUILD_ID BUILD_NAME BUILD_JOB_NAME BUILD_PIPELINE_NAME BUILD_TEAM_NAME ATC_EXTERNAL_URL).each do |env_var|
+              it "evaluates #{env_var} for a context" do
+                ENV[env_var] = 'build-env-var'
+                stub_status_post.with(body: hash_including('context' => 'concourse-ci/build-env-var'))
+
+                put('params' => { 'status' => 'success', 'path' => 'resource', 'context' => "$#{env_var}" }, 'source' => { 'repo' => 'jtarchie/test' })
+                ENV[env_var] = nil
+              end
+            end
+          end
         end
 
         context 'with setting multiple contextes' do

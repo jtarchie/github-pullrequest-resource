@@ -54,7 +54,7 @@ module Commands
           atc_url: atc_url,
           sha: sha,
           repo: repo,
-          context: context
+          context: whitelist(context: context)
         ).create!
       end
 
@@ -84,6 +84,13 @@ module Commands
     end
 
     private
+
+    def whitelist(context:)
+      %w(BUILD_ID BUILD_NAME BUILD_JOB_NAME BUILD_PIPELINE_NAME BUILD_TEAM_NAME ATC_EXTERNAL_URL).each do |name|
+        context.gsub!("$#{name}", ENV[name] || '')
+      end
+      context
+    end
 
     def params
       input.params
