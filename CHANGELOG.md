@@ -1,3 +1,7 @@
+# v26 @ 8/21/2017
+
+* Support evaluating the concourse BUILD environment variables in a context.
+
 # v25 @ 8/1/2017
 
 * support caching of API requests to Github. This decreases hitting the
