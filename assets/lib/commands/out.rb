@@ -86,7 +86,7 @@ module Commands
     private
 
     def whitelist(context:)
-      %w(BUILD_ID BUILD_NAME BUILD_JOB_NAME BUILD_PIPELINE_NAME BUILD_TEAM_NAME ATC_EXTERNAL_URL).each do |name|
+      %w[BUILD_ID BUILD_NAME BUILD_JOB_NAME BUILD_PIPELINE_NAME BUILD_TEAM_NAME ATC_EXTERNAL_URL].each do |name|
         context.gsub!("$#{name}", ENV[name] || '')
       end
       context
@@ -97,14 +97,14 @@ module Commands
     end
 
     def check_defaults!
-      raise %(`status` "#{params.status}" is not supported -- only success, failure, error, or pending) unless %w(success failure error pending).include?(params.status)
-      raise %(`merge.method` "#{params.merge.method}" is not supported -- only merge, squash, or rebase) if params.merge.method && !%w(merge squash rebase).include?(params.merge.method)
+      raise %(`status` "#{params.status}" is not supported -- only success, failure, error, or pending) unless %w[success failure error pending].include?(params.status)
+      raise %(`merge.method` "#{params.merge.method}" is not supported -- only merge, squash, or rebase) if params.merge.method && !%w[merge squash rebase].include?(params.merge.method)
       raise '`path` required in `params`' unless params.path
     end
   end
 end
 
-if __FILE__ == $PROGRAM_NAME
+if $PROGRAM_NAME == __FILE__
   destination = ARGV.shift
   command = Commands::Out.new(destination: destination)
   puts JSON.generate(command.output)

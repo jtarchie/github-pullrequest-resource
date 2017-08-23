@@ -13,7 +13,7 @@ module Filters
 
       return @pull_requests if paths.empty? && ignore_paths.empty?
 
-      @memoized ||= @pull_requests.select do |pr|
+      @memoized ||= @pull_requests.reject do |pr|
         files = Octokit.pull_request_files(@input.source.repo, pr.id)
         unless paths.empty?
           files.select! do |file|
@@ -29,7 +29,7 @@ module Filters
             end
           end
         end
-        !files.empty?
+        files.empty?
       end
     end
   end

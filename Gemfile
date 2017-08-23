@@ -1,9 +1,9 @@
 source 'https://rubygems.org'
 
-gem 'octokit'
-gem 'httpclient'
-gem 'faraday-http-cache'
 gem 'activesupport'
+gem 'faraday-http-cache'
+gem 'httpclient'
+gem 'octokit'
 
 group :development do
   gem 'pry'
@@ -12,7 +12,7 @@ group :development do
 end
 
 group :test do
-  gem 'rspec'
   gem 'puffing-billy'
+  gem 'rspec'
   gem 'webmock'
 end

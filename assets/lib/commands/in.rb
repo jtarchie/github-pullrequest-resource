@@ -88,7 +88,7 @@ module Commands
   end
 end
 
-if __FILE__ == $PROGRAM_NAME
+if $PROGRAM_NAME == __FILE__
   destination = ARGV.shift
   command = Commands::In.new(destination: destination)
   puts JSON.generate(command.output)

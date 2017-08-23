@@ -205,7 +205,7 @@ describe Commands::In do
     it 'get submodules with paths' do
       expect_arg /git submodule update --init --recursive  path1/
       expect_arg /git submodule update --init --recursive  path2/
-      get('version' => { 'ref' => @ref, 'pr' => '1' }, 'source' => { 'uri' => git_uri, 'repo' => 'jtarchie/test' }, 'params' => { 'git' => { 'submodules' => %w(path1 path2) } })
+      get('version' => { 'ref' => @ref, 'pr' => '1' }, 'source' => { 'uri' => git_uri, 'repo' => 'jtarchie/test' }, 'params' => { 'git' => { 'submodules' => %w[path1 path2] } })
     end
 
     it 'checkouts everything by depth' do
@@ -215,7 +215,7 @@ describe Commands::In do
           'source' => { 'uri' => git_uri, 'repo' => 'jtarchie/test' },
           'params' => {
             'git' => {
-              'submodules' => %w(path1 path2),
+              'submodules' => %w[path1 path2],
               'depth' => 100
             }
           })

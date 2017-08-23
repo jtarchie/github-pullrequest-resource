@@ -18,7 +18,7 @@ module Commands
   end
 end
 
-if __FILE__ == $PROGRAM_NAME
+if $PROGRAM_NAME == __FILE__
   command = Commands::Check.new
   puts JSON.generate(command.output)
 end
