@@ -1,8 +1,11 @@
 # Github Pull Request Resource
 
-Tracks pull requests made to a particular github repo. In the spirit of [Travis
+Tracks Github pull requests made to a particular Github repo. In the spirit of [Travis
 CI](https://travis-ci.org/), a status of pending, success, or failure will be
 set on the pull request, which must be explicitly defined in your pipeline.
+
+NOTE: Pull requests are implemented differently between the git repo providers. This
+resource only support *GITHUB*.
 
 ## Deploying to Concourse
 
