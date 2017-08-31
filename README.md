@@ -114,6 +114,17 @@ git config --get pullrequest.id         # returns the ID number of the PR
 git config --get pullrequest.basebranch # returns the base branch used for the pull request
 ```
 
+
+#### Additional files populated
+
+ * `.git/id`: the pull request id
+
+ * `.git/url`: the URL for the pull request
+
+ * `.git/branch`: the branch associated with the pull request
+
+ * `.git/base_branch`: the base branch of the pull request
+
 #### Parameters
 
 * `git.depth`: *Optional.* If a positive integer is given, *shallow* clone the
