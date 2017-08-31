@@ -87,6 +87,27 @@ describe Commands::In do
         value = git('config pullrequest.basebranch', dest_dir)
         expect(value).to eq 'master'
       end
+
+      it 'creates a file that icludes the id in the .git folder' do
+        value = File.read(File.join(dest_dir,'.git','id')).strip()
+        expect(value).to eq '1'
+      end
+
+      it 'creates a file that icludes the url in the .git folder' do
+        value = File.read(File.join(dest_dir,'.git','url')).strip()
+        expect(value).to eq 'http://example.com'
+      end
+
+      it 'creates a file that icludes ahe branch in the .git folder' do
+        value = File.read(File.join(dest_dir,'.git','branch')).strip()
+        expect(value).to eq 'foo'
+      end
+
+      it 'creates a file that icludes the base_branch in the .git folder' do
+        value = File.read(File.join(dest_dir,'.git','base_branch')).strip()
+        expect(value).to eq 'master'
+      end
+
     end
 
     context 'when the git clone fails' do
