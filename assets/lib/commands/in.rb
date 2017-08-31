@@ -10,6 +10,7 @@ module Commands
 
     def initialize(destination:, input: Input.instance)
       @destination = destination
+      @src_destination = "#{@destination}/src"
 
       super(input: input)
     end
@@ -20,11 +21,20 @@ module Commands
 
       raise 'PR has merge conflicts' if pr['mergeable'] == false && fetch_merge
 
-      system("git clone #{depth_flag} #{uri} #{destination} 1>&2")
+      system("git clone #{depth_flag} #{uri} #{@src_destination} 1>&2")
 
       raise 'git clone failed' unless $CHILD_STATUS.exitstatus.zero?
 
-      Dir.chdir(destination) do
+      Dir.chdir(@destination) do
+        system <<-BASH
+          echo "#{pr['html_url']}" > url
+          echo "#{pr['number']}" > id
+          echo "#{pr['head']['ref']}" > branch
+          echo "#{pr['base']['ref']}" > base_branch
+        BASH
+      end
+
+      Dir.chdir(@src_destination) do
         raise 'git clone failed' unless system("git fetch -q origin pull/#{id}/#{remote_ref}:#{branch_ref} 1>&2")
 
         system <<-BASH

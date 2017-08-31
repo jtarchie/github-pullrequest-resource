@@ -13,6 +13,7 @@ describe Commands::In do
   end
 
   let(:dest_dir) { Dir.mktmpdir }
+  let(:src_dest_dir) { "#{dest_dir}/src" }
 
   def get(payload)
     payload['source']['no_ssl_verify'] = true
@@ -51,13 +52,17 @@ describe Commands::In do
         @dest_dir ||= Dir.mktmpdir
       end
 
+      def src_dest_dir
+        @src_dest_dir ||= "#{dest_dir}/src"
+      end
+
       before(:all) do
         stub_json('https://api.github.com:443/repos/jtarchie/test/pulls/1', html_url: 'http://example.com', number: 1, head: { ref: 'foo' }, base: { ref: 'master' })
         @output = get('version' => { 'ref' => @ref, 'pr' => '1' }, 'source' => { 'uri' => git_uri, 'repo' => 'jtarchie/test' })
       end
 
-      it 'checks out the pull request to dest_dir' do
-        expect(@ref).to eq git('log --format=format:%H HEAD', dest_dir)
+      it 'checks out the pull request to src_dest_dir' do
+        expect(@ref).to eq git('log --format=format:%H HEAD', src_dest_dir)
       end
 
       it 'returns the correct JSON metadata' do
@@ -69,22 +74,22 @@ describe Commands::In do
       end
 
       it 'adds metadata to `git config`' do
-        value = git('config --get pullrequest.url', dest_dir)
+        value = git('config --get pullrequest.url', src_dest_dir)
         expect(value).to eq 'http://example.com'
       end
 
       it 'checks out as a branch with a `pr-` prefix' do
-        value = git('rev-parse --abbrev-ref HEAD', dest_dir)
+        value = git('rev-parse --abbrev-ref HEAD', src_dest_dir)
         expect(value).to eq 'pr-foo'
       end
 
       it 'sets config variable to branch name' do
-        value = git('config pullrequest.branch', dest_dir)
+        value = git('config pullrequest.branch', src_dest_dir)
         expect(value).to eq 'foo'
       end
 
       it 'sets config variable to base_branch name' do
-        value = git('config pullrequest.basebranch', dest_dir)
+        value = git('config pullrequest.basebranch', src_dest_dir)
         expect(value).to eq 'master'
       end
     end
@@ -108,7 +113,7 @@ describe Commands::In do
 
         get('version' => { 'ref' => @ref, 'pr' => '1' }, 'source' => { 'uri' => git_uri, 'repo' => 'jtarchie/test' }, 'params' => { 'fetch_merge' => false })
 
-        value = git('rev-parse --abbrev-ref HEAD', dest_dir)
+        value = git('rev-parse --abbrev-ref HEAD', src_dest_dir)
         expect(value).to eq 'pr-foo'
       end
 
@@ -129,7 +134,7 @@ describe Commands::In do
 
         get('version' => { 'ref' => @ref, 'pr' => '1' }, 'source' => { 'uri' => git_uri, 'repo' => 'jtarchie/test' }, 'params:' => { 'fetch_merge' => true })
 
-        value = git('rev-parse --abbrev-ref HEAD', dest_dir)
+        value = git('rev-parse --abbrev-ref HEAD', src_dest_dir)
         expect(value).to eq 'pr-foo'
       end
 
