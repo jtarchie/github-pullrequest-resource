@@ -7,7 +7,6 @@ describe 'get' do
 
   let(:proxy) { Billy::Proxy.new }
   let(:dest_dir) { Dir.mktmpdir }
-  let(:src_dest_dir) { "#{dest_dir}/src" }
   let(:git_dir)  { Dir.mktmpdir }
   let(:git_uri)  { "file://#{git_dir}" }
 
@@ -39,9 +38,9 @@ describe 'get' do
            .and_return(json: { html_url: 'http://example.com', number: 1, head: { ref: 'foo' }, base: { ref: 'master' } })
     end
 
-    it 'checks out the pull request to src_dest_dir' do
+    it 'checks out the pull request to dest_dir' do
       get(version: { ref: @ref, pr: '1' }, source: { access_token: 'abc', uri: git_uri, repo: 'jtarchie/test' })
-      expect(@ref).to eq git('log --format=format:%H HEAD', src_dest_dir)
+      expect(@ref).to eq git('log --format=format:%H HEAD', dest_dir)
     end
   end
 end
