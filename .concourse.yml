@@ -27,7 +27,7 @@ resources:
     source:
       access_token: {{github-access-token}}
       private_key: {{github-private-key}}
-      repo: jtarchie/pullrequest-resource
+      repo: jtarchie/github-pullrequest-resource
       base: master
   - name: merge-pull-requests
     type: pull-request-test
@@ -35,7 +35,7 @@ resources:
       access_token: {{github-access-token}}
       private_key: {{github-private-key}}
       base: test-merge
-      repo: jtarchie/pullrequest-resource
+      repo: jtarchie/github-pullrequest-resource
 
 jobs:
   - name: create-pr
