@@ -24,6 +24,15 @@ module Commands
 
       raise 'git clone failed' unless $CHILD_STATUS.exitstatus.zero?
 
+      Dir.chdir(File.join(destination,'.git')) do
+        system <<-BASH
+          echo "#{pr['html_url']}" > url
+          echo "#{pr['number']}" > id
+          echo "#{pr['head']['ref']}" > branch
+          echo "#{pr['base']['ref']}" > base_branch
+        BASH
+      end
+
       Dir.chdir(destination) do
         raise 'git clone failed' unless system("git fetch -q origin pull/#{id}/#{remote_ref}:#{branch_ref} 1>&2")
 
