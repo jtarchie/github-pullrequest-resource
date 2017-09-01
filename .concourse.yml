@@ -93,7 +93,6 @@ jobs:
     plan:
       - get: git-pr
         passed: [ 'create-pr' ]
-        trigger: true
       - get: merge-pull-requests
         trigger: true
       - put: merge-pull-requests
