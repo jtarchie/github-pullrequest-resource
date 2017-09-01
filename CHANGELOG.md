@@ -1,3 +1,7 @@
+# v27 @ 8/31/2017
+
+* Output the `git config` meta values into files in the `.git/` directory. Thanks @mazubieta
+
 # v26 @ 8/21/2017
 
 * Support evaluating the concourse BUILD environment variables in a context.
@@ -5,7 +9,7 @@
 # v25 @ 8/1/2017
 
 * support caching of API requests to Github. This decreases hitting the
-rate limit per hour. It does not reduce the number of request, though.
+rate limit per hour. It does not reduce the number of requests, though.
 
 # v24 @ 6/26/2017
 
