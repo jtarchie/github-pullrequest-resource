@@ -35,7 +35,7 @@ describe 'get' do
   context 'for every PR that is checked out' do
     before do
       proxy.stub('https://api.github.com:443/repos/jtarchie/test/pulls/1')
-           .and_return(json: { html_url: 'http://example.com', number: 1, head: { ref: 'foo' }, base: { ref: 'master' } })
+           .and_return(json: { html_url: 'http://example.com', number: 1, head: { ref: 'foo' }, base: { ref: 'master', user: { login: 'jtarchie' } } })
     end
 
     it 'checks out the pull request to dest_dir' do
