@@ -112,6 +112,7 @@ git config --get pullrequest.url        # returns the URL to the pull request
 git config --get pullrequest.branch     # returns the branch name used for the pull request
 git config --get pullrequest.id         # returns the ID number of the PR
 git config --get pullrequest.basebranch # returns the base branch used for the pull request
+git config --get pullrequest.userlogin  # returns the github user login for the pull request author
 ```
 
 
@@ -125,10 +126,12 @@ git config --get pullrequest.basebranch # returns the base branch used for the p
 
  * `.git/base_branch`: the base branch of the pull request
 
+ * `.git/user_login`: the user login of the pull request author
+
 #### Parameters
 
 * `git.depth`: *Optional.* If a positive integer is given, *shallow* clone the
-  repository using the `--depth` option. 
+  repository using the `--depth` option.
 
 * `git.submodules`: *Optional*, default `all`. If `none`, submodules will not be
   fetched. If specified as a list of paths, only the given paths will be
@@ -158,7 +161,7 @@ Set the status message for `concourse-ci` context on specified pull request.
   This supports the [build environment](http://concourse.ci/implementing-resources.html#resource-metadata)
   variables provided by concourse. For example, `context: $BUILD_JOB_NAME` will set the context to the job name.
 
-* `comment`: *Optional.* The file path of the comment message. Comment owner is same with the owner of `access_token`. 
+* `comment`: *Optional.* The file path of the comment message. Comment owner is same with the owner of `access_token`.
 
 * `merge.method`: *Optional.* Use this to merge the PR into the target branch of the PR. There are three available merge methods -- `merge`, `squash`, or `rebase`. Please this [doc](https://developer.github.com/changes/2016-09-26-pull-request-merge-api-update/) for more information.
 
@@ -179,4 +182,3 @@ Requires `ruby` to be installed.
   bundle install
   bundle exec rspec
   ```
-
