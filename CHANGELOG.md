@@ -1,3 +1,7 @@
+# v28 @ 9/5/2017
+
+* Output user of the PR to the meta data Thanks @drnic
+
 # v27 @ 8/31/2017
 
 * Output the `git config` meta values into files in the `.git/` directory. Thanks @mazubieta
