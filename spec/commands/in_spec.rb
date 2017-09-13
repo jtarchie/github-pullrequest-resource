@@ -52,7 +52,7 @@ describe Commands::In do
       end
 
       before(:all) do
-        stub_json('https://api.github.com:443/repos/jtarchie/test/pulls/1', html_url: 'http://example.com', number: 1, head: { ref: 'foo' }, base: { ref: 'master', user: { login: 'jtarchie' } })
+        stub_json('https://api.github.com:443/repos/jtarchie/test/pulls/1', html_url: 'http://example.com', number: 1, head: { ref: 'foo', sha: 'hash' }, base: { ref: 'master', user: { login: 'jtarchie' } })
         @output = get('version' => { 'ref' => @ref, 'pr' => '1' }, 'source' => { 'uri' => git_uri, 'repo' => 'jtarchie/test' })
       end
 
@@ -111,6 +111,11 @@ describe Commands::In do
       it 'creates a file that icludes the base_branch in the .git folder' do
         value = File.read(File.join(dest_dir,'.git','base_branch')).strip()
         expect(value).to eq 'master'
+      end
+
+      it 'creates a file that includes the hash of the branch  in the .git folder' do
+        value = File.read(File.join(dest_dir,'.git','branch_sha')).strip()
+        expect(value).to eq 'hash'
       end
 
     end
