@@ -31,7 +31,7 @@ module Commands
           echo "#{pr['head']['ref']}" > branch
           echo "#{pr['base']['ref']}" > base_branch
           echo "#{pr['base']['user']['login']}" > userlogin
-          echo "#{pr['head']['sha']}" > branch_sha
+          echo "#{pr['head']['sha']}" > head_sha
         BASH
       end
 

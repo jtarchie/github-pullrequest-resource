@@ -114,7 +114,7 @@ describe Commands::In do
       end
 
       it 'creates a file that includes the hash of the branch  in the .git folder' do
-        value = File.read(File.join(dest_dir,'.git','branch_sha')).strip()
+        value = File.read(File.join(dest_dir,'.git','head_sha')).strip()
         expect(value).to eq 'hash'
       end
 
