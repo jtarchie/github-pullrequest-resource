@@ -54,7 +54,9 @@ module Commands
           atc_url: atc_url,
           sha: sha,
           repo: repo,
-          context: whitelist(context: context)
+          context: whitelist(context: context),
+          description: params.description,
+          title: params.title
         ).create!
       end
 

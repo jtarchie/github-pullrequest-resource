@@ -221,8 +221,16 @@ describe Commands::Out do
           end
         end
 
+        context 'with a custom context for the status, custom title, and custom description' do
+          it 'sets the context' do
+            stub_status_post.with(body: hash_including('context' => 'my-title/my-custom-context', 'description' => 'My custom description.'))
+
+            put('params' => { 'status' => 'success', 'path' => 'resource', 'context' => 'my-custom-context', 'title' => 'my-title', 'description' => 'My custom description.' }, 'source' => { 'repo' => 'jtarchie/test' })
+          end
+        end
+
         it 'sets the a default context on the status' do
-          stub_status_post.with(body: hash_including('context' => 'concourse-ci/status'))
+          stub_status_post.with(body: hash_including('context' => 'concourse-ci/status', 'description' => 'Concourse CI build success'))
 
           put('params' => { 'status' => 'success', 'path' => 'resource' }, 'source' => { 'repo' => 'jtarchie/test' })
         end
