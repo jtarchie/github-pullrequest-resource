@@ -90,7 +90,7 @@ describe Commands::In do
 
       it 'sets config variable to user_login name' do
         value = git('config pullrequest.userlogin', dest_dir)
-        expect(value).to eq 'jtarchie'
+        expect(value).to eq 'jtarchie-contributor'
       end
 
       it 'creates a file that icludes the id in the .git folder' do
