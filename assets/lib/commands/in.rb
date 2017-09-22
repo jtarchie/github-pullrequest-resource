@@ -30,7 +30,7 @@ module Commands
           echo "#{pr['number']}" > id
           echo "#{pr['head']['ref']}" > branch
           echo "#{pr['base']['ref']}" > base_branch
-          echo "#{pr['base']['user']['login']}" > userlogin
+          echo "#{pr['user']['login']}" > userlogin
           echo "#{pr['head']['sha']}" > head_sha
         BASH
       end
@@ -44,7 +44,7 @@ module Commands
           git config --add pullrequest.id #{pr['number']} 1>&2
           git config --add pullrequest.branch #{pr['head']['ref']} 1>&2
           git config --add pullrequest.basebranch #{pr['base']['ref']} 1>&2
-          git config --add pullrequest.userlogin #{pr['base']['user']['login']} 1>&2
+          git config --add pullrequest.userlogin #{pr['user']['login']} 1>&2
         BASH
 
         case input.params.git.submodules
