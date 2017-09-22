@@ -1,12 +1,14 @@
 require 'octokit'
 
 class Status
-  def initialize(state:, atc_url:, sha:, repo:, context: 'concourse-ci')
+  def initialize(state:, atc_url:, sha:, repo:, title:, description:, context: 'concourse-ci')
     @atc_url = atc_url
     @context = context
     @repo    = repo
     @sha     = sha
     @state   = state
+    @title   = title.nil? ? 'concourse-ci' : title
+    @description = description.nil? ? "Concourse CI build #{@state}" : description
   end
 
   def create!
@@ -14,8 +16,8 @@ class Status
       @repo.name,
       @sha,
       @state,
-      context: "concourse-ci/#{@context}",
-      description: "Concourse CI build #{@state}",
+      context: "#{@title}/#{@context}",
+      description: @description,
       target_url: target_url
     )
   end
