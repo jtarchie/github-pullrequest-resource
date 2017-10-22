@@ -52,7 +52,7 @@ describe Commands::In do
       end
 
       before(:all) do
-        stub_json('https://api.github.com:443/repos/jtarchie/test/pulls/1', html_url: 'http://example.com', number: 1, head: { ref: 'foo', sha: 'hash' }, base: { ref: 'master', user: { login: 'jtarchie' } })
+        stub_json('https://api.github.com:443/repos/jtarchie/test/pulls/1', html_url: 'http://example.com', number: 1, head: { ref: 'foo', sha: 'hash' }, base: { ref: 'master', user: { login: 'jtarchie' } }, user: { login: 'jtarchie-contributor' })
         @output = get('version' => { 'ref' => @ref, 'pr' => '1' }, 'source' => { 'uri' => git_uri, 'repo' => 'jtarchie/test' })
       end
 
@@ -90,7 +90,7 @@ describe Commands::In do
 
       it 'sets config variable to user_login name' do
         value = git('config pullrequest.userlogin', dest_dir)
-        expect(value).to eq 'jtarchie'
+        expect(value).to eq 'jtarchie-contributor'
       end
 
       it 'creates a file that icludes the id in the .git folder' do
@@ -121,7 +121,7 @@ describe Commands::In do
 
     context 'when the git clone fails' do
       it 'provides a helpful erorr message' do
-        stub_json('https://api.github.com:443/repos/jtarchie/test/pulls/1', html_url: 'http://example.com', number: 1, head: { ref: 'foo' }, base: { ref: 'master', user: { login: 'jtarchie' } })
+        stub_json('https://api.github.com:443/repos/jtarchie/test/pulls/1', html_url: 'http://example.com', number: 1, head: { ref: 'foo' }, base: { ref: 'master', user: { login: 'jtarchie' } }, user: { login: 'jtarchie-contributor'})
 
         expect do
           get('version' => { 'ref' => @ref, 'pr' => '1' }, 'source' => { 'uri' => 'invalid_git_uri', 'repo' => 'jtarchie/test' })
@@ -134,7 +134,7 @@ describe Commands::In do
     context 'and fetch_merge is false' do
       it 'checks out as a branch named in the PR' do
         stub_json('https://api.github.com:443/repos/jtarchie/test/pulls/1',
-                  html_url: 'http://example.com', number: 1, head: { ref: 'foo' }, base: { ref: 'master', user: { login: 'jtarchie' } }, mergeable: true)
+                  html_url: 'http://example.com', number: 1, head: { ref: 'foo' }, base: { ref: 'master', user: { login: 'jtarchie' } }, user: { login: 'jtarchie-contributor' }, mergeable: true)
 
         get('version' => { 'ref' => @ref, 'pr' => '1' }, 'source' => { 'uri' => git_uri, 'repo' => 'jtarchie/test' }, 'params' => { 'fetch_merge' => false })
 
@@ -144,7 +144,7 @@ describe Commands::In do
 
       it 'does not fail cloning' do
         stub_json('https://api.github.com:443/repos/jtarchie/test/pulls/1',
-                  html_url: 'http://example.com', number: 1, head: { ref: 'foo' }, base: { ref: 'master', user: { login: 'jtarchie' } }, mergeable: true)
+                  html_url: 'http://example.com', number: 1, head: { ref: 'foo' }, base: { ref: 'master', user: { login: 'jtarchie' } }, user: { login: 'jtarchie-contributor' }, mergeable: true)
 
         expect do
           get('version' => { 'ref' => @ref, 'pr' => '1' }, 'source' => { 'uri' => git_uri, 'repo' => 'jtarchie/test' }, 'params' => { 'fetch_merge' => false })
@@ -155,7 +155,7 @@ describe Commands::In do
     context 'and fetch_merge is true' do
       it 'checks out the branch the PR would be merged into' do
         stub_json('https://api.github.com:443/repos/jtarchie/test/pulls/1',
-                  html_url: 'http://example.com', number: 1, head: { ref: 'foo' }, base: { ref: 'master', user: { login: 'jtarchie' } }, mergeable: true)
+                  html_url: 'http://example.com', number: 1, head: { ref: 'foo' }, base: { ref: 'master', user: { login: 'jtarchie' } }, user: { login: 'jtarchie-contributor' }, mergeable: true)
 
         get('version' => { 'ref' => @ref, 'pr' => '1' }, 'source' => { 'uri' => git_uri, 'repo' => 'jtarchie/test' }, 'params:' => { 'fetch_merge' => true })
 
@@ -165,7 +165,7 @@ describe Commands::In do
 
       it 'does not fail cloning' do
         stub_json('https://api.github.com:443/repos/jtarchie/test/pulls/1',
-                  html_url: 'http://example.com', number: 1, head: { ref: 'foo' }, base: { ref: 'master', user: { login: 'jtarchie' } }, mergeable: true)
+                  html_url: 'http://example.com', number: 1, head: { ref: 'foo' }, base: { ref: 'master', user: { login: 'jtarchie' } }, user: { login: 'jtarchie-contributor' }, mergeable: true)
 
         expect do
           get('version' => { 'ref' => @ref, 'pr' => '1' }, 'source' => { 'uri' => git_uri, 'repo' => 'jtarchie/test' }, 'params' => { 'fetch_merge' => true })
@@ -178,7 +178,7 @@ describe Commands::In do
     context 'and fetch_merge is true' do
       it 'raises a helpful error message' do
         stub_json('https://api.github.com:443/repos/jtarchie/test/pulls/1',
-                  html_url: 'http://example.com', number: 1, head: { ref: 'foo' }, base: { ref: 'master', user: { login: 'jtarchie' } }, mergeable: false)
+                  html_url: 'http://example.com', number: 1, head: { ref: 'foo' }, base: { ref: 'master', user: { login: 'jtarchie' } }, user: { login: 'jtarchie-contributor' }, mergeable: false)
 
         expect do
           get('version' => { 'ref' => @ref, 'pr' => '1' }, 'source' => { 'uri' => git_uri, 'repo' => 'jtarchie/test' }, 'params' => { 'fetch_merge' => true })
@@ -192,7 +192,8 @@ describe Commands::In do
       stub_json('https://api.github.com:443/repos/jtarchie/test/pulls/1',
                 html_url: 'http://example.com', number: 1,
                 head: { ref: 'foo' },
-                base: { ref: 'master', user: { login: 'jtarchie' } })
+                base: { ref: 'master', user: { login: 'jtarchie' } },
+                user: { login: 'jtarchie-contributor' })
     end
 
     def expect_arg(*args)
