@@ -89,9 +89,8 @@ marked with that specific label. It is case insensitive.
 ### `check`: Check for new pull requests
 
 Concourse resources always iterate over the latest version. This maps well to
-semver and git, but not with pull requests. To find the latests pull
-requests, `check` queries for all PRs, selects only PRs without `concourse-ci`
-status messages, and then only returns the oldest one from list.
+semver and git, but not with pull requests. This filters all open PRs
+sorted by most recently updated.
 
 To ensure that `check` can iterate over all PRs, you must explicitly define an
 `out` for the PR.
