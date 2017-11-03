@@ -1,3 +1,11 @@
+# v30
+
+* Use correct user for PR author in the git meta data Thanks @victoru
+
+# v29
+
+* populate file with latest commit hash of PR branch
+
 # v28 @ 9/5/2017
 
 * Output user of the PR to the meta data Thanks @drnic
