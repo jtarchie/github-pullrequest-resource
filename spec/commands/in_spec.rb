@@ -242,6 +242,7 @@ describe Commands::In do
     it 'checkouts everything by depth' do
       expect_arg /git submodule update --init --recursive --depth 100 path1/
       expect_arg /git clone --depth 100/
+      expect_arg /git fetch --depth 100/
       get('version' => { 'ref' => @ref, 'pr' => '1' },
           'source' => { 'uri' => git_uri, 'repo' => 'jtarchie/test' },
           'params' => {
