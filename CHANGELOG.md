@@ -1,3 +1,8 @@
+# v31 @ 11/7/2017
+
+* apply `depth` to the `git fetch` of the PR (thanks @bhcleek)
+* checkout the original branch the PR was made against (thanks @bhcleek)
+
 # v30
 
 * Use correct user for PR author in the git meta data Thanks @victoru
