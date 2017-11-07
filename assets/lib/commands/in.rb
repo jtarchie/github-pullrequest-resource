@@ -36,7 +36,7 @@ module Commands
       end
 
       Dir.chdir(destination) do
-        raise 'git clone failed' unless system("git fetch -q origin pull/#{id}/#{remote_ref}:#{branch_ref} 1>&2")
+        raise 'git clone failed' unless system("git fetch #{depth_flag} -q origin pull/#{id}/#{remote_ref}:#{branch_ref} 1>&2")
 
         system <<-BASH
           git checkout #{branch_ref} 1>&2
