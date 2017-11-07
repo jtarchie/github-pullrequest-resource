@@ -20,7 +20,7 @@ module Commands
 
       raise 'PR has merge conflicts' if pr['mergeable'] == false && fetch_merge
 
-      system("git clone #{depth_flag} #{uri} #{destination} 1>&2")
+      system("git clone #{depth_flag} --branch #{pr['base']['ref']} #{uri} #{destination} 1>&2")
 
       raise 'git clone failed' unless $CHILD_STATUS.exitstatus.zero?
 
