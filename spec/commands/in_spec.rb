@@ -121,7 +121,7 @@ describe Commands::In do
 
     context 'when the git clone fails' do
       it 'provides a helpful erorr message' do
-        stub_json('https://api.github.com:443/repos/jtarchie/test/pulls/1', html_url: 'http://example.com', number: 1, head: { ref: 'foo' }, base: { ref: 'master', user: { login: 'jtarchie' } }, user: { login: 'jtarchie-contributor'})
+        stub_json('https://api.github.com:443/repos/jtarchie/test/pulls/1', html_url: 'http://example.com', number: 1, head: { ref: 'foo' }, base: { ref: 'master', user: { login: 'jtarchie' } }, user: { login: 'jtarchie-contributor' })
 
         expect do
           get('version' => { 'ref' => @ref, 'pr' => '1' }, 'source' => { 'uri' => 'invalid_git_uri', 'repo' => 'jtarchie/test' })
