@@ -4,16 +4,6 @@ require 'faraday-http-cache'
 require 'active_support/cache'
 require 'active_support/cache/file_store'
 
-stack = Faraday::RackBuilder.new do |builder|
-  storer = ActiveSupport::Cache::FileStore.new('/tmp', namespace: 'pullrequest')
-  builder.use Faraday::HttpCache, store: storer, serializer: Marshal, shared_cache: false
-  builder.use Octokit::Response::RaiseError
-  # httpclient and excon are the only Faraday adpater which support
-  # the no_proxy environment variable atm
-  builder.adapter :httpclient
-end
-Octokit.middleware = stack
-
 require_relative '../input'
 
 module Commands
@@ -28,6 +18,19 @@ module Commands
     private
 
     def setup_octokit
+      http_cache = (!input.source.http_cache.present?) || input.source.http_cache
+
+      Octokit.middleware = Faraday::RackBuilder.new do |builder|
+        if http_cache
+          storer = ActiveSupport::Cache::FileStore.new('/tmp', namespace: 'pullrequest') if http_cache
+          builder.use Faraday::HttpCache, store: storer, serializer: Marshal, shared_cache: false if http_cache
+        end
+        builder.use Octokit::Response::RaiseError
+        # httpclient and excon are the only Faraday adpater which support
+        # the no_proxy environment variable atm
+        builder.adapter :httpclient
+      end
+
       Octokit.auto_paginate = true
       Octokit.connection_options[:ssl] = { verify: false } if input.source.no_ssl_verify
       Octokit.configure do |c|

@@ -58,6 +58,9 @@ resource_types:
 * `disable_forks`: *Optional*, default false. If set to `true`, it will filter
   out pull requests that were created via users that forked from your repo.
 
+* `http_cache`: *Optional*, default `true`. If set to `false` no http caching will be done. 
+  Use this in combination with [`webhook_token`](https://concourse.ci/configuring-resources.html#resource-webhook-token).  
+  
 * `label`: *Optional.* If set to a string it will only return pull requests that have been
 marked with that specific label. It is case insensitive.
 
