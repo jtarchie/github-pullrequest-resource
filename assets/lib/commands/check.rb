@@ -7,9 +7,7 @@ require_relative '../repository'
 module Commands
   class Check < Commands::Base
     def output
-      repo.pull_requests.reject do |pr|
-        pr.latest_commit_message.include? '[ci skip]'
-      end
+      repo.pull_requests
     end
 
     private
