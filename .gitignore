@@ -3,3 +3,4 @@ example/
 .bundle
 bin
 .secrets.yml
+test_pipeline.yml

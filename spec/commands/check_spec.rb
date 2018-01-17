@@ -19,6 +19,7 @@ describe Commands::Check do
     before do
       stub_json('https://api.github.com/repos/jtarchie/test/statuses/abcdef', [])
       stub_json('https://api.github.com:443/repos/jtarchie/test/pulls?base=my-base-branch&direction=asc&per_page=100&sort=updated&state=open', [{ number: 1, head: { sha: 'abcdef' } }])
+      stub_json('https://api.github.com:443/repos/jtarchie/test/commits/abcdef', {sha: 'abcdef', commit: {message: 'foo bar'}})
     end
 
     it 'retrieves pull requests for the specified base branch' do
@@ -47,6 +48,7 @@ describe Commands::Check do
   context 'when there is an open pull request' do
     before do
       stub_json('https://api.github.com:443/repos/jtarchie/test/pulls?direction=asc&per_page=100&sort=updated&state=open', [{ number: 1, head: { sha: 'abcdef' } }])
+      stub_json('https://api.github.com:443/repos/jtarchie/test/commits/abcdef', {sha: 'abcdef', commit: { message: 'foo bar'} })
     end
 
     it 'returns SHA of the pull request' do
@@ -62,6 +64,17 @@ describe Commands::Check do
         ]
       end
     end
+
+    context 'and the top commit has [ci skip] in its message' do
+      before do
+        stub_json('https://api.github.com:443/repos/jtarchie/test/pulls?direction=asc&per_page=100&sort=updated&state=open', [{ number: 1, head: { sha: 'abcdef' } }])
+        stub_json('https://api.github.com:443/repos/jtarchie/test/commits/abcdef', {sha: 'abcdef', commit: {message: 'foo [ci skip] bar'}})
+      end
+
+      it 'returns no versions' do
+        expect(check('source' => { 'repo' => 'jtarchie/test' }, 'version' => {})).to eq []
+      end
+    end
   end
 
   context 'when there is more than one open pull request' do
@@ -70,6 +83,8 @@ describe Commands::Check do
                   { number: 1, head: { sha: 'abcdef', repo: { full_name: 'jtarchie/test' } }, base: { repo: { full_name: 'jtarchie/test' } } },
                   { number: 2, head: { sha: 'zyxwvu', repo: { full_name: 'someotherowner/repo' } }, base: { repo: { full_name: 'jtarchie/test' } } }
                 ])
+      stub_json('https://api.github.com:443/repos/jtarchie/test/commits/abcdef', {sha: 'abcdef', commit: { message: 'foo bar' }})
+      stub_json('https://api.github.com:443/repos/jtarchie/test/commits/zyxwvu', {sha: 'abcdef', commit: { message: 'foo bar'}})
     end
 
     it 'returns all PRs oldest to newest last' do
@@ -104,6 +119,11 @@ describe Commands::Check do
       pull_requests = (1..100).map do |i|
         { number: i, head: { sha: "abcdef-#{i}", repo: { full_name: 'jtarchie/test' } }, base: { repo: { full_name: 'jtarchie/test' } } }
       end
+
+      (1..100).each do |j|
+        stub_json("https://api.github.com:443/repos/jtarchie/test/commits/abcdef-#{j}", {sha: "abcdef-#{j}", commit: {message: 'foo bar'}})
+      end
+
       stub_body_json('https://api.github.com/repos/jtarchie/test/pulls?direction=asc&per_page=100&sort=updated&state=open', pull_requests[0..49], 'Link' => '<https://api.github.com/repos/jtarchie/test/pulls?direction=asc&per_page=100&sort=updated&state=open&page=2>; rel="next"')
       stub_body_json('https://api.github.com/repos/jtarchie/test/pulls?direction=asc&per_page=100&sort=updated&state=open&page=2', pull_requests[50..99])
 

@@ -1,14 +1,15 @@
 require_relative '../../assets/lib/filters/label'
 require_relative '../../assets/lib/pull_request'
+require_relative '../../assets/lib/input'
 require 'webmock/rspec'
 
 describe Filters::Label do
   let(:ignore_pr) do
-    PullRequest.new(pr: { 'number' => 1 })
+    PullRequest.new(pr: { 'number' => 1 }, top_commit: {})
   end
 
   let(:pr) do
-    PullRequest.new(pr: { 'number' => 2 })
+    PullRequest.new(pr: { 'number' => 2 }, top_commit: {})
   end
 
   let(:pull_requests) { [ignore_pr, pr] }

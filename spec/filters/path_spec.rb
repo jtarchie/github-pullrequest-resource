@@ -4,11 +4,11 @@ require 'webmock/rspec'
 
 describe Filters::Path do
   let(:ignore_pr) do
-    PullRequest.new(pr: { 'number' => 1 })
+    PullRequest.new(pr: { 'number' => 1 }, top_commit: {})
   end
 
   let(:pr) do
-    PullRequest.new(pr: { 'number' => 2 })
+    PullRequest.new(pr: { 'number' => 2 }, top_commit: {})
   end
 
   let(:pull_requests) { [ignore_pr, pr] }
