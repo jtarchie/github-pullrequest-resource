@@ -125,7 +125,7 @@ git config --get pullrequest.userlogin  # returns the github user login for the 
 
  * `.git/base_branch`: the base branch of the pull request
 
- * `.git/user_login`: the user login of the pull request author
+ * `.git/userlogin`: the user login of the pull request author
 
  * `.git/head_sha`: the latest commit hash of the branch associated with the pull request
 
