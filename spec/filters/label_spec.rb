@@ -5,11 +5,11 @@ require 'webmock/rspec'
 
 describe Filters::Label do
   let(:ignore_pr) do
-    PullRequest.new(pr: { 'number' => 1 }, top_commit: {})
+    PullRequest.new(pr: { 'number' => 1 })
   end
 
   let(:pr) do
-    PullRequest.new(pr: { 'number' => 2 }, top_commit: {})
+    PullRequest.new(pr: { 'number' => 2 })
   end
 
   let(:pull_requests) { [ignore_pr, pr] }

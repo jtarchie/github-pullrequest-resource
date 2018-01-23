@@ -3,13 +3,11 @@ require 'octokit'
 class PullRequest
   def self.from_github(repo:, id:)
     pr = Octokit.pull_request(repo.name, id)
-    tc = Octokit.commit(repo.name, pr['head']['sha'])
-    PullRequest.new(pr: pr, top_commit: tc)
+    PullRequest.new(pr: pr)
   end
 
-  def initialize(pr:, top_commit:)
+  def initialize(pr:)
     @pr = pr
-    @top_commit = top_commit
   end
 
   def from_fork?
@@ -34,10 +32,6 @@ class PullRequest
 
   def sha
     @pr['head']['sha']
-  end
-
-  def latest_commit_message
-    @top_commit['commit']['message']
   end
 
   def url

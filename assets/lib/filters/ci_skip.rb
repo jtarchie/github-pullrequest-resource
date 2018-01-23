@@ -6,10 +6,13 @@ module Filters
     end
 
     def pull_requests
-      unless @input.source.disable_ci_skip
-        @memoized ||= @pull_requests.delete_if { |pr| pr.latest_commit_message =~ /\[(ci skip|skip ci)\]/ }
-      else
+      if !@input.source.ci_skip
         @pull_requests
+      else
+        @memoized ||= @pull_requests.delete_if do |pr|
+          latest_commit = Octokit.commit(@input.source.repo, pr.sha)
+          latest_commit['commit']['message'] =~ /\[(ci skip|skip ci)\]/
+        end
       end
     end
   end

@@ -9,7 +9,7 @@ module Filters
 
     def pull_requests
       @pull_requests ||= Octokit.pulls(input.source.repo, pull_options).map do |pr|
-        PullRequest.new(pr: pr, top_commit: Octokit.commit(input.source.repo, pr['head']['sha']))
+        PullRequest.new(pr: pr)
       end
     end
 

@@ -127,8 +127,6 @@ describe Commands::Out do
                 html_url: 'http://example.com',
                 number: 1,
                 head: { sha: 'abcdef' })
-      stub_json(:get, 'https://api.github.com:443/repos/jtarchie/test/commits/abcdef',
-                sha: "abcdef-#{j}", commit: { message: 'foo bar' })
     end
 
     context 'when setting a status with a comment' do
