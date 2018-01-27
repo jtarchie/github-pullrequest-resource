@@ -72,6 +72,9 @@ marked with that specific label. It is case insensitive.
 
 * `ignore_paths`: *Optional.* The inverse of `paths`; changes to the specified
   files are ignored.
+  
+* `ci_skip`: *Optional.* Filters out PRs that have `[ci skip]` message. Default
+   is `false`.
 
 * `skip_ssl_verification`: *Optional.* Skips git ssl verification by exporting
   `GIT_SSL_NO_VERIFY=true`.
