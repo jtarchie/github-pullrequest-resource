@@ -1,3 +1,7 @@
+# v32 @ 1/27/2018
+
+* enable filtering out PRs that have `ci_skip` messages (thanks @aditya87)
+
 # v31 @ 11/7/2017
 
 * apply `depth` to the `git fetch` of the PR (thanks @bhcleek)
