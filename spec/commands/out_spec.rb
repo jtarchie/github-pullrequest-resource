@@ -271,4 +271,16 @@ describe Commands::Out do
       end
     end
   end
+  context 'when the pull request is supposed to be created' do
+    before do
+      git('config --add pullrequest.id new')
+      stub_status_post
+      stub_request(:post, "https://api.github.com:443/repos/jtarchie/test/pulls").to_return(
+        body: { 'number' => '7', 'html_url' => 'http://example.com', 'head' => { 'sha' => 'abcdef' } }.to_json)
+    end
+    it 'creates a pull request.' do
+      output, = put('params' => { 'status' => 'success', 'path' => 'resource' }, 'source' => { 'repo' => 'jtarchie/test' })
+      expect(output).to eq('version' => { 'ref' => @sha, 'pr' => '7' }, 'metadata' => [{'name' => 'status', 'value' => 'success'}, { 'name' => 'url', 'value' => 'http://example.com' }])
+    end
+  end
 end
