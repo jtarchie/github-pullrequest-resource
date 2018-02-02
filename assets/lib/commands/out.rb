@@ -38,6 +38,19 @@ module Commands
       metadata = [{ 'name' => 'status', 'value' => params['status'] }]
       if id.empty?
         version = { 'ref' => sha }
+      elsif id == 'new'
+        title = Dir.chdir(path) { `git config --get pullrequest.title`.chomp }
+        title = "Concourse CI Pull Request" if title.blank?
+        body = Dir.chdir(path) { `git config --get pullrequest.body`.chomp }
+        merge_into = Dir.chdir(path) { `git config --get pullrequest.merge_into`.chomp }
+        merge_into = "master" if title.blank?
+        branch = Dir.chdir(path) { `git symbolic-ref --short HEAD`.chomp }
+
+        pr_dict = Octokit.create_pull_request(input.source.repo, merge_into, branch, title, body)
+        pr = PullRequest.new(pr: pr_dict)
+        metadata << { 'name' => 'url', 'value' => pr.url }
+        id = pr.id
+        version = { 'pr' => id, 'ref' => sha }
       else
         pr = PullRequest.from_github(repo: repo, id: id)
         metadata << { 'name' => 'url', 'value' => pr.url }
