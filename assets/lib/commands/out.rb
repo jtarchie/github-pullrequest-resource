@@ -42,14 +42,14 @@ module Commands
         title = Dir.chdir(path) { `git config --get pullrequest.title`.chomp }
         title = "Concourse CI Pull Request" if title.blank?
         body = Dir.chdir(path) { `git config --get pullrequest.body`.chomp }
-        merge_into = Dir.chdir(path) { `git config --get pullrequest.merge_into`.chomp }
-        merge_into = "master" if title.blank?
+        merge_into = Dir.chdir(path) { `git config --get pullrequest.mergeinto`.chomp }
+        merge_into = "master" if merge_into.blank?
         branch = Dir.chdir(path) { `git symbolic-ref --short HEAD`.chomp }
 
         pr_dict = Octokit.create_pull_request(input.source.repo, merge_into, branch, title, body)
         pr = PullRequest.new(pr: pr_dict)
         metadata << { 'name' => 'url', 'value' => pr.url }
-        id = pr.id
+        id = pr.id.to_s
         version = { 'pr' => id, 'ref' => sha }
       else
         pr = PullRequest.from_github(repo: repo, id: id)
