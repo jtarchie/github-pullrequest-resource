@@ -15,10 +15,17 @@ describe Commands::Check do
       .to_return(headers: { 'Content-Type' => 'application/json' }, body: body.to_json)
   end
 
+  def stub_prs(uri, body)
+    stub_json(uri, body)
+    body.each do |pr|
+      stub_json(uri.sub('pulls', 'pulls/' + pr[:number].to_s).sub('&per_page=100', ''), pr)
+    end
+  end
+
   context 'when targetting a base branch other than master' do
     before do
       stub_json('https://api.github.com/repos/jtarchie/test/statuses/abcdef', [])
-      stub_json('https://api.github.com:443/repos/jtarchie/test/pulls?base=my-base-branch&direction=asc&per_page=100&sort=updated&state=open', [{ number: 1, head: { sha: 'abcdef' } }])
+      stub_prs('https://api.github.com:443/repos/jtarchie/test/pulls?base=my-base-branch&direction=asc&per_page=100&sort=updated&state=open', [{ number: 1, head: { sha: 'abcdef' } }])
     end
 
     it 'retrieves pull requests for the specified base branch' do
@@ -46,7 +53,7 @@ describe Commands::Check do
 
   context 'when there is an open pull request' do
     before do
-      stub_json('https://api.github.com:443/repos/jtarchie/test/pulls?direction=asc&per_page=100&sort=updated&state=open', [{ number: 1, head: { sha: 'abcdef' } }])
+      stub_prs('https://api.github.com:443/repos/jtarchie/test/pulls?direction=asc&per_page=100&sort=updated&state=open', [{ number: 1, head: { sha: 'abcdef' } }])
     end
 
     it 'returns SHA of the pull request' do
@@ -77,7 +84,7 @@ describe Commands::Check do
 
   context 'when there is more than one open pull request' do
     before do
-      stub_json('https://api.github.com/repos/jtarchie/test/pulls?direction=asc&per_page=100&sort=updated&state=open', [
+      stub_prs('https://api.github.com/repos/jtarchie/test/pulls?direction=asc&per_page=100&sort=updated&state=open', [
                   { number: 1, head: { sha: 'abcdef', repo: { full_name: 'jtarchie/test' } }, base: { repo: { full_name: 'jtarchie/test' } } },
                   { number: 2, head: { sha: 'zyxwvu', repo: { full_name: 'someotherowner/repo' } }, base: { repo: { full_name: 'jtarchie/test' } } }
                 ])
@@ -117,7 +124,9 @@ describe Commands::Check do
       end
 
       stub_body_json('https://api.github.com/repos/jtarchie/test/pulls?direction=asc&per_page=100&sort=updated&state=open', pull_requests[0..49], 'Link' => '<https://api.github.com/repos/jtarchie/test/pulls?direction=asc&per_page=100&sort=updated&state=open&page=2>; rel="next"')
+      stub_prs('https://api.github.com/repos/jtarchie/test/pulls?direction=asc&sort=updated&state=open', pull_requests[0..49])
       stub_body_json('https://api.github.com/repos/jtarchie/test/pulls?direction=asc&per_page=100&sort=updated&state=open&page=2', pull_requests[50..99])
+      stub_prs('https://api.github.com/repos/jtarchie/test/pulls?direction=asc&sort=updated&state=open', pull_requests[50..99])
 
       first_prs = check('source' => { 'repo' => 'jtarchie/test' })
       expect(first_prs.length).to eq 100
