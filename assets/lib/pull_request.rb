@@ -15,9 +15,23 @@ class PullRequest
   end
 
   def mergeable?
-      (@pr['mergeable'] &&
-       @pr['base']['repo']['permissions']['push'] &&
-       Octokit.pull_request_reviews(base_repo, id).any? {|r| r['state'] == 'APPROVED'})
+    @pr['mergeable']
+  end
+
+  def review_approved?
+    Octokit.pull_request_reviews(base_repo, id).any? {|r| r['state'] == 'APPROVED'}
+  end
+
+  def author_associated?
+    # Checks whether the author is associated with the repo that the PR is against:
+    # either the owner of that repo, someone invited to collaborate, or a member
+    # of the organization who owns that repository.
+    %w(OWNER COLLABORATOR MEMBER).include? @pr['author_association']
+  end
+
+  def approved_by_collaborator?
+    Octokit.pull_comments(base_repo, id).any? {|c| (%w(OWNER COLLABORATOR MEMBER).include?(c['author_association']) &&
+                                                    c['body'].downcase.include?('ci ok')) }
   end
 
   def equals?(id:, sha:)
