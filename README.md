@@ -59,10 +59,17 @@ resource_types:
   out pull requests that were created via users that forked from your repo.
 
 * `only_mergeable`: *Optional*, default false. If set to `true`, it will filter
-  out pull requests that are not mergeable.  A pull request is mergeable if
-  - It has no merge conflicts.
-  - The current user has push permissions to the base repository.
-  - It has at least one review and has been Approved.
+  out pull requests that are not mergeable.  A pull request is mergeable if it has no merge conflicts.
+
+* `require_review_approval`: *Optional*, default false.  If set to `true`, it will
+  filter out pull requests that do not have an Approved review.
+
+* `require_manual_approval`: *Optional*, default false.  If set to `true`, it will
+  filter out pull requests, unless there is a comment on the PR containing the string
+  `ci ok`, from a collaborator, repo owner, or organization member.
+
+* `authorship_restriction`: *Optional*, default false.  If set to `true`, will only
+  return PRs created by someone who is a collaborator, repo owner, or organization member.
 
 * `label`: *Optional.* If set to a string it will only return pull requests that have been
 marked with that specific label. It is case insensitive.
