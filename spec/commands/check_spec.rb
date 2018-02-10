@@ -26,6 +26,28 @@ describe Commands::Check do
     end
   end
 
+  context 'when targeting head branch other than any' do
+    before do
+      stub_json('https://api.github.com/repos/jtarchie/test/statuses/abcdef', [])
+      stub_json('https://api.github.com:443/repos/jtarchie/test/pulls?base=my-base-branch&head=jtarchie:my-feature-branch&direction=asc&per_page=100&sort=updated&state=open', [{ number: 1, head: { sha: 'abcdef' } }])
+    end
+
+    it 'retrieves pull requests for the specified head branch' do
+      expect(check('source' => { 'repo' => 'jtarchie/test', 'base' => 'my-base-branch', 'head' => 'jtarchie:my-feature-branch' })).to eq [{ 'ref' => 'abcdef', 'pr' => '1' }]
+    end
+  end
+
+  context 'when targeting an invalid head branch' do
+    before do
+      stub_json('https://api.github.com/repos/jtarchie/test/statuses/abcdef', [])
+      stub_json('https://api.github.com:443/repos/jtarchie/test/pulls?head=no-user-in-head&direction=asc&per_page=100&sort=updated&state=open', [])
+    end
+
+    it 'retrieves all pull requests' do
+      expect(check('source' => { 'repo' => 'jtarchie/test', 'head' => 'no-user-in-head' })).to eq []
+    end
+  end
+
   context 'when there are no pull requests' do
     before do
       stub_json('https://api.github.com/repos/jtarchie/test/pulls?direction=asc&per_page=100&sort=updated&state=open', [])
