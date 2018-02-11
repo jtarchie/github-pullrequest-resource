@@ -38,6 +38,10 @@ class PullRequest
     @pr['html_url']
   end
 
+  def state
+    @pr['state']
+  end
+
   private
 
   def base_repo
