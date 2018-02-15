@@ -38,6 +38,7 @@ describe 'out' do
     proxy.stub("https://api.github.com:443/repos/jtarchie/test/statuses/#{@sha}")
          .and_return(json: [])
     ENV['BUILD_ID'] = '1234'
+    ENV['ATC_EXTERNAL_URL'] = 'default-test-atc-url.com'
   end
 
   context 'when the git repo has no pull request meta information' do
