@@ -103,8 +103,6 @@ To ensure that `check` can iterate over all PRs, you must explicitly define an
 Clones the repository to the destination, and locks it down to a given ref. It is important
 to specify `version: every`, otherwise you will only ever get the latest PR.
 
-Submodules are initialized and updated recursively, there is no option to to disable that, currently.
-
 There is `git config` information set on the repo about the PR, which can be consumed within your tasks.
 
 For example:
