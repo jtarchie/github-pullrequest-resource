@@ -45,70 +45,6 @@ describe Commands::Out do
   end
 
   context 'when the git repo has no pull request meta information' do
-    context 'when the merge is set' do
-      it 'retuns an error for unsupported merge types' do
-        stub_status_post
-
-        expect do
-          put('params' => { 'status' => 'success', 'merge' => { 'method' => 'do not care' }, 'path' => 'resource' }, 'source' => { 'repo' => 'jtarchie/test' })
-        end.to raise_error '`merge.method` "do not care" is not supported -- only merge, squash, or rebase'
-      end
-
-      it 'returns metadata on success' do
-        stub_status_post
-        stub_request(:put, 'https://api.github.com/repos/jtarchie/test/pulls/merge')
-          .with(body: { merge_method: 'merge', commit_message: '' }.to_json)
-
-        output = put('params' => { 'status' => 'success', 'merge' => { 'method' => 'merge' }, 'path' => 'resource' }, 'source' => { 'repo' => 'jtarchie/test' })
-        expect(output).to eq('version'  => { 'ref' => @sha },
-                             'metadata' => [
-                               { 'name' => 'status', 'value' => 'success' },
-                               { 'name' => 'merge', 'value' => 'merge' },
-                               { 'name' => 'merge_commit_msg', 'value' => '' }
-                             ])
-      end
-
-      context 'on merge failure' do
-        it 'raises an error' do
-          stub_status_post
-          stub_request(:put, 'https://api.github.com/repos/jtarchie/test/pulls/merge')
-            .to_return(status: 405)
-
-          expect do
-            put('params' => { 'status' => 'success', 'merge' => { 'method' => 'merge' }, 'path' => 'resource' }, 'source' => { 'repo' => 'jtarchie/test' })
-          end.to raise_error Octokit::MethodNotAllowed
-        end
-      end
-
-      context 'with a commit message' do
-        it 'sets the commit message' do
-          File.write(File.join(dest_dir, 'merge_commit_msg'), 'merge commit message')
-
-          stub_status_post
-          stub_request(:put, 'https://api.github.com/repos/jtarchie/test/pulls/merge')
-            .with(body: { merge_method: 'merge', commit_message: 'merge commit message' }.to_json)
-
-          output = put('params' => { 'status' => 'success', 'merge' => { 'method' => 'merge', 'commit_msg' => 'resource/merge_commit_msg' }, 'path' => 'resource' }, 'source' => { 'repo' => 'jtarchie/test' })
-          expect(output).to eq('version'  => { 'ref' => @sha },
-                               'metadata' => [
-                                 { 'name' => 'status', 'value' => 'success' },
-                                 { 'name' => 'merge', 'value' => 'merge' },
-                                 { 'name' => 'merge_commit_msg', 'value' => 'merge commit message' }
-                               ])
-        end
-
-        it 'returns an error if the file does not exist' do
-          stub_status_post
-          stub_request(:put, 'https://api.github.com/repos/jtarchie/test/pulls/merge')
-            .with(body: { merge_method: 'merge', commit_message: 'merge commit message' }.to_json)
-
-          expect do
-            put('params' => { 'status' => 'success', 'merge' => { 'method' => 'merge', 'commit_msg' => 'resource/merge_commit_msg' }, 'path' => 'resource' }, 'source' => { 'repo' => 'jtarchie/test' })
-          end.to raise_error '`merge.commit_msg` "resource/merge_commit_msg" does not exist'
-        end
-      end
-    end
-
     it 'sets the status just on the SHA' do
       stub_status_post
 
@@ -127,6 +63,72 @@ describe Commands::Out do
                 html_url: 'http://example.com',
                 number: 1,
                 head: { sha: 'abcdef' })
+    end
+
+    context 'when the merge is set' do
+      it 'retuns an error for unsupported merge types' do
+        stub_status_post
+
+        expect do
+          put('params' => { 'status' => 'success', 'merge' => { 'method' => 'do not care' }, 'path' => 'resource' }, 'source' => { 'repo' => 'jtarchie/test' })
+        end.to raise_error '`merge.method` "do not care" is not supported -- only merge, squash, or rebase'
+      end
+
+      it 'returns metadata on success' do
+        stub_status_post
+        stub_request(:put, 'https://api.github.com/repos/jtarchie/test/pulls/1/merge')
+          .with(body: { merge_method: 'merge', commit_message: '' }.to_json)
+
+        output = put('params' => { 'status' => 'success', 'merge' => { 'method' => 'merge' }, 'path' => 'resource' }, 'source' => { 'repo' => 'jtarchie/test' })
+        expect(output).to eq('version'  => { 'pr' => '1', 'ref' => @sha },
+                             'metadata' => [
+                               { 'name' => 'status', 'value' => 'success' },
+                               { 'name' => 'url', 'value' => 'http://example.com' },
+                               { 'name' => 'merge', 'value' => 'merge' },
+                               { 'name' => 'merge_commit_msg', 'value' => '' }
+                             ])
+      end
+
+      context 'on merge failure' do
+        it 'raises an error' do
+          stub_status_post
+          stub_request(:put, 'https://api.github.com/repos/jtarchie/test/pulls/1/merge')
+            .to_return(status: 405)
+
+          expect do
+            put('params' => { 'status' => 'success', 'merge' => { 'method' => 'merge' }, 'path' => 'resource' }, 'source' => { 'repo' => 'jtarchie/test' })
+          end.to raise_error Octokit::MethodNotAllowed
+        end
+      end
+
+      context 'with a commit message' do
+        it 'sets the commit message' do
+          File.write(File.join(dest_dir, 'merge_commit_msg'), 'merge commit message')
+
+          stub_status_post
+          stub_request(:put, 'https://api.github.com/repos/jtarchie/test/pulls/1/merge')
+            .with(body: { merge_method: 'merge', commit_message: 'merge commit message' }.to_json)
+
+          output = put('params' => { 'status' => 'success', 'merge' => { 'method' => 'merge', 'commit_msg' => 'resource/merge_commit_msg' }, 'path' => 'resource' }, 'source' => { 'repo' => 'jtarchie/test' })
+          expect(output).to eq('version'  => { 'pr' => '1', 'ref' => @sha },
+                               'metadata' => [
+                                 { 'name' => 'status', 'value' => 'success' },
+                                 { 'name' => 'url', 'value' => 'http://example.com' },
+                                 { 'name' => 'merge', 'value' => 'merge' },
+                                 { 'name' => 'merge_commit_msg', 'value' => 'merge commit message' }
+                               ])
+        end
+
+        it 'returns an error if the file does not exist' do
+          stub_status_post
+          stub_request(:put, 'https://api.github.com/repos/jtarchie/test/pulls/123/merge')
+            .with(body: { merge_method: 'merge', commit_message: 'merge commit message' }.to_json)
+
+          expect do
+            put('params' => { 'status' => 'success', 'merge' => { 'method' => 'merge', 'commit_msg' => 'resource/merge_commit_msg' }, 'path' => 'resource' }, 'source' => { 'repo' => 'jtarchie/test' })
+          end.to raise_error '`merge.commit_msg` "resource/merge_commit_msg" does not exist'
+        end
+      end
     end
 
     context 'when setting a status with a comment' do

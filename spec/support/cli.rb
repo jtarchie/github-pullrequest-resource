@@ -17,7 +17,7 @@ module CliIntegration
 
     response = begin
                  JSON.parse(output)
-               rescue
+               rescue StandardError
                  nil
                end
     [response, error]
@@ -34,7 +34,7 @@ module CliIntegration
 
     response = begin
                  JSON.parse(output)
-               rescue
+               rescue StandardError
                  nil
                end
     [response, error]
