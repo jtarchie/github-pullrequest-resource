@@ -41,6 +41,11 @@ resource_types:
   linking to builds. On newer versions of Concourse ( >= v0.71.0) , the resource will
   automatically sets the URL.
 
+* `head`: *Optional* When set, will only pull PRs made from a specific branch. The default
+  behaviour is any branch. The value of this property needs to be in the format `user:ref-name`
+  where `user` is the name of the repository where the head is located in, and `ref-name` is the
+  name of the reference (e.g. a branch) of the head.
+
 * `private_key`: *Optional.* Private key to use when pulling/pushing.
     Example:
     ```
