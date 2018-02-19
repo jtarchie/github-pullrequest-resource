@@ -77,7 +77,7 @@ marked with that specific label. It is case insensitive.
    is `false`.
 
 * `skip_ssl_verification`: *Optional.* Skips git ssl verification by exporting
-  `GIT_SSL_NO_VERIFY=true`.
+  `GIT_SSL_NO_VERIFY=true` and applying it to the Github API client. 
 
 * `git_config`: *Optional*. If specified as (list of pairs `name` and `value`)
   it will configure git global options, setting each name with each value.
@@ -100,8 +100,9 @@ To ensure that `check` can iterate over all PRs, you must explicitly define an
 
 ### `in`: Clone the repository, at the given pull request ref
 
-Clones the repository to the destination, and locks it down to a given ref. It is important
-to specify `version: every`, otherwise you will only ever get the latest PR.
+Clones the repository to the destination, and locks it down to a given ref. It
+is important to specify `version: every`, otherwise you will only ever get the
+latest PR.
 
 There is `git config` information set on the repo about the PR, which can be consumed within your tasks.
 
