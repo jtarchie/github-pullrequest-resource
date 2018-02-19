@@ -273,4 +273,35 @@ describe Commands::Out do
       end
     end
   end
+  context 'when the pull request is supposed to be created' do
+    before do
+      git('config --add pullrequest.id new')
+      stub_status_post
+      stub_request(:post, "https://api.github.com:443/repos/jtarchie/test/pulls").to_return(
+        body: { 'number' => '7', 'html_url' => 'http://example.com', 'head' => { 'sha' => 'abcdef' } }.to_json)
+    end
+    it 'breaks if there is no origin.' do 
+      expect{put('params' => { 'status' => 'success', 'path' => 'resource' }, 'source' => { 'repo' => 'jtarchie/test' })}.to raise_error(RuntimeError)
+    end
+
+    it 'can use a non-origin remote' do
+      git('remote add foobar git@github.com:jtarchie/test.git')
+      git('config pullrequest.remote foobar')
+      output, = put('params' => { 'status' => 'success', 'path' => 'resource' }, 'source' => { 'repo' => 'jtarchie/test' })
+      expect(output).to eq('version' => { 'ref' => @sha, 'pr' => '7' }, 'metadata' => [{'name' => 'status', 'value' => 'success'}, { 'name' => 'url', 'value' => 'http://example.com' }])
+    end
+    
+    it 'creates a pull request with ssh-format GH remote.' do
+      git('remote add origin git@github.com:jtarchie/test.git')
+      output, = put('params' => { 'status' => 'success', 'path' => 'resource' }, 'source' => { 'repo' => 'jtarchie/test' })
+      expect(output).to eq('version' => { 'ref' => @sha, 'pr' => '7' }, 'metadata' => [{'name' => 'status', 'value' => 'success'}, { 'name' => 'url', 'value' => 'http://example.com' }])
+    end
+
+    it 'creates a pull request with https-format GH remote.' do
+      git('remote add origin https://github.com/jtarchie/test.git')
+      output, = put('params' => { 'status' => 'success', 'path' => 'resource' }, 'source' => { 'repo' => 'jtarchie/test' })
+      expect(output).to eq('version' => { 'ref' => @sha, 'pr' => '7' }, 'metadata' => [{'name' => 'status', 'value' => 'success'}, { 'name' => 'url', 'value' => 'http://example.com' }])
+    end
+
+  end
 end

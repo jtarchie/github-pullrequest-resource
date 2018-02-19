@@ -38,6 +38,42 @@ module Commands
       metadata = [{ 'name' => 'status', 'value' => params['status'] }]
       if id.empty?
         version = { 'ref' => sha }
+      elsif id == 'new'
+        # Create a new pull request.  We need to fetch the PR title, PR body, which branch
+        # to merge into, and the source.  The first three are straightforward.
+        title = Dir.chdir(path) { `git config --get pullrequest.title`.chomp }
+        title = "Concourse CI Pull Request" if title.blank?  # Default title - Concourse CI Pull Request
+        body = Dir.chdir(path) { `git config --get pullrequest.body`.chomp }  # Default body is blank.
+        merge_into = Dir.chdir(path) { `git config --get pullrequest.mergeinto`.chomp }
+        merge_into = "master" if merge_into.blank?  # Default merge-into is master (almost always correct).
+
+        # Fetching the branch (called 'head' in the github docs) is trickier.  We need username:branchname,
+        # but only if the username is different from the username on the repository we're creating the PR in.
+        # First we fetch the branch.  There's a hundred ways to do this, and this is one of them.
+        branch = Dir.chdir(path) { `git symbolic-ref --short HEAD`.chomp }
+        # Then we fetch the remote URL.  We use 'origin' by default, overrideable by pullrequest.remote.
+        which_remote = Dir.chdir(path) { `git config --get pullrequest.remote` }
+        which_remote = "origin" if which_remote.blank?
+        remote = Dir.chdir(path) { `git remote get-url #{which_remote}` }
+        # Could be git@github.com:user/repo.git *or* https://github.com/user/repo.git.
+        # Need to fetch 'user' and 'repo' separately.
+        m = /(?:https:\/\/|git@)github.com(?::|\/)(?<user>\w*)\/(?<repo>[\w-]*)(?:.git)?/.match(remote)
+        # Error handling here.
+        raise %(Remote origin ("#{remote}") does not match GitHub regex.  Remote must be on GitHub.) unless m
+        unless input.source.repo.end_with?(m['repo'])
+          raise %(Remote origin ("#{remote}") does not seem to be related to source.repo ("#{input.source.repo}").) 
+        end
+        # Format 'branch' appropriately.
+        unless input.source.repo.start_with?(m['user'])
+          branch = "%s:%s" % [m['user'], branch]
+        end
+
+        # Create the pull request and format it appropriately for the rest of this function.
+        pr_dict = Octokit.create_pull_request(input.source.repo, merge_into, branch, title, body)
+        pr = PullRequest.new(pr: pr_dict)
+        metadata << { 'name' => 'url', 'value' => pr.url }
+        id = pr.id.to_s
+        version = { 'pr' => id, 'ref' => sha }
       else
         pr = PullRequest.from_github(repo: repo, id: id)
         metadata << { 'name' => 'url', 'value' => pr.url }

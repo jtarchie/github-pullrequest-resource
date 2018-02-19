@@ -152,7 +152,7 @@ Set the status message for `concourse-ci` context on specified pull request.
 
 #### Parameters
 
-* `path`: *Required.* The path of the repository to reference the pull request.
+* `path`: *Required.* The path of the repository to reference the pull request.  In this repository, `git config --get pullrequest.id` must return the number of the pull request you want to update.  If this config value is set to the special string `new`, a new pull request will be created.  See below for more details.
 
 * `status`: *Required.* The status of success, failure, error, or pending.
   * [`on_success`](https://concourse.ci/on-success-step.html) and [`on_failure`](https://concourse.ci/on-failure-step.html) triggers may be useful for you when you wanted to reflect build result to the PR (see the example below).
@@ -169,6 +169,14 @@ Set the status message for `concourse-ci` context on specified pull request.
 * `merge.method`: *Optional.* Use this to merge the PR into the target branch of the PR. There are three available merge methods -- `merge`, `squash`, or `rebase`. Please this [doc](https://developer.github.com/changes/2016-09-26-pull-request-merge-api-update/) for more information.
 
 * `merge.commit_msg`: *Optional.* Used with `merge` to set the commit message for the merge. Specify a file path to the merge commit message.
+
+## Creating pull requests
+
+If the config value `pullrequest.id` is set to `new`, a new pull request will be created.  It will be against the repo specified by the source configuration's `repo` attribute.  The branch at HEAD will be used as the pull-request head, and `master` (or `pullrequest.merge_into`, if set in git config) will be used as the base.  You can set the title and body of the PR using `pullrequest.title` and `pullrequest.body` config values as well.
+
+The local git repository must have a remote which is on github.  If the correct remote is `origin`, no changes need to be made.  If it's something else, set `pullrequest.remote` to the relevant origin name.  Cross-repo pull requests are supported - if the local repo's remote is `git@github.com:user-a/foo.git` and `source.repo` is `user-b/foo`, the correct pull request will be made.
+
+When creating a pull request, `git push` is *not* executed, so if you have updated the code in a previous task, you will need a `put` step to update GitHub first.
 
 ## Example pipeline
 

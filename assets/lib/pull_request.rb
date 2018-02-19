@@ -1,3 +1,4 @@
+require 'json'
 require 'octokit'
 
 class PullRequest
@@ -7,6 +8,11 @@ class PullRequest
   end
 
   def initialize(pr:)
+    # Octokit returns a raw JSON string instead of a hash on PR creation.
+    # Until this bug is fixed upstream, parse JSON strings into hashes.
+    if pr.is_a?(String)
+      pr = JSON.load(pr)
+    end
     @pr = pr
   end
 
