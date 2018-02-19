@@ -16,7 +16,7 @@ describe Commands::Out do
   end
 
   def put(payload)
-    payload['source']['no_ssl_verify'] = true
+    payload['source']['skip_ssl_verification'] = true
     Input.instance(payload: payload)
 
     resource_dir = Dir.mktmpdir

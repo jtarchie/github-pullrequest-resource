@@ -4,7 +4,7 @@ require 'json'
 describe 'check' do
   def check(payload)
     path = ['./assets/check', '/opt/resource/check'].find { |p| File.exist? p }
-    payload[:source][:no_ssl_verify] = true
+    payload[:source][:skip_ssl_verification] = true
 
     output = `echo '#{JSON.generate(payload)}' | env http_proxy=#{proxy.url} #{path}`
     JSON.parse(output)

@@ -15,7 +15,7 @@ describe Commands::In do
   let(:dest_dir) { Dir.mktmpdir }
 
   def get(payload)
-    payload['source']['no_ssl_verify'] = true
+    payload['source']['skip_ssl_verification'] = true
     Input.instance(payload: payload)
     command = Commands::In.new(destination: dest_dir)
     command.output

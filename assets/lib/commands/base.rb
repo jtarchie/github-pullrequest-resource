@@ -29,7 +29,7 @@ module Commands
 
     def setup_octokit
       Octokit.auto_paginate = true
-      Octokit.connection_options[:ssl] = { verify: false } if input.source.no_ssl_verify
+      Octokit.connection_options[:ssl] = { verify: false } if input.source.skip_ssl_verification
       Octokit.configure do |c|
         c.api_endpoint = input.source.api_endpoint if input.source.api_endpoint
         c.access_token = input.source.access_token

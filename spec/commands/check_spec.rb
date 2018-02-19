@@ -4,7 +4,7 @@ require 'json'
 
 describe Commands::Check do
   def check(payload)
-    payload['source']['no_ssl_verify'] = true
+    payload['source']['skip_ssl_verification'] = true
 
     Input.instance(payload: payload)
     Commands::Check.new.output.map &:as_json
