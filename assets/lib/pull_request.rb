@@ -31,11 +31,6 @@ class PullRequest
     %w(OWNER COLLABORATOR MEMBER).include? @pr['author_association']
   end
 
-  def approved_by_collaborator?
-    Octokit.pull_comments(base_repo, id).any? {|c| (%w(OWNER COLLABORATOR MEMBER).include?(c['author_association']) &&
-                                                    c['body'].downcase.include?('ci ok')) }
-  end
-
   def equals?(id:, sha:)
     [self.sha, self.id.to_s] == [sha, id.to_s]
   end

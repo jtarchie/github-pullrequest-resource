@@ -64,10 +64,6 @@ resource_types:
 * `require_review_approval`: *Optional*, default false.  If set to `true`, it will
   filter out pull requests that do not have an Approved review.
 
-* `require_manual_approval`: *Optional*, default false.  If set to `true`, it will
-  filter out pull requests, unless there is a comment on the PR containing the string
-  `ci ok`, from a collaborator, repo owner, or organization member.
-
 * `authorship_restriction`: *Optional*, default false.  If set to `true`, will only
   return PRs created by someone who is a collaborator, repo owner, or organization member.
 
