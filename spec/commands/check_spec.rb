@@ -87,9 +87,9 @@ describe Commands::Check do
   context 'when there is more than one open pull request' do
     before do
       stub_prs('https://api.github.com/repos/jtarchie/test/pulls?direction=asc&per_page=100&sort=updated&state=open', [
-                  { number: 1, head: { sha: 'abcdef', repo: { full_name: 'jtarchie/test' } }, base: { repo: { full_name: 'jtarchie/test' } } },
-                  { number: 2, head: { sha: 'zyxwvu', repo: { full_name: 'someotherowner/repo' } }, base: { repo: { full_name: 'jtarchie/test' } } }
-                ])
+                 { number: 1, head: { sha: 'abcdef', repo: { full_name: 'jtarchie/test' } }, base: { repo: { full_name: 'jtarchie/test' } } },
+                 { number: 2, head: { sha: 'zyxwvu', repo: { full_name: 'someotherowner/repo' } }, base: { repo: { full_name: 'jtarchie/test' } } }
+               ])
     end
 
     it 'returns all PRs oldest to newest last' do

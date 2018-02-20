@@ -5,11 +5,11 @@ require 'webmock/rspec'
 
 describe Filters::Mergeable do
   let(:ignore_pr) do
-    PullRequest.new(pr: { 'number' => 1, 'head' => { 'sha' => 'abc' }, 'mergeable' => false})
+    PullRequest.new(pr: { 'number' => 1, 'head' => { 'sha' => 'abc' }, 'mergeable' => false })
   end
 
   let(:pr) do
-    PullRequest.new(pr: { 'number' => 2, 'head' => { 'sha' => 'def' }, 'mergeable' => true})
+    PullRequest.new(pr: { 'number' => 2, 'head' => { 'sha' => 'def' }, 'mergeable' => true })
   end
 
   let(:pull_requests) { [ignore_pr, pr] }
