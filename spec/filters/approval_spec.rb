@@ -6,12 +6,12 @@ require 'webmock/rspec'
 describe Filters::Approval do
   let(:ignore_pr) do
     PullRequest.new(pr: { 'number' => 1, 'head' => { 'sha' => 'abc' }, 'author_association' => 'NONE',
-                          'base' => { 'repo' => {'full_name' => 'user/repo', 'permissions' => {'push' => true} } } })
+                          'base' => { 'repo' => { 'full_name' => 'user/repo', 'permissions' => { 'push' => true } } } })
   end
 
   let(:pr) do
     PullRequest.new(pr: { 'number' => 2, 'head' => { 'sha' => 'def' }, 'author_association' => 'OWNER',
-                          'base' => { 'repo' => {'full_name' => 'user/repo', 'permissions' => {'push' => true} } } })
+                          'base' => { 'repo' => { 'full_name' => 'user/repo', 'permissions' => { 'push' => true } } } })
   end
 
   let(:pull_requests) { [ignore_pr, pr] }
@@ -36,7 +36,7 @@ describe Filters::Approval do
       expect(filter.pull_requests).to eq pull_requests
     end
   end
-  
+
   context 'when owner filtering is enabled' do
     it 'only returns PRs that are repo-owners' do
       payload = { 'source' => { 'repo' => 'user/repo', 'require_manual_approval' => false, 'require_review_approval' => false, 'authorship_restriction' => true } }
@@ -59,5 +59,4 @@ describe Filters::Approval do
       expect(filter.pull_requests).to eq [pr]
     end
   end
-
 end
