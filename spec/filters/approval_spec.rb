@@ -60,20 +60,4 @@ describe Filters::Approval do
     end
   end
 
-  context 'when manual approval filtering is enabled' do
-    before do
-      stub_json(%r{https://api.github.com/repos/user/repo/pulls/1/comments}, [{ 'author_association' => 'OWNER', 'body' => 'other comment' },
-                                                                              { 'author_association' => 'NONE', 'body' => 'ci ok' }])
-      stub_json(%r{https://api.github.com/repos/user/repo/pulls/2/comments}, [{ 'author_association' => 'OWNER', 'body' => 'ci ok' }])
-    end
-
-    it 'only returns PRs that are approved' do
-      payload = { 'source' => { 'repo' => 'user/repo', 'require_manual_approval' => true, 'require_review_approval' => false, 'authorship_restriction' => false } }
-      filter = described_class.new(pull_requests: pull_requests, input: Input.instance(payload: payload))
-
-      expect(filter.pull_requests).to eq [pr]
-    end
-  end
-
-
 end
