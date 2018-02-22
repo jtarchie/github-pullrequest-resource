@@ -28,6 +28,7 @@ module Commands
         system <<-BASH
           echo "#{pr['html_url']}" > url
           echo "#{pr['number']}" > id
+          echo "#{pr['body']}" > body
           echo "#{pr['head']['ref']}" > branch
           echo "#{pr['base']['ref']}" > base_branch
           echo "#{pr['user']['login']}" > userlogin

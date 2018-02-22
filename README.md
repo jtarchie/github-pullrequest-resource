@@ -131,6 +131,8 @@ git config --get pullrequest.userlogin  # returns the github user login for the 
 
  * `.git/head_sha`: the latest commit hash of the branch associated with the pull request
 
+ * `.git/body`: the body of the pull request.
+
 #### Parameters
 
 * `git.depth`: *Optional.* If a positive integer is given, *shallow* clone the
