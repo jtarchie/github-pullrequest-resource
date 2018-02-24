@@ -188,3 +188,9 @@ Requires `ruby` to be installed.
   bundle install
   bundle exec rspec
   ```
+
+Or with the `Dockerfile`, which runs the tests to see if it can successfully build:
+
+  ```
+  docker build .
+  ```
