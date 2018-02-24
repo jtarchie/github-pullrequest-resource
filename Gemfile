@@ -2,7 +2,7 @@
 
 source 'https://rubygems.org'
 
-ruby '~> 2.5'
+ruby '~> 2.4'
 
 gem 'activesupport'
 gem 'faraday-http-cache'
