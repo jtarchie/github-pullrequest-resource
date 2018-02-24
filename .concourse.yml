@@ -41,7 +41,7 @@ jobs:
   - name: create-pr
     plan:
       - get: git-pr
-        passed: [ 'tests' ]
+        passed: [ 'docker' ]
         trigger: true
       - task: create
         config:
@@ -150,29 +150,10 @@ jobs:
       - put: docker-pr
         params:
           build: git-pr
-          dockerfile: git-pr/Dockerfile.test
+          dockerfile: git-pr/Dockerfile
           tag: tag/name
           get_params:
             skip_download: true
-  - name: tests
-    plan:
-      - get: git-pr
-        passed: [ docker ]
-        trigger: true
-      - task: rspec
-        privileged: true
-        config:
-          image_resource:
-            type: docker-image
-            source:
-              repository: jtarchie/pr
-              tag: test
-          inputs:
-            - name: git-pr
-          platform: linux
-          run:
-            path: sh
-            args: ['-c', 'cd git-pr && bundle install && bundle exec rspec']
   - name: release
     plan:
       - get: git-pr
