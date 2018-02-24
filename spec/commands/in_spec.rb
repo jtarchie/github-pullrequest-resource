@@ -78,6 +78,11 @@ describe Commands::In do
         expect(value).to eq 'pr-foo'
       end
 
+      it 'sets config of the PR body' do
+        value = git('config --get pullrequest.body', dest_dir)
+        expect(value).to eq 'PR Body'
+      end
+
       it 'sets config variable to branch name' do
         value = git('config pullrequest.branch', dest_dir)
         expect(value).to eq 'foo'

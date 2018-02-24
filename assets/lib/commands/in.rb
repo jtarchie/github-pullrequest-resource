@@ -43,6 +43,7 @@ module Commands
           git checkout #{branch_ref} 1>&2
           git config --add pullrequest.url #{pr['html_url']} 1>&2
           git config --add pullrequest.id #{pr['number']} 1>&2
+          git config --add pullrequest.body '#{pr['body']}' 1>&2
           git config --add pullrequest.branch #{pr['head']['ref']} 1>&2
           git config --add pullrequest.basebranch #{pr['base']['ref']} 1>&2
           git config --add pullrequest.userlogin #{pr['user']['login']} 1>&2
