@@ -125,7 +125,7 @@ describe Commands::In do
 
       it 'creates a file that contains the PR body in the .git folder' do
         value = File.read(File.join(dest_dir, '.git', 'body')).strip
-        expect(value).to eq 'PR Body'
+        expect(value).to eq 'PR Body `echo do not execute this`'
       end
     end
 
