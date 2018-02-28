@@ -32,6 +32,7 @@ module Commands
         File.write('body', pr['body'])
         File.write('branch', pr['head']['ref'])
         File.write('base_branch', pr['base']['ref'])
+        File.write('base_sha', pr['base']['sha'])
         File.write('userlogin', pr['user']['login'])
         File.write('head_sha', pr['head']['sha'])
       end
