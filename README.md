@@ -179,7 +179,7 @@ Please see this repo's [pipeline](https://github.com/jtarchie/pullrequest-resour
 
 There's also an [example](https://github.com/starkandwayne/concourse-pullrequest-playtime) by @starkandwayne.
 
-## Tests
+## Running the tests
 
 Requires `ruby` to be installed.
 
