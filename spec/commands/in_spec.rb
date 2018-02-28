@@ -52,7 +52,23 @@ describe Commands::In do
       end
 
       before(:all) do
-        stub_json('https://api.github.com:443/repos/jtarchie/test/pulls/1', html_url: 'http://example.com', number: 1, head: { ref: 'foo', sha: 'hash' }, base: { ref: 'master', user: { login: 'jtarchie' } }, body: 'PR Body', user: { login: 'jtarchie-contributor' })
+        stub_json('https://api.github.com:443/repos/jtarchie/test/pulls/1',
+                  html_url: 'http://example.com',
+                  number: 1,
+                  head: {
+                    ref: 'foo',
+                    sha: 'hash'
+                  },
+                  base: {
+                    ref: 'master',
+                    user: {
+                      login: 'jtarchie'
+                    }
+                  },
+                  body: %(A comment with shell stuff var='\'`rm -rf ./*`\''),
+                  user: {
+                    login: 'jtarchie-contributor'
+                  })
         @output = get('version' => { 'ref' => @ref, 'pr' => '1' }, 'source' => { 'uri' => git_uri, 'repo' => 'jtarchie/test' })
       end
 
@@ -80,7 +96,7 @@ describe Commands::In do
 
       it 'sets config of the PR body' do
         value = git('config --get pullrequest.body', dest_dir)
-        expect(value).to eq 'PR Body'
+        expect(value).to eq "A comment with shell stuff var=''`rm -rf ./*`''"
       end
 
       it 'sets config variable to branch name' do
@@ -125,7 +141,7 @@ describe Commands::In do
 
       it 'creates a file that contains the PR body in the .git folder' do
         value = File.read(File.join(dest_dir, '.git', 'body')).strip
-        expect(value).to eq 'PR Body'
+        expect(value).to eq "A comment with shell stuff var=''`rm -rf ./*`''"
       end
     end
 

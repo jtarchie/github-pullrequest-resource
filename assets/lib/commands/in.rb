@@ -2,6 +2,7 @@
 
 require 'English'
 require 'json'
+require 'shellwords'
 require_relative 'base'
 
 module Commands
@@ -25,15 +26,13 @@ module Commands
       raise 'git clone failed' unless $CHILD_STATUS.exitstatus.zero?
 
       Dir.chdir(File.join(destination, '.git')) do
-        system <<-BASH
-          echo "#{pr['html_url']}" > url
-          echo "#{pr['number']}" > id
-          echo "#{pr['body']}" > body
-          echo "#{pr['head']['ref']}" > branch
-          echo "#{pr['base']['ref']}" > base_branch
-          echo "#{pr['user']['login']}" > userlogin
-          echo "#{pr['head']['sha']}" > head_sha
-        BASH
+        File.write('url', pr['html_url'])
+        File.write('id', pr['number'])
+        File.write('body', pr['body'])
+        File.write('branch', pr['head']['ref'])
+        File.write('base_branch', pr['base']['ref'])
+        File.write('userlogin', pr['user']['login'])
+        File.write('head_sha', pr['head']['sha'])
       end
 
       Dir.chdir(destination) do
@@ -41,12 +40,12 @@ module Commands
 
         system <<-BASH
           git checkout #{branch_ref} 1>&2
-          git config --add pullrequest.url #{pr['html_url']} 1>&2
-          git config --add pullrequest.id #{pr['number']} 1>&2
-          git config --add pullrequest.body '#{pr['body']}' 1>&2
-          git config --add pullrequest.branch #{pr['head']['ref']} 1>&2
-          git config --add pullrequest.basebranch #{pr['base']['ref']} 1>&2
-          git config --add pullrequest.userlogin #{pr['user']['login']} 1>&2
+          git config --add pullrequest.url #{pr['html_url'].to_s.shellescape} 1>&2
+          git config --add pullrequest.id #{pr['number'].to_s.shellescape} 1>&2
+          git config --add pullrequest.body #{pr['body'].to_s.shellescape} 1>&2
+          git config --add pullrequest.branch #{pr['head']['ref'].to_s.shellescape} 1>&2
+          git config --add pullrequest.basebranch #{pr['base']['ref'].to_s.shellescape} 1>&2
+          git config --add pullrequest.userlogin #{pr['user']['login'].to_s.shellescape} 1>&2
         BASH
 
         case input.params.git.submodules
