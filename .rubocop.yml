@@ -3,7 +3,7 @@
 require: rubocop-rspec
 
 Style/FrozenStringLiteralComment:
-  Enabled: false
+  Enabled: always
 
 AllCops:
   TargetRubyVersion: 2.5

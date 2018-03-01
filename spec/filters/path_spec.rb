@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require_relative '../../assets/lib/filters/path'
 require_relative '../../assets/lib/pull_request'
 require 'webmock/rspec'

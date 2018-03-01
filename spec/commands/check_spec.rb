@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require_relative '../../assets/lib/commands/check'
 require 'webmock/rspec'
 require 'json'

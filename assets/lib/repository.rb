@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require_relative 'filters/all'
 require_relative 'filters/fork'
 require_relative 'filters/label'

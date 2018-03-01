@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require_relative '../../assets/lib/filters/ci_skip'
 require_relative '../../assets/lib/pull_request'
 require_relative '../../assets/lib/input'
