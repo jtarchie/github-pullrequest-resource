@@ -112,6 +112,11 @@ describe Commands::In do
         expect(value).to eq 'master'
       end
 
+      it 'sets config variable to basesha name' do
+        value = git('config pullrequest.basesha', dest_dir)
+        expect(value).to eq 'basehash'
+      end
+
       it 'sets config variable to user_login name' do
         value = git('config pullrequest.userlogin', dest_dir)
         expect(value).to eq 'jtarchie-contributor'

@@ -47,6 +47,7 @@ module Commands
           git config --add pullrequest.body #{pr['body'].to_s.shellescape} 1>&2
           git config --add pullrequest.branch #{pr['head']['ref'].to_s.shellescape} 1>&2
           git config --add pullrequest.basebranch #{pr['base']['ref'].to_s.shellescape} 1>&2
+          git config --add pullrequest.basesha #{pr['base']['sha'].to_s.shellescape} 1>&2
           git config --add pullrequest.userlogin #{pr['user']['login'].to_s.shellescape} 1>&2
         BASH
 
