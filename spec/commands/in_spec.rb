@@ -63,6 +63,7 @@ describe Commands::In do
                   },
                   base: {
                     ref: 'master',
+                    sha: 'basehash',
                     user: {
                       login: 'jtarchie'
                     }
@@ -134,6 +135,11 @@ describe Commands::In do
       it 'creates a file that icludes the base_branch in the .git folder' do
         value = File.read(File.join(dest_dir, '.git', 'base_branch')).strip
         expect(value).to eq 'master'
+      end
+
+      it 'creates a file that icludes the base_sha in the .git folder' do
+        value = File.read(File.join(dest_dir, '.git', 'base_sha')).strip
+        expect(value).to eq 'basehash'
       end
 
       it 'creates a file that includes the hash of the branch  in the .git folder' do
