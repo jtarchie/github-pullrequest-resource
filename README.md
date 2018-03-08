@@ -111,6 +111,7 @@ git config --get pullrequest.branch     # returns the branch name used for the p
 git config --get pullrequest.id         # returns the ID number of the PR
 git config --get pullrequest.body       # returns the PR body
 git config --get pullrequest.basebranch # returns the base branch used for the pull request
+git config --get pullrequest.basesha    # returns the commit of the base branch used for the pull request
 git config --get pullrequest.userlogin  # returns the github user login for the pull request author
 ```
 
