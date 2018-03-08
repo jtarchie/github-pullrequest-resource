@@ -95,9 +95,6 @@ Concourse resources always iterate over the latest version. This maps well to
 semver and git, but not with pull requests. This filters all open PRs
 sorted by most recently updated.
 
-To ensure that `check` can iterate over all PRs, you must explicitly define an
-`out` for the PR.
-
 ### `in`: Clone the repository, at the given pull request ref
 
 Clones the repository to the destination, and locks it down to a given ref. It
