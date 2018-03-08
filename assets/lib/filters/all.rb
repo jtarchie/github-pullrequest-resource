@@ -11,7 +11,7 @@ module Filters
 
     def pull_requests
       @pull_requests ||= Octokit.pulls(input.source.repo, pull_options).map do |pr|
-        PullRequest.new(pr: pr)
+        PullRequest.new(pr: Octokit.pull_request(input.source.repo, pr['number'], pull_options))
       end
     end
 

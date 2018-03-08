@@ -58,6 +58,15 @@ resource_types:
 * `disable_forks`: *Optional*, default false. If set to `true`, it will filter
   out pull requests that were created via users that forked from your repo.
 
+* `only_mergeable`: *Optional*, default false. If set to `true`, it will filter
+  out pull requests that are not mergeable.  A pull request is mergeable if it has no merge conflicts.
+
+* `require_review_approval`: *Optional*, default false.  If set to `true`, it will
+  filter out pull requests that do not have an Approved review.
+
+* `authorship_restriction`: *Optional*, default false.  If set to `true`, will only
+  return PRs created by someone who is a collaborator, repo owner, or organization member.
+
 * `label`: *Optional.* If set to a string it will only return pull requests that have been
 marked with that specific label. It is case insensitive.
 
