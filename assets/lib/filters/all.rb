@@ -10,8 +10,19 @@ module Filters
     end
 
     def pull_requests
-      @pull_requests ||= Octokit.pulls(input.source.repo, pull_options).map do |pr|
-        PullRequest.new(pr: pr)
+      if input.version.pr.nil?
+        @pull_requests ||= Octokit.pulls(input.source.repo, pull_options).map {
+          |pr| PullRequest.new(pr: pr)
+        }
+      else
+        pr = Octokit.pull_request(input.source.repo, input.version.pr)
+        pr.head.sha = input.version.ref
+        last_pr = PullRequest.new(pr: pr)
+        @pull_requests ||= Octokit.pulls(input.source.repo, pull_options).map {
+          |pr| PullRequest.new(pr: pr)
+        }.reject {
+          |pr| pr.id == last_pr.id and pr.sha == last_pr.sha
+        }.unshift(last_pr)
       end
     end
 
