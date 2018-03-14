@@ -11,7 +11,7 @@ module Filters
 
     def pull_requests
       @pull_requests ||= Octokit.pulls(input.source.repo, pull_options).map do |pr|
-        PullRequest.new(pr: pr)
+        PullRequest.new(pr: pr) # keep this lazy, specific filters should pull data if they need to
       end
     end
 
