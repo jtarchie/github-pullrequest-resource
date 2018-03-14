@@ -1,22 +1,29 @@
+# Stage: Base
 FROM alpine as resource
 
-RUN apk add --update ca-certificates
-RUN apk add --update curl
-RUN apk add --update git
-RUN apk add --update jq
-RUN apk add --update openssh-client
-RUN apk add --update perl
-RUN apk add --update ruby
-RUN apk add --update ruby-json
-RUN gem install octokit activesupport httpclient faraday-http-cache --no-rdoc --no-ri
+RUN set -ex; \
+  apk add --update \
+  ca-certificates \
+  curl \
+  git \
+  jq \
+  openssh-client \
+  perl \
+  ruby \
+  ruby-json \
+  ruby-bundler \
+  ; \
+  rm -rf /var/cache/apk/*;
 
+ADD Gemfile Gemfile.lock /opt/resource/
+RUN cd /opt/resource && bundle install --without test development
 ADD assets/ /opt/resource/
 RUN chmod +x /opt/resource/*
 ADD scripts/install_git_lfs.sh install_git_lfs.sh
 RUN ./install_git_lfs.sh
 
+# Stage: Testing
 FROM resource as tests
-COPY . /resource
 
 RUN apk add --update \
     ruby-bundler \
@@ -24,6 +31,14 @@ RUN apk add --update \
     ruby-dev \
     openssl-dev \
     alpine-sdk
-RUN cd /resource && bundle install && bundle exec rspec
 
+COPY Gemfile Gemfile.lock /resource/
+
+RUN cd /resource && bundle install
+
+COPY . /resource
+
+RUN cd /resource && rspec
+
+# Stage: Final
 FROM resource
