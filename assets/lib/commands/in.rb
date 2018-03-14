@@ -34,6 +34,7 @@ module Commands
         File.write('base_branch', pr['base']['ref'])
         File.write('userlogin', pr['user']['login'])
         File.write('head_sha', pr['head']['sha'])
+        File.write('useremail', user['email'])
       end
 
       Dir.chdir(destination) do
@@ -47,6 +48,7 @@ module Commands
           git config --add pullrequest.branch #{pr['head']['ref'].to_s.shellescape} 1>&2
           git config --add pullrequest.basebranch #{pr['base']['ref'].to_s.shellescape} 1>&2
           git config --add pullrequest.userlogin #{pr['user']['login'].to_s.shellescape} 1>&2
+          git config --add pullrequest.useremail #{user['email'].to_s.shellescape} 1>&2
         BASH
 
         case input.params.git.submodules
@@ -74,6 +76,12 @@ module Commands
 
     def pr
       @pr ||= Octokit.pull_request(input.source.repo, input.version.pr)
+    end
+
+    def user
+      @user ||= Octokit.user(pr['user']['login'])
+    rescue StandardError
+      return {'email' => ''}
     end
 
     def uri

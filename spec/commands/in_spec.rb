@@ -28,6 +28,11 @@ describe Commands::In do
       .to_return(headers: { 'Content-Type' => 'application/json' }, body: body.to_json)
   end
 
+  def stub_user
+    stub_json('https://api.github.com/users/jtarchie-contributor',
+              email: 'jtarchie-contributor@fake.local')
+  end
+
   def git(cmd, dir = git_dir)
     Dir.chdir(dir) { `git #{cmd}`.chomp }
   end
@@ -45,6 +50,10 @@ describe Commands::In do
 
     git("update-ref refs/pull/1/head #{@ref}")
     git("update-ref refs/pull/1/merge #{@ref}")
+  end
+
+  before(:each) do
+    stub_user
   end
 
   context 'for every PR that is checked out' do
@@ -71,6 +80,9 @@ describe Commands::In do
                   user: {
                     login: 'jtarchie-contributor'
                   })
+
+        stub_user
+
         @output = get('version' => { 'ref' => @ref, 'pr' => '1' }, 'source' => { 'uri' => git_uri, 'repo' => 'jtarchie/test' })
       end
 
@@ -116,22 +128,27 @@ describe Commands::In do
         expect(value).to eq 'jtarchie-contributor'
       end
 
-      it 'creates a file that icludes the id in the .git folder' do
+      it 'sets config variable to user email address' do
+        value = git('config pullrequest.useremail', dest_dir)
+        expect(value).to eq 'jtarchie-contributor@fake.local'
+      end
+
+      it 'creates a file that includes the id in the .git folder' do
         value = File.read(File.join(dest_dir, '.git', 'id')).strip
         expect(value).to eq '1'
       end
 
-      it 'creates a file that icludes the url in the .git folder' do
+      it 'creates a file that includes the url in the .git folder' do
         value = File.read(File.join(dest_dir, '.git', 'url')).strip
         expect(value).to eq 'http://example.com'
       end
 
-      it 'creates a file that icludes ahe branch in the .git folder' do
+      it 'creates a file that includes ahe branch in the .git folder' do
         value = File.read(File.join(dest_dir, '.git', 'branch')).strip
         expect(value).to eq 'foo'
       end
 
-      it 'creates a file that icludes the base_branch in the .git folder' do
+      it 'creates a file that includes the base_branch in the .git folder' do
         value = File.read(File.join(dest_dir, '.git', 'base_branch')).strip
         expect(value).to eq 'master'
       end
@@ -156,9 +173,19 @@ describe Commands::In do
         end.to raise_error('git clone failed')
       end
     end
+
+    context 'when user does not exist' do
+      it 'sets empty email' do
+        stub_request(:get, 'https://api.github.com/users/jtarchie-contributor').
+          to_return(status: [404, 'Not Found'])
+
+        value = git('config pullrequest.useremail', dest_dir)
+        expect(value).to be_empty
+      end
+    end
   end
 
-  context 'when the PR is meregable' do
+  context 'when the PR is mergeable' do
     context 'and fetch_merge is false' do
       it 'checks out as a branch named in the PR' do
         stub_json('https://api.github.com:443/repos/jtarchie/test/pulls/1',
