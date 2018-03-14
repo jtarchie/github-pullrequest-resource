@@ -112,6 +112,7 @@ git config --get pullrequest.id         # returns the ID number of the PR
 git config --get pullrequest.body       # returns the PR body
 git config --get pullrequest.basebranch # returns the base branch used for the pull request
 git config --get pullrequest.userlogin  # returns the github user login for the pull request author
+git config --get pullrequest.useremail  # returns the github user email address for the pull request author
 ```
 
 
@@ -126,6 +127,8 @@ git config --get pullrequest.userlogin  # returns the github user login for the 
  * `.git/base_branch`: the base branch of the pull request
 
  * `.git/userlogin`: the user login of the pull request author
+ 
+ * `.git/useremail`: the user email address of the pull request author
 
  * `.git/head_sha`: the latest commit hash of the branch associated with the pull request
 
