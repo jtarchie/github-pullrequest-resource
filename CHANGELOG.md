@@ -1,3 +1,17 @@
+# v35 @ 3/14/2018
+
+* filter PRs by the mergeable status (thanks @ndmckinley)
+* filter PRs based on the author's association to the repo (thanks @ndmckinley)
+* Get the SHA of the base branch (thanks @aconrad)
+
+# v34
+
+* fix shell escaping in pull request meta information so it doesn't break with special characters
+
+# v33
+
+* access the Pull Request message body (thanks @ndmckinley)
+
 # v32 @ 1/27/2018
 
 * enable filtering out PRs that have `ci_skip` messages (thanks @aditya87)
