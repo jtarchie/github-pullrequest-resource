@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require_relative '../../assets/lib/filters/mergeable'
 require_relative '../../assets/lib/pull_request'
 require_relative '../../assets/lib/input'
@@ -37,11 +39,11 @@ describe Filters::Mergeable do
 
   context 'when the mergeable filtering is enabled' do
     before do
-      stub_json(%r{https://api.github.com/repos/user/repo/pulls/1/reviews}, [{ 'state' => 'CHANGES_REQUESTED' }])
-      stub_json(%r{https://api.github.com/repos/user/repo/pulls/2/reviews}, [{ 'state' => 'APPROVED' }])
+      stub_json(%r{https://api.github.com/repos/user/repo/pulls/1}, 'mergeable' => false)
+      stub_json(%r{https://api.github.com/repos/user/repo/pulls/2}, 'mergeable' => true)
     end
 
-    it 'only returns PRs with that label' do
+    it 'only returns PRs with that are mergeable' do
       payload = { 'source' => { 'repo' => 'user/repo', 'only_mergeable' => true } }
       filter = described_class.new(pull_requests: pull_requests, input: Input.instance(payload: payload))
 

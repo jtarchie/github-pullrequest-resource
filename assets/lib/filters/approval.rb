@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module Filters
   class Approval
     def initialize(pull_requests:, input: Input.instance)

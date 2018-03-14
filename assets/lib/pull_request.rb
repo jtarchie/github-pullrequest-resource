@@ -16,10 +16,6 @@ class PullRequest
     base_repo != head_repo
   end
 
-  def mergeable?
-    @pr['mergeable']
-  end
-
   def review_approved?
     Octokit.pull_request_reviews(base_repo, id).any? { |r| r['state'] == 'APPROVED' }
   end
