@@ -68,6 +68,7 @@ module Commands
 
       if params.label
         Octokit.add_labels_to_an_issue(input.source.repo, id, [params.label])
+        metadata << { 'name' => 'label', 'value' => params.label }
       end
 
       if params.merge.method
