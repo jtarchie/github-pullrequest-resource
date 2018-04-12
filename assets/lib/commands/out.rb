@@ -92,6 +92,8 @@ module Commands
     private
 
     def whitelist(context:)
+      return nil unless context
+
       c = context.dup
       %w[BUILD_ID BUILD_NAME BUILD_JOB_NAME BUILD_PIPELINE_NAME BUILD_TEAM_NAME ATC_EXTERNAL_URL].each do |name|
         c.gsub!("$#{name}", ENV[name] || '')
