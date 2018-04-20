@@ -107,20 +107,32 @@ jobs:
       - get: git-pull-requests
         trigger: true
         version: every
-      - task: rspec
-        privileged: true
+      - task: next-tag
         config:
           image_resource:
             type: docker-image
             source:
-              repository: jtarchie/pr
-              tag: test
-          inputs:
-            - name: git-pull-requests
+              repository: concourse/git-resource
           platform: linux
+          inputs:
+            - name: git-pr
+          outputs:
+            - name: tag
           run:
-            path: sh
-            args: ['-c', 'cd git-pull-requests && bundle install && bundle exec rspec']
+            path: bash
+            args:
+              - -c
+              - |
+                set -eux
+                echo "testing-pr" > tag/name
+      - put: docker-pr
+        params:
+          build: git-pull-requests
+          dockerfile: git-pull-requests/Dockerfile
+          tag: tag/name
+          tag_as_latest: false
+          get_params:
+            skip_download: true
         on_success:
           put: git-pull-requests
           params:
