@@ -13,7 +13,7 @@ resources:
   - name: git-pr
     type: git
     source:
-      uri: git@github.com:jtarchie/pullrequest-resource
+      uri: git@github.com:jtarchie/github-pullrequest-resource
       branch: master
       private_key: {{github-private-key}}
   - name: docker-pr
@@ -103,9 +103,12 @@ jobs:
             method: merge
             commit_msg: merge-pull-requests/README.md
   - name: pr tests
+    public: true
     plan:
       - get: git-pull-requests
         trigger: true
+        version: every
+      - get: git-pr
         version: every
       - task: next-tag
         config:
