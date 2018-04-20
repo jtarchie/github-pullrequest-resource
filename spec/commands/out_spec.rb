@@ -195,6 +195,26 @@ describe Commands::Out do
       end
     end
 
+    context 'when setting a status with a label' do
+      before do
+        stub_request(:post, "https://api.github.com/repos/jtarchie/test/issues/1/labels").with(
+          body: "[\"test_label\"]").to_return(
+            status: 200, body: "", headers: {})
+      end
+      it 'posts a comment to the PR\'s SHA' do
+        stub_status_post
+        stub_json(:post, 'https://api.github.com:443/repos/jtarchie/test/issues/1/comments', id: 1)
+
+        output, = put('params' => { 'status' => 'success', 'path' => 'resource', 'label' => 'test_label' }, 'source' => { 'repo' => 'jtarchie/test' })
+        expect(output).to eq('version'  => { 'ref' => @sha, 'pr' => '1' },
+                             'metadata' => [
+                               { 'name' => 'status', 'value' => 'success' },
+                               { 'name' => 'url', 'value' => 'http://example.com' },
+                               { 'name' => 'label', 'value' => 'test_label' },
+                             ])
+      end
+    end
+
     context 'when the pull request is being release' do
       context 'and the build passed' do
         it 'sets into success mode' do

@@ -66,6 +66,11 @@ module Commands
         metadata << { 'name' => 'comment', 'value' => comment }
       end
 
+      if params.label
+        Octokit.add_labels_to_an_issue(input.source.repo, id, [params.label])
+        metadata << { 'name' => 'label', 'value' => params.label }
+      end
+
       if params.merge.method
         commit_msg = if params.merge.commit_msg
                        commit_path = File.join(destination, params.merge.commit_msg)
