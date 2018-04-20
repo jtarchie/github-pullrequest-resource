@@ -4,3 +4,4 @@ example/
 bin
 .secrets.yml
 test_pipeline.yml
+.vscode/
