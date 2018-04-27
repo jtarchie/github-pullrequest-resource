@@ -39,6 +39,7 @@ describe Commands::Out do
 
     stub_json(:get, "https://api.github.com:443/repos/jtarchie/test/statuses/#{@sha}", [])
     ENV['BUILD_ID'] = '1234'
+    ENV['ATC_EXTERNAL_URL'] = 'default-test-atc-url.com'
   end
 
   def stub_json(method, uri, body)
@@ -233,6 +234,16 @@ describe Commands::Out do
             stub_status_post.with(body: hash_including('target_url' => 'http://example.com/builds/1234'))
 
             put('params' => { 'status' => 'success', 'path' => 'resource' }, 'source' => { 'repo' => 'jtarchie/test', 'base_url' => 'http://example.com' })
+          end
+        end
+
+        context 'with base_url defined on source containing environment variable' do
+          it 'sets the target_url for status' do
+            ENV['BUILD_TEAM_NAME'] = 'build-env-var'
+            stub_status_post.with(body: hash_including('target_url' => 'http://example.com/build-env-var/builds/1234'))
+
+            put('params' => { 'status' => 'success', 'path' => 'resource' }, 'source' => { 'repo' => 'jtarchie/test', 'base_url' => 'http://example.com/$BUILD_TEAM_NAME' })
+            ENV['BUILD_TEAM_NAME'] = nil
           end
         end
 

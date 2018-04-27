@@ -41,6 +41,9 @@ resource_types:
   linking to builds. On newer versions of Concourse ( >= v0.71.0) , the resource will
   automatically sets the URL.
 
+  This supports the [build environment](http://concourse.ci/implementing-resources.html#resource-metadata)
+  variables provided by concourse. For example, `context: $BUILD_JOB_NAME` will set the context to the job name.
+
 * `private_key`: *Optional.* Private key to use when pulling/pushing.
     Example:
     ```

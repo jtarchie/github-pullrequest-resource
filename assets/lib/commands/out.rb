@@ -52,7 +52,7 @@ module Commands
       contextes.each do |context|
         Status.new(
           state: params.status,
-          atc_url: atc_url,
+          atc_url: whitelist(context: atc_url),
           sha: sha,
           repo: repo,
           context: whitelist(context: context)
