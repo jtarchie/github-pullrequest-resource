@@ -59,9 +59,19 @@ module Commands
         ).create!
       end
 
-      if params.comment
-        comment_path = File.join(destination, params.comment)
-        comment = File.read(comment_path, encoding: Encoding::UTF_8)
+      if params.comment || params.comment_text
+        if params.comment
+          comment_path = File.join(destination, params.comment)
+          comment_file_contents = File.read(comment_path, encoding: Encoding::UTF_8)
+        end
+
+        if params.comment_text
+          comment = whitelist(context: params.comment_text)
+          comment.gsub!("$COMMENT_FILE_CONTENT", comment_file_contents || '')
+        else
+          comment = comment_file_contents
+        end
+
         Octokit.add_comment(input.source.repo, id, comment)
         metadata << { 'name' => 'comment', 'value' => comment }
       end
