@@ -51,8 +51,6 @@ class PullRequest
     @pr['html_url']
   end
 
-  private
-
   def base_repo
     @pr['base']['repo']['full_name']
   end

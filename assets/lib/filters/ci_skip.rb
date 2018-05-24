@@ -12,7 +12,7 @@ module Filters
         @pull_requests
       else
         @memoized ||= @pull_requests.delete_if do |pr|
-          latest_commit = Octokit.commit(@input.source.repo, pr.sha)
+          latest_commit = Octokit.commit(pr.head_repo, pr.sha)
           latest_commit['commit']['message'] =~ /\[(ci skip|skip ci)\]/
         end
       end
