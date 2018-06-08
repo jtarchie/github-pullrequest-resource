@@ -79,7 +79,11 @@ module Commands
     end
 
     def uri
-      input.source.uri || "https://github.com/#{input.source.repo}"
+      return input.source.uri if input.source.uri
+
+      match = /https:\/\/([a-zA-Z0-9\.\-]+)/.match(input.source.api_endpoint) if input.source.api_endpoint
+      domain = match.length > 1 ? match[1] : 'github.com'
+      "https://%s/%s" % [domain, input.source.repo]
     end
 
     def ref
