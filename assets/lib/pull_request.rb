@@ -20,6 +20,14 @@ class PullRequest
     Octokit.pull_request_reviews(base_repo, id).any? { |r| r['state'] == 'APPROVED' }
   end
 
+  def review_approved_count(count)
+    if count <= 1
+      Octokit.pull_request_reviews(base_repo, id).any? { |r| r['state'] == 'APPROVED' }
+    else
+      Octokit.pull_request_reviews(base_repo, id).count { |r| r['state'] == 'APPROVED' } == count
+    end
+  end
+
   def author_associated?
     # Checks whether the author is associated with the repo that the PR is against:
     # either the owner of that repo, someone invited to collaborate, or a member
