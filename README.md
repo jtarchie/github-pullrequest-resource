@@ -67,6 +67,9 @@ resource_types:
 * `require_review_approval`: *Optional*, default false.  If set to `true`, it will
   filter out pull requests that do not have an Approved review.
 
+* `review_approval_count`: *Optional*, default to 1. If the count of approval is lower than `review_approval_count`
+  the pull request is filtered out.
+
 * `authorship_restriction`: *Optional*, default false.  If set to `true`, will only
   return PRs created by someone who is a collaborator, repo owner, or organization member.
 

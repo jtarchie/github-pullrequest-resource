@@ -24,7 +24,7 @@ class PullRequest
     if count <= 1
       Octokit.pull_request_reviews(base_repo, id).any? { |r| r['state'] == 'APPROVED' }
     else
-      Octokit.pull_request_reviews(base_repo, id).count { |r| r['state'] == 'APPROVED' } == count
+      Octokit.pull_request_reviews(base_repo, id).count { |r| r['state'] == 'APPROVED' } >= count
     end
   end
 
