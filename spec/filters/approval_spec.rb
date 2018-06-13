@@ -65,7 +65,7 @@ describe Filters::Approval do
   context 'when approval count filtering is enabled' do
     before do
       stub_json(%r{https://api.github.com/repos/user/repo/pulls/1/reviews}, [{ 'state' => 'CHANGES_REQUESTED' }])
-      stub_json(%r{https://api.github.com/repos/user/repo/pulls/2/reviews}, [{ 'state' => 'APPROVED' }, {'state' => 'APPROVED' }])
+      stub_json(%r{https://api.github.com/repos/user/repo/pulls/2/reviews}, [{ 'state' => 'APPROVED' }, {'state' => 'APPROVED' }, {'state' => 'APPROVED' }])
     end
 
     it 'only returns PRs that are approved twice' do
