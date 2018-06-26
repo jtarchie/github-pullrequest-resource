@@ -7,11 +7,11 @@ require 'webmock/rspec'
 
 describe Filters::CISkip do
   let(:ignore_pr) do
-    PullRequest.new(pr: { 'number' => 1, 'head' => { 'sha' => 'abc' } })
+    PullRequest.new(pr: { 'number' => 1, 'head' => { 'sha' => 'abc', 'repo' => { 'full_name' => 'user/repo' } } })
   end
 
   let(:pr) do
-    PullRequest.new(pr: { 'number' => 2, 'head' => { 'sha' => 'def' } })
+    PullRequest.new(pr: { 'number' => 2, 'head' => { 'sha' => 'def', 'repo' => { 'full_name' => 'user/repo' } } })
   end
 
   let(:pull_requests) { [ignore_pr, pr] }

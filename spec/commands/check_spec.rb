@@ -67,7 +67,7 @@ describe Commands::Check do
 
     context 'and the top commit has [ci skip] in its message' do
       before do
-        stub_json('https://api.github.com:443/repos/jtarchie/test/pulls?direction=asc&per_page=100&sort=updated&state=open', [{ number: 1, head: { sha: 'abcdef' } }])
+        stub_json('https://api.github.com:443/repos/jtarchie/test/pulls?direction=asc&per_page=100&sort=updated&state=open', [{ number: 1, head: { sha: 'abcdef', repo: { full_name: 'jtarchie/test' } } }])
         stub_json('https://api.github.com:443/repos/jtarchie/test/commits/abcdef', sha: 'abcdef', commit: { message: 'foo [ci skip] bar' })
       end
 
