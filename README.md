@@ -125,6 +125,7 @@ git config --get pullrequest.body       # returns the PR body
 git config --get pullrequest.basebranch # returns the base branch used for the pull request
 git config --get pullrequest.basesha    # returns the commit of the base branch used for the pull request
 git config --get pullrequest.userlogin  # returns the github user login for the pull request author
+git config --get pullrequest.repo       # returns the full name of the source repo of the PR.
 ```
 
 
@@ -145,6 +146,8 @@ git config --get pullrequest.userlogin  # returns the github user login for the 
  * `.git/head_sha`: the latest commit hash of the branch associated with the pull request
 
  * `.git/body`: the body of the pull request.
+
+ * `.git/repo`: the full name of the source repo of the PR.
 
 #### Parameters
 
