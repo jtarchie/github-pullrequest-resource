@@ -61,4 +61,25 @@ describe Filters::Approval do
       expect(filter.pull_requests).to eq [pr]
     end
   end
+
+  context 'when approval count filtering is enabled' do
+    before do
+      stub_json(%r{https://api.github.com/repos/user/repo/pulls/1/reviews}, [{ 'state' => 'CHANGES_REQUESTED' }])
+      stub_json(%r{https://api.github.com/repos/user/repo/pulls/2/reviews}, [{ 'state' => 'APPROVED' }, {'state' => 'APPROVED' }, {'state' => 'APPROVED' }])
+    end
+
+    it 'only returns PRs that are approved twice' do
+      payload = { 'source' => { 'repo' => 'user/repo', 'require_manual_approval' => false, 'require_review_approval' => true, 'review_approval_count' => 2, 'authorship_restriction' => false } }
+      filter = described_class.new(pull_requests: pull_requests, input: Input.instance(payload: payload))
+
+      expect(filter.pull_requests).to eq [pr]
+    end
+
+    it 'returns nothing' do
+      payload = { 'source' => { 'repo' => 'user/repo', 'require_manual_approval' => false, 'require_review_approval' => true, 'review_approval_count' => 5, 'authorship_restriction' => false } }
+      filter = described_class.new(pull_requests: pull_requests, input: Input.instance(payload: payload))
+
+      expect(filter.pull_requests).to eq []
+    end
+  end
 end

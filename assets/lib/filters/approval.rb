@@ -11,6 +11,9 @@ module Filters
       if @input.source.require_review_approval
         @pull_requests.delete_if { |x| !x.review_approved? }
       end
+      if @input.source.review_approval_count
+        @pull_requests.delete_if { |x| !x.review_approved_count(@input.source.review_approval_count) }
+      end
       if @input.source.authorship_restriction
         @pull_requests.delete_if { |x| !x.author_associated? }
       end
