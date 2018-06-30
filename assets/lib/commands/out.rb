@@ -41,6 +41,13 @@ module Commands
         version = { 'ref' => sha }
       else
         pr = PullRequest.from_github(repo: repo, id: id)
+        if sha == pr.merge_commit_sha
+          # If the SHA that we have here is the merge commit's SHA,
+          # we know that the correct SHA is the one at the tip of
+          # the PR (which might be the same as the merge SHA if
+          # there's no need for a merge).
+          sha = pr.sha
+        end
         metadata << { 'name' => 'url', 'value' => pr.url }
         version = { 'pr' => id, 'ref' => sha }
       end
@@ -77,7 +84,7 @@ module Commands
                        File.read(commit_path, encoding: Encoding::UTF_8)
                      else
                        ''
-        end
+                     end
         Octokit.merge_pull_request(input.source.repo, id, commit_msg, merge_method: params.merge.method, accept: 'application/vnd.github.polaris-preview+json')
         metadata << { 'name' => 'merge', 'value' => params.merge.method }
         metadata << { 'name' => 'merge_commit_msg', 'value' => commit_msg }
