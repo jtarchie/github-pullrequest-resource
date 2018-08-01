@@ -7,7 +7,7 @@ _main() {
   tmpdir="$(mktemp -d git_lfs_install.XXXXXX)"
 
   cd "$tmpdir"
-  curl -Lo git.tar.gz https://github.com/github/git-lfs/releases/download/v2.1.1/git-lfs-linux-amd64-2.1.1.tar.gz
+  curl -Lo git.tar.gz https://github.com/git-lfs/git-lfs/releases/download/v2.1.1/git-lfs-linux-amd64-2.1.1.tar.gz
   gunzip git.tar.gz
   tar xf git.tar
   mv git-lfs-2.1.1/git-lfs /usr/bin
