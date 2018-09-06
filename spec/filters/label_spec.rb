@@ -42,5 +42,12 @@ describe Filters::Label do
 
       expect(filter.pull_requests).to eq [pr]
     end
+
+    it 'only returns PRs with that label' do
+      payload = { 'source' => { 'repo' => 'user/repo', 'no_label' => 'feature' } }
+      filter = described_class.new(pull_requests: pull_requests, input: Input.instance(payload: payload))
+
+      expect(filter.pull_requests).to eq [pr]
+    end
   end
 end
