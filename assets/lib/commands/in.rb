@@ -79,7 +79,9 @@ module Commands
     end
 
     def uri
-      input.source.uri || "https://github.com/#{input.source.repo}"
+      return input.source.uri if input.source.uri
+      return "git@github.com:#{input.source.repo}.git" if input.source.private_key
+      return "https://github.com/#{input.source.repo}"
     end
 
     def ref
