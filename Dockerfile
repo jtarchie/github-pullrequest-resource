@@ -26,6 +26,7 @@ RUN ./install_git_lfs.sh
 FROM resource as tests
 
 RUN apk add --update \
+    ruby-bigdecimal \
     ruby-bundler \
     ruby-io-console \
     ruby-dev \
