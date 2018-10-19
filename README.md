@@ -1,3 +1,8 @@
+# DEPRECATED
+We would like for you to start using the new [github-pr-resource](https://github.com/telia-oss/github-pr-resource) that is based on Github's GraphQL resources. Using GraphQL fixes a lot of issues this repo has. 
+
+For history or context regarding this change, please see this [issue](https://github.com/telia-oss/github-pr-resource/issues/34).
+
 # Github Pull Request Resource
 
 Tracks Github pull requests made to a particular Github repo. In the spirit of [Travis
