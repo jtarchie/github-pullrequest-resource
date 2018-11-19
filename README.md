@@ -192,6 +192,8 @@ Set the status message for `concourse-ci` context on specified pull request.
 
 * `label`: *Optional.* A label to add to the pull request.
 
+* `delete_label`: *Optional.* A label to remove from the pull request.
+
 ## Example pipeline
 
 Please see this repo's [pipeline](https://github.com/jtarchie/pullrequest-resource/blob/master/.concourse.yml) for a perfect example.
