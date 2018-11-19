@@ -16,11 +16,15 @@ describe Commands::In do
 
   let(:dest_dir) { Dir.mktmpdir }
 
-  def get(payload)
+  def command(payload)
     payload['source']['skip_ssl_verification'] = true
     Input.instance(payload: payload)
-    command = Commands::In.new(destination: dest_dir)
-    command.output
+
+    Commands::In.new(destination: dest_dir)
+  end
+
+  def get(payload)
+    command(payload).output
   end
 
   def stub_json(uri, body)
@@ -155,6 +159,20 @@ describe Commands::In do
       it 'creates a file that contains the PR body in the .git folder' do
         value = File.read(File.join(dest_dir, '.git', 'body')).strip
         expect(value).to eq "A comment with shell stuff var=''`rm -rf ./*`''"
+      end
+    end
+
+    context 'when an SSH key is specified' do
+      it 'defaults to an SSH clone URI' do
+        cmd = command('version' => { 'ref' => @ref, 'pr' => '1' }, 'source' => { 'private_key' => '-----BEGIN', 'repo' => 'jtarchie/test' })
+        expect(cmd.send(:uri)).to eq 'git@github.com:jtarchie/test.git'
+      end
+    end
+
+    context 'when an SSH key is not specified' do
+      it 'defaults to an HTTPS clone URI' do
+        cmd = command('version' => { 'ref' => @ref, 'pr' => '1' }, 'source' => { 'repo' => 'jtarchie/test' })
+        expect(cmd.send(:uri)).to eq 'https://github.com/jtarchie/test'
       end
     end
 
