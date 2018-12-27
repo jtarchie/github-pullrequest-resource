@@ -69,7 +69,7 @@ describe Commands::Out do
     end
 
     context 'when the merge is set' do
-      it 'retuns an error for unsupported merge types' do
+      it 'returns an error for unsupported merge types' do
         stub_status_post
 
         expect do
@@ -139,7 +139,7 @@ describe Commands::Out do
         File.write(File.join(dest_dir, 'comment'), 'comment message')
       end
 
-      it 'posts a comment to the PR\'s SHA' do
+      it 'posts a comment file to the PR\'s SHA' do
         stub_status_post
         stub_json(:post, 'https://api.github.com:443/repos/jtarchie/test/issues/1/comments', id: 1)
 
@@ -149,6 +149,47 @@ describe Commands::Out do
                                { 'name' => 'status', 'value' => 'success' },
                                { 'name' => 'url', 'value' => 'http://example.com' },
                                { 'name' => 'comment', 'value' => 'comment message' }
+                             ])
+      end
+
+      it 'posts a static text comment to the PR\'s SHA' do
+        stub_status_post
+        stub_json(:post, 'https://api.github.com:443/repos/jtarchie/test/issues/1/comments', id: 1)
+
+        output, = put('params' => { 'status' => 'success', 'path' => 'resource', 'comment_text' => 'static comment message' }, 'source' => { 'repo' => 'jtarchie/test' })
+        expect(output).to eq('version'  => { 'ref' => @sha, 'pr' => '1' },
+                             'metadata' => [
+                                 { 'name' => 'status', 'value' => 'success' },
+                                 { 'name' => 'url', 'value' => 'http://example.com' },
+                                 { 'name' => 'comment', 'value' => 'static comment message' }
+                             ])
+      end
+
+      it 'posts a static text comment with environment variables to the PR\'s SHA' do
+        stub_status_post
+        stub_json(:post, 'https://api.github.com:443/repos/jtarchie/test/issues/1/comments', id: 1)
+
+        ENV['BUILD_TEAM_NAME'] = 'build-env-var'
+        output, = put('params' => { 'status' => 'success', 'path' => 'resource', 'comment_text' => 'static comment message $BUILD_TEAM_NAME' }, 'source' => { 'repo' => 'jtarchie/test' })
+        expect(output).to eq('version'  => { 'ref' => @sha, 'pr' => '1' },
+                             'metadata' => [
+                                 { 'name' => 'status', 'value' => 'success' },
+                                 { 'name' => 'url', 'value' => 'http://example.com' },
+                                 { 'name' => 'comment', 'value' => 'static comment message build-env-var' }
+                             ])
+        ENV['BUILD_TEAM_NAME'] = ''
+      end
+
+      it 'posts a static text comment with comment file contents to the PR\'s SHA' do
+        stub_status_post
+        stub_json(:post, 'https://api.github.com:443/repos/jtarchie/test/issues/1/comments', id: 1)
+
+        output, = put('params' => { 'status' => 'success', 'path' => 'resource', 'comment' => 'resource/comment', 'comment_text' => 'static comment message: $COMMENT_FILE_CONTENT' }, 'source' => { 'repo' => 'jtarchie/test' })
+        expect(output).to eq('version'  => { 'ref' => @sha, 'pr' => '1' },
+                             'metadata' => [
+                                 { 'name' => 'status', 'value' => 'success' },
+                                 { 'name' => 'url', 'value' => 'http://example.com' },
+                                 { 'name' => 'comment', 'value' => 'static comment message: comment message' }
                              ])
       end
 

@@ -186,6 +186,15 @@ Set the status message for `concourse-ci` context on specified pull request.
 
 * `comment`: *Optional.* The file path of the comment message. Comment owner is same with the owner of `access_token`.
 
+* `comment_text`: *Optional.* Static text of the comment message. Comment owner is same with the owner of `access_token`.
+
+  This supports the [build environment](http://concourse.ci/implementing-resources.html#resource-metadata)
+  variables provided by concourse.
+  
+  In addition, if you specify both `comment` and `comment_text`, the `$COMMENT_FILE_CONTENT` variable can be used in 
+  the `comment_text` string to include the contents of the `comment` file with other static text and interpolated 
+  variables.
+
 * `merge.method`: *Optional.* Use this to merge the PR into the target branch of the PR. There are three available merge methods -- `merge`, `squash`, or `rebase`. Please this [doc](https://developer.github.com/changes/2016-09-26-pull-request-merge-api-update/) for more information.
 
 * `merge.commit_msg`: *Optional.* Used with `merge` to set the commit message for the merge. Specify a file path to the merge commit message.
