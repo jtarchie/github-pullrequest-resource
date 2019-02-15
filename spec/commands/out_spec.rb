@@ -303,6 +303,23 @@ describe Commands::Out do
                                  { 'name' => 'url', 'value' => 'http://example.com' }
                                ])
         end
+        context 'when fetching a merged commit' do
+          it 'posts the status to the PR\'s SHA instead of the merge SHA.' do
+            stub_json(:get, 'https://api.github.com:443/repos/jtarchie/test/pulls/1',
+                      html_url: 'http://example.com',
+                      number: 1,
+                      head: { sha: 'abcdef' },
+                      merge_commit_sha: @sha)
+            stub_request(:post, 'https://api.github.com:443/repos/jtarchie/test/statuses/abcdef')
+            output, = put('params' => { 'status' => 'failure', 'path' => 'resource' }, 'source' => { 'repo' => 'jtarchie/test' })
+            expect(output).to eq('version'  => { 'ref' => 'abcdef', 'pr' => '1' },
+                                 'metadata' => [
+                                   { 'name' => 'status', 'value' => 'failure' },
+                                   { 'name' => 'url', 'value' => 'http://example.com' }
+                                 ])
+
+          end
+        end
       end
     end
   end

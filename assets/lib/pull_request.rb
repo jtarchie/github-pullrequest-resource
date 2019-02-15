@@ -47,6 +47,10 @@ class PullRequest
     @pr['head']['sha']
   end
 
+  def merge_commit_sha
+    @pr['merge_commit_sha']
+  end
+
   def url
     @pr['html_url']
   end
